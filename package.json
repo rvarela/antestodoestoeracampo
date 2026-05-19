@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "seed:egif": "tsx scripts/seed-from-egif.ts",
-    "geocode:municipalities": "tsx scripts/geocode-municipalities.ts"
+    "geocode:municipalities": "tsx scripts/geocode-municipalities.ts",
+    "import:cases": "tsx scripts/import-case-data.ts",
+    "enrich:catastro": "tsx scripts/enrich-from-catastro.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

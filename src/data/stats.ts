@@ -1,22 +1,26 @@
 export const STATS = [
   {
-    value: "23",
+    key: "caseCount",
+    value: "—",
     label: "casos documentados",
     source: "elaboración propia",
   },
   {
+    key: "humanFires",
     value: "96%",
     label: "incendios de origen humano",
     source: "MITECO / EGIF",
   },
   {
+    key: "identified",
     value: "9%",
     label: "causantes identificados",
     source: "MITECO / EGIF",
   },
   {
-    value: "142k",
+    key: "totalHa",
+    value: "—",
     label: "hectáreas afectadas",
     source: "elaboración propia",
   },
-] as const;
+];

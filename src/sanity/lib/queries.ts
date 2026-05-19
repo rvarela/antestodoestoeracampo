@@ -14,6 +14,7 @@ export const allCasesQuery = groq`
     accentColor,
     excerpt,
     coordinates,
+    coverImage,
   }
 `;
 

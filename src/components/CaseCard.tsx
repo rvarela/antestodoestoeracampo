@@ -1,5 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { CaseSummary } from "@/types/case";
+import { urlFor } from "@/sanity/lib/image";
 
 interface CaseCardProps {
   case_: CaseSummary;
@@ -7,6 +9,9 @@ interface CaseCardProps {
 
 export default function CaseCard({ case_: c }: CaseCardProps) {
   const isConvicted = c.status === "Sentencia firme";
+  const imageUrl = c.coverImage?.asset
+    ? urlFor(c.coverImage).width(800).height(416).fit("crop").auto("format").url()
+    : null;
 
   return (
     <Link
@@ -19,18 +24,35 @@ export default function CaseCard({ case_: c }: CaseCardProps) {
         className="h-44 md:h-52 relative flex items-end px-5 pb-4"
         style={{ backgroundColor: c.accentColor + "22" }}
       >
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt={c.coverImage?.alt ?? c.title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          />
+        )}
+        {/* Gradient overlay so year label stays readable over images */}
+        {imageUrl && (
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 60%)" }}
+          />
+        )}
+
         {/* Year */}
         <span
-          className="type-data text-[11px]"
-          style={{ color: "var(--muted)" }}
+          className="relative type-data text-[11px] z-10"
+          style={{ color: imageUrl ? "rgba(255,255,255,0.8)" : "var(--muted)" }}
         >
           {c.year}
         </span>
 
         {/* Hover arrow */}
         <span
-          className="absolute right-5 bottom-4 type-data text-[11px] opacity-0 group-hover:opacity-100 transition-opacity duration-150"
-          style={{ color: "var(--accent)" }}
+          className="absolute right-5 bottom-4 type-data text-[11px] opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10"
+          style={{ color: imageUrl ? "white" : "var(--accent)" }}
         >
           Leer caso →
         </span>

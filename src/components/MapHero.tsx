@@ -14,7 +14,7 @@ export default function MapHero({ cases }: { cases: CaseSummary[] }) {
   return (
     <section
       className="relative w-full"
-      style={{ height: "100svh", backgroundColor: "var(--map-water)" }}
+      style={{ height: "75svh", minHeight: "480px", backgroundColor: "var(--map-water)" }}
     >
       {/* Mapbox map — fills the entire section */}
       <div className="absolute inset-0">

@@ -34,6 +34,7 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
       zoom: 5.2,
       minZoom: 4,
       maxZoom: 12,
+      scrollZoom: false,
       // Keep view within Spain + Canaries
       maxBounds: [[-22, 26], [12, 50]],
     });

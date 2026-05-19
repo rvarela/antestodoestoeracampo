@@ -60,12 +60,13 @@ export interface CaseSummary {
   accentColor: string;
   excerpt: string;
   coordinates?: { lat: number; lng: number };
+  coverImage?: { asset: { _ref: string }; alt?: string };
 }
 
 // Full version for case page
 export interface CaseDetail extends CaseSummary {
   overview?: PortableTextBlock[];
-  coverImage?: { asset: { url: string }; alt?: string };
+  coverImage?: { asset: { _ref: string }; alt?: string };
   timeline?: TimelineEvent[];
   connections?: PoliticalConnection[];
   judicial?: JudicialEvent[];

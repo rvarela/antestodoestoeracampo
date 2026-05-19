@@ -12,11 +12,16 @@ export const revalidate = 60;
 export default async function Home() {
   const cases = await client.fetch<CaseSummary[]>(allCasesQuery);
 
+  const totalHa = cases.reduce((sum, c) => sum + (c.hectares ?? 0), 0);
+  const formattedHa = totalHa >= 1000
+    ? `${Math.round(totalHa / 1000)}k`
+    : String(Math.round(totalHa));
+
   return (
     <>
       <Navigation />
       <MapHero cases={cases} />
-      <StatsStrip />
+      <StatsStrip caseCount={cases.length} totalHectares={formattedHa} />
       <CasesSection cases={cases} />
       <Footer />
     </>

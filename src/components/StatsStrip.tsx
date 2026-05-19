@@ -1,18 +1,30 @@
 import { STATS } from "@/data/stats";
 
-export default function StatsStrip() {
+export default function StatsStrip({
+  caseCount,
+  totalHectares,
+}: {
+  caseCount: number;
+  totalHectares: string;
+}) {
+  const stats = STATS.map((s) => {
+    if (s.key === "caseCount") return { ...s, value: String(caseCount) };
+    if (s.key === "totalHa") return { ...s, value: totalHectares };
+    return s;
+  });
+
   return (
     <div
       className="grid grid-cols-2 md:grid-cols-4"
       style={{ backgroundColor: "var(--foreground)" }}
     >
-      {STATS.map((stat, i) => (
+      {stats.map((stat, i) => (
         <div
           key={i}
-          className="flex flex-col gap-1 px-6 py-8 md:px-10 md:py-10"
+          className="flex flex-col gap-1 px-6 py-6 md:px-10 md:py-8"
           style={{
             borderRight:
-              i < STATS.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
+              i < stats.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
             borderBottom:
               i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none",
           }}

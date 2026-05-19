@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { CASES } from "@/data/cases";
+import type { CaseSummary } from "@/types/case";
 
 // Editorial map colours matching the design system
 const STYLE_OVERRIDES: Array<[string, string, string]> = [
@@ -18,7 +18,7 @@ const STYLE_OVERRIDES: Array<[string, string, string]> = [
   ["admin-0-boundary",    "line-color",   "#B0B0AC"],
 ];
 
-export default function MapboxMap() {
+export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
 
@@ -54,8 +54,8 @@ export default function MapboxMap() {
         }
       });
 
-      // Add case markers
-      CASES.forEach((c) => {
+      // Add case markers (only cases with coordinates)
+      cases.filter(c => c.coordinates).forEach((c) => {
         // Custom marker element
         const el = document.createElement("div");
         el.style.cssText = `
@@ -108,7 +108,7 @@ export default function MapboxMap() {
         `);
 
         new mapboxgl.Marker({ element: el })
-          .setLngLat(c.coordinates)
+          .setLngLat([c.coordinates!.lng, c.coordinates!.lat])
           .setPopup(popup)
           .addTo(map);
       });
@@ -118,7 +118,7 @@ export default function MapboxMap() {
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [cases]);
 
   return <div ref={containerRef} className="w-full h-full" />;
 }

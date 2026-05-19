@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { Case } from "@/data/cases";
+import type { CaseSummary } from "@/types/case";
 
 interface CaseCardProps {
-  case_: Case;
+  case_: CaseSummary;
 }
 
 export default function CaseCard({ case_: c }: CaseCardProps) {

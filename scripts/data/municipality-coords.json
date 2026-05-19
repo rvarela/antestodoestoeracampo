@@ -1,0 +1,1502 @@
+{
+  "SELLA||ALICANTE": {
+    "lat": 38.6083783,
+    "lng": -0.2722519
+  },
+  "BECEDAS||AVILA": {
+    "lat": 40.4049606,
+    "lng": -5.6343467
+  },
+  "VILLAREJO DEL VALLE||AVILA": {
+    "lat": 40.2867537,
+    "lng": -4.9957469
+  },
+  "SOLANA DE ÁVILA||AVILA": {
+    "lat": 40.3154483,
+    "lng": -5.6122436
+  },
+  "STA MARIA DEL TIETAR||AVILA": {
+    "lat": 40.3042531,
+    "lng": -4.5541531
+  },
+  "TORRELLES DE LLOBREGAT||BARCELONA": {
+    "lat": 41.3565232,
+    "lng": 1.9816276
+  },
+  "VALLE DE MENA||BURGOS": {
+    "lat": 43.1094373,
+    "lng": -3.2949068
+  },
+  "ESPINOSA DE LOS MONTEROS||BURGOS": {
+    "lat": 43.1114017,
+    "lng": -3.6207233
+  },
+  "ALGECIRAS||CADIZ": {
+    "lat": 36.1311725,
+    "lng": -5.4473991
+  },
+  "AZUÉBAR||CASTELLON": {
+    "lat": 39.8344623,
+    "lng": -0.3692385
+  },
+  "CABANES||CASTELLON": {
+    "lat": 40.1564567,
+    "lng": 0.0437829
+  },
+  "MALPICA DE BERGANTIÑOS||A CORUÑA": {
+    "lat": 43.2984388,
+    "lng": -8.8247606
+  },
+  "OUTES||A CORUÑA": {
+    "lat": 42.8455717,
+    "lng": -8.9140816
+  },
+  "RIANXO||A CORUÑA": {
+    "lat": 42.6909268,
+    "lng": -8.7911951
+  },
+  "VIMIANZO||A CORUÑA": {
+    "lat": 43.0944643,
+    "lng": -9.0269133
+  },
+  "CEE||A CORUÑA": {
+    "lat": 42.9603145,
+    "lng": -9.1966442
+  },
+  "CARNOTA||A CORUÑA": {
+    "lat": 42.837917,
+    "lng": -9.0796553
+  },
+  "PONTECESO||A CORUÑA": {
+    "lat": 43.2618915,
+    "lng": -8.8639166
+  },
+  "ARANGA||A CORUÑA": {
+    "lat": 43.2230734,
+    "lng": -8.0124434
+  },
+  "CAMARIÑAS||A CORUÑA": {
+    "lat": 43.1601989,
+    "lng": -9.1445881
+  },
+  "ORTIGUEIRA||A CORUÑA": {
+    "lat": 43.6516865,
+    "lng": -7.8400525
+  },
+  "ORIO||GUIPUZCOA": {
+    "lat": 43.2760488,
+    "lng": -2.127262
+  },
+  "ESCACENA DEL CAMPO||HUELVA": {
+    "lat": 37.4088438,
+    "lng": -6.3896302
+  },
+  "CALAÑAS||HUELVA": {
+    "lat": 37.6545062,
+    "lng": -6.8786335
+  },
+  "LOPORZANO||HUESCA": {
+    "lat": 42.1612104,
+    "lng": -0.3233975
+  },
+  "CASTROPODAME||LEON": {
+    "lat": 42.5809609,
+    "lng": -6.4677875
+  },
+  "VILLAGATON||LEON": {
+    "lat": 42.6423627,
+    "lng": -6.1627847
+  },
+  "VEGA DE ESPINAREDA||LEON": {
+    "lat": 42.7563855,
+    "lng": -6.73352
+  },
+  "CORULLON||LEON": {
+    "lat": 42.5738626,
+    "lng": -6.8608458
+  },
+  "PERANZANES||LEON": {
+    "lat": 42.8695192,
+    "lng": -6.6448756
+  },
+  "CEBANICO||LEON": {
+    "lat": 42.7249878,
+    "lng": -5.0258867
+  },
+  "VALDESAMARIO||LEON": {
+    "lat": 42.721377,
+    "lng": -5.9518021
+  },
+  "PONFERRADA||LEON": {
+    "lat": 42.4984436,
+    "lng": -6.5663176
+  },
+  "STA COLOMBA DE SOMOZA||LEON": {
+    "lat": 42.444358,
+    "lng": -6.2419948
+  },
+  "CABRILLANES||LEON": {
+    "lat": 42.95367,
+    "lng": -6.147952
+  },
+  "CISTIERNA||LEON": {
+    "lat": 42.8031437,
+    "lng": -5.1255957
+  },
+  "VILLAFRANCA DEL BIERZO||LEON": {
+    "lat": 42.6952561,
+    "lng": -6.7930716
+  },
+  "CANDIN||LEON": {
+    "lat": 42.8166961,
+    "lng": -6.7283943
+  },
+  "ENCINEDO||LEON": {
+    "lat": 42.2634788,
+    "lng": -6.6563752
+  },
+  "CASTRILLO DE CABRERA||LEON": {
+    "lat": 42.3422869,
+    "lng": -6.5515731
+  },
+  "RIOSECO DE TAPIA||LEON": {
+    "lat": 42.7294093,
+    "lng": -5.7913406
+  },
+  "TORRE DEL BIERZO||LEON": {
+    "lat": 42.5957352,
+    "lng": -6.3240362
+  },
+  "VEGA DE VALCARCE||LEON": {
+    "lat": 42.6838123,
+    "lng": -6.9822467
+  },
+  "BARJAS||LEON": {
+    "lat": 42.6120715,
+    "lng": -6.989447
+  },
+  "SENA DE LUNA||LEON": {
+    "lat": 42.9290995,
+    "lng": -5.9524814
+  },
+  "PARAMO DEL SIL||LEON": {
+    "lat": 42.8210447,
+    "lng": -6.4883427
+  },
+  "BEMBIBRE||LEON": {
+    "lat": 42.6448905,
+    "lng": -6.4475399
+  },
+  "BENUZA||LEON": {
+    "lat": 42.3785876,
+    "lng": -6.6902243
+  },
+  "NAVIA DE SUARNA||LUGO": {
+    "lat": 42.9603984,
+    "lng": -6.9546352
+  },
+  "VILALBA||LUGO": {
+    "lat": 43.3263225,
+    "lng": -7.6946722
+  },
+  "GUITIRIZ||LUGO": {
+    "lat": 43.2140833,
+    "lng": -7.8238736
+  },
+  "XERMADE||LUGO": {
+    "lat": 43.3640508,
+    "lng": -7.8180211
+  },
+  "FONSAGRADA, A||LUGO": {
+    "lat": 43.147408,
+    "lng": -7.0604355
+  },
+  "MONDOÑEDO||LUGO": {
+    "lat": 43.4483248,
+    "lng": -7.3808688
+  },
+  "FRIOL||LUGO": {
+    "lat": 43.0340365,
+    "lng": -7.8036448
+  },
+  "ESTEPONA||MALAGA": {
+    "lat": 36.4268068,
+    "lng": -5.1468484
+  },
+  "IRIXO, O||OURENSE": {
+    "lat": 42.5123517,
+    "lng": -8.1433952
+  },
+  "QUINTELA DE LEIRADO||OURENSE": {
+    "lat": 42.120476,
+    "lng": -8.0898818
+  },
+  "CARBALLINO, O||OURENSE": {
+    "lat": 42.4300001,
+    "lng": -8.0780235
+  },
+  "CARBALLEDA DE AVIA||OURENSE": {
+    "lat": 42.3347768,
+    "lng": -8.1848927
+  },
+  "MONTEDERRAMO||OURENSE": {
+    "lat": 42.2700137,
+    "lng": -7.4975219
+  },
+  "BEADE||OURENSE": {
+    "lat": 42.3288696,
+    "lng": -8.1359436
+  },
+  "GOMESENDE||OURENSE": {
+    "lat": 42.1890052,
+    "lng": -8.1013586
+  },
+  "BANDE||OURENSE": {
+    "lat": 42.0226108,
+    "lng": -7.9477755
+  },
+  "VILAR DE BARRIO||OURENSE": {
+    "lat": 42.1761644,
+    "lng": -7.5602524
+  },
+  "ESGOS||OURENSE": {
+    "lat": 42.3337549,
+    "lng": -7.692395
+  },
+  "VIANA DO BOLO||OURENSE": {
+    "lat": 42.1804504,
+    "lng": -7.1131809
+  },
+  "MACEDA||OURENSE": {
+    "lat": 42.2563419,
+    "lng": -7.6068125
+  },
+  "LAZA||OURENSE": {
+    "lat": 42.1052424,
+    "lng": -7.4543686
+  },
+  "CARBALLEDA DE VALDEORRAS||OURENSE": {
+    "lat": 42.3439743,
+    "lng": -6.8491007
+  },
+  "RUBIÁ||OURENSE": {
+    "lat": 42.4656647,
+    "lng": -6.8892028
+  },
+  "BOBORÁS||OURENSE": {
+    "lat": 42.4492271,
+    "lng": -8.1685559
+  },
+  "BALTAR||OURENSE": {
+    "lat": 41.9358295,
+    "lng": -7.7505172
+  },
+  "CALVOS DE RANDÍN||OURENSE": {
+    "lat": 41.9250298,
+    "lng": -7.8590989
+  },
+  "BLANCOS, OS||OURENSE": {
+    "lat": 42.0150092,
+    "lng": -7.7393786
+  },
+  "RAIRIZ DE VEIGA||OURENSE": {
+    "lat": 42.0908329,
+    "lng": -7.8562861
+  },
+  "PADRENDA||OURENSE": {
+    "lat": 42.119224,
+    "lng": -8.1557789
+  },
+  "VEREA||OURENSE": {
+    "lat": 42.1000133,
+    "lng": -7.9836179
+  },
+  "LOBIOS||OURENSE": {
+    "lat": 41.9039062,
+    "lng": -8.0599771
+  },
+  "CORTEGADA||OURENSE": {
+    "lat": 42.212191,
+    "lng": -8.1534834
+  },
+  "CHANDREXA DE QUEIXA||OURENSE": {
+    "lat": 42.2592799,
+    "lng": -7.3776155
+  },
+  "CASTRO CALDELAS||OURENSE": {
+    "lat": 42.3725684,
+    "lng": -7.3990415
+  },
+  "VEIGA, A||OURENSE": {
+    "lat": 42.1378213,
+    "lng": -7.9300289
+  },
+  "BARCO DE VALDEORRAS, O||OURENSE": {
+    "lat": 42.4172173,
+    "lng": -6.984035
+  },
+  "ALLER||ASTURIAS": {
+    "lat": 43.1060162,
+    "lng": -5.5808161
+  },
+  "ALLANDE||ASTURIAS": {
+    "lat": 43.2372182,
+    "lng": -6.688504
+  },
+  "VALDÉS||ASTURIAS": {
+    "lat": 43.4847858,
+    "lng": -6.4693693
+  },
+  "TINEO||ASTURIAS": {
+    "lat": 43.333974,
+    "lng": -6.4165462
+  },
+  "BOAL||ASTURIAS": {
+    "lat": 43.4102403,
+    "lng": -6.8351539
+  },
+  "VILLAYÓN||ASTURIAS": {
+    "lat": 43.4086693,
+    "lng": -6.7003867
+  },
+  "CARREÑO||ASTURIAS": {
+    "lat": 43.5517905,
+    "lng": -5.7894013
+  },
+  "CERVERA DE PISUERGA||PALENCIA": {
+    "lat": 42.8635509,
+    "lng": -4.4972234
+  },
+  "RESPENDA DE LA PEÑA||PALENCIA": {
+    "lat": 42.7652208,
+    "lng": -4.6860529
+  },
+  "PONTEAREAS||PONTEVEDRA": {
+    "lat": 42.1886579,
+    "lng": -8.5054515
+  },
+  "MONDARIZ||PONTEVEDRA": {
+    "lat": 42.2390491,
+    "lng": -8.4532251
+  },
+  "COVELO||PONTEVEDRA": {
+    "lat": 42.2683939,
+    "lng": -8.3527426
+  },
+  "ARBO||PONTEVEDRA": {
+    "lat": 42.1201334,
+    "lng": -8.3182402
+  },
+  "CAÑIZA, A||PONTEVEDRA": {
+    "lat": 42.2158506,
+    "lng": -8.2790051
+  },
+  "CANGAS||PONTEVEDRA": {
+    "lat": 42.7448038,
+    "lng": -8.0871131
+  },
+  "VILABOA||PONTEVEDRA": {
+    "lat": 42.3433945,
+    "lng": -8.6641497
+  },
+  "COTOBADE||PONTEVEDRA": {
+    "lat": 42.2205633,
+    "lng": -8.4931105
+  },
+  "PONTEVEDRA||PONTEVEDRA": {
+    "lat": 42.428065,
+    "lng": -8.6041447
+  },
+  "ROSAL, O||PONTEVEDRA": {
+    "lat": 41.936719,
+    "lng": -8.8256755
+  },
+  "RODEIRO||PONTEVEDRA": {
+    "lat": 42.6534859,
+    "lng": -7.9387885
+  },
+  "AGOLADA||PONTEVEDRA": {
+    "lat": 42.7780351,
+    "lng": -8.047489
+  },
+  "VICTORIA DE ACENTEJO, LA||S.C. TENERIFE": {
+    "lat": 28.4417055,
+    "lng": -16.4654233
+  },
+  "REALEJOS, LOS||S.C. TENERIFE": {
+    "lat": 28.3816256,
+    "lng": -16.5839772
+  },
+  "TUDANCA||CANTABRIA": {
+    "lat": 43.15226,
+    "lng": -4.3728
+  },
+  "RIONANSA||CANTABRIA": {
+    "lat": 43.2195449,
+    "lng": -4.3955368
+  },
+  "CABUÉRNIGA||CANTABRIA": {
+    "lat": 43.2064824,
+    "lng": -4.3050679
+  },
+  "TOJOS, LOS||CANTABRIA": {
+    "lat": 43.1532969,
+    "lng": -4.2571942
+  },
+  "MADROÑO, EL||SEVILLA": {
+    "lat": 37.9488654,
+    "lng": -5.9471495
+  },
+  "CASTILLO DE LAS GUARDAS, EL||SEVILLA": {
+    "lat": 37.6912896,
+    "lng": -6.3208853
+  },
+  "AZNALCÓLLAR||SEVILLA": {
+    "lat": 37.5193459,
+    "lng": -6.2716793
+  },
+  "MONTMELL, EL||TARRAGONA": {
+    "lat": 41.3308478,
+    "lng": 1.4570373
+  },
+  "ESPADAÑEDO||ZAMORA": {
+    "lat": 42.1321752,
+    "lng": -6.4030953
+  },
+  "REQUEJO||ZAMORA": {
+    "lat": 42.0283353,
+    "lng": -6.7632719
+  },
+  "PALACIOS DE SANABRIA||ZAMORA": {
+    "lat": 42.0469229,
+    "lng": -6.5511691
+  },
+  "COBREROS||ZAMORA": {
+    "lat": 42.0671024,
+    "lng": -6.7066531
+  },
+  "LUBIAN||ZAMORA": {
+    "lat": 42.0548499,
+    "lng": -6.8943603
+  },
+  "HERMISENDE||ZAMORA": {
+    "lat": 41.9836681,
+    "lng": -6.9007805
+  },
+  "NAVALMORAL DE LA MATA||CACERES": {
+    "lat": 39.8928306,
+    "lng": -5.5401199
+  },
+  "SAN ROQUE||CADIZ": {
+    "lat": 36.2100586,
+    "lng": -5.3868293
+  },
+  "ALDEA DEL REY||CIUDAD REAL": {
+    "lat": 38.7380137,
+    "lng": -3.8391468
+  },
+  "TEO||A CORUÑA": {
+    "lat": 42.794435,
+    "lng": -8.5621856
+  },
+  "LAXE||A CORUÑA": {
+    "lat": 43.1924428,
+    "lng": -9.016891
+  },
+  "BAÑA, A||A CORUÑA": {
+    "lat": 42.96155,
+    "lng": -8.7534844
+  },
+  "RIELLO||LEON": {
+    "lat": 42.7734736,
+    "lng": -5.9449781
+  },
+  "BARRIOS DE LUNA LOS||LEON": {
+    "lat": 42.8836096,
+    "lng": -5.8783676
+  },
+  "BECERREÁ||LUGO": {
+    "lat": 42.8842655,
+    "lng": -7.143607
+  },
+  "BOLO, O||OURENSE": {
+    "lat": 42.3078799,
+    "lng": -7.095033
+  },
+  "POBRA DE TRIVES, A||OURENSE": {
+    "lat": 42.3405898,
+    "lng": -7.2547833
+  },
+  "OÍMBRA||OURENSE": {
+    "lat": 41.8741287,
+    "lng": -7.5231543
+  },
+  "VILARDEVÓS||OURENSE": {
+    "lat": 41.9163669,
+    "lng": -7.2948993
+  },
+  "MEZQUITA, A||OURENSE": {
+    "lat": 42.0444565,
+    "lng": -7.0192944
+  },
+  "CUALEDRO||OURENSE": {
+    "lat": 41.9768268,
+    "lng": -7.5833586
+  },
+  "MUIÑOS||OURENSE": {
+    "lat": 41.9368705,
+    "lng": -7.9800073
+  },
+  "TEIXEIRA, A||OURENSE": {
+    "lat": 42.3911832,
+    "lng": -7.472801
+  },
+  "SARREAUS||OURENSE": {
+    "lat": 42.0974335,
+    "lng": -7.5923779
+  },
+  "PARADA DE SIL||OURENSE": {
+    "lat": 42.361062,
+    "lng": -7.5642297
+  },
+  "SAN CRISTOVO DE CEA||OURENSE": {
+    "lat": 42.5009975,
+    "lng": -7.9415413
+  },
+  "ENTRIMO||OURENSE": {
+    "lat": 41.9537793,
+    "lng": -8.134253
+  },
+  "SALAS||ASTURIAS": {
+    "lat": 43.4109448,
+    "lng": -6.2315688
+  },
+  "CEREZAL DE PEÑAHORCADA||SALAMANCA": {
+    "lat": 41.1303953,
+    "lng": -6.6538463
+  },
+  "VOTO||CANTABRIA": {
+    "lat": 43.3467008,
+    "lng": -3.5109605
+  },
+  "LAMASÓN||CANTABRIA": {
+    "lat": 43.2200671,
+    "lng": -4.4872277
+  },
+  "ROZAS DE VALDEARROYO, LAS||CANTABRIA": {
+    "lat": 42.973621,
+    "lng": -4.0298526
+  },
+  "JUSTEL||ZAMORA": {
+    "lat": 42.1486268,
+    "lng": -6.2689401
+  },
+  "PEDRALBA DE LA PRADERIA||ZAMORA": {
+    "lat": 41.9913107,
+    "lng": -6.7065989
+  },
+  "PÍAS||ZAMORA": {
+    "lat": 42.0964669,
+    "lng": -6.9741223
+  },
+  "MUELAS DE LOS CABALLEROS||ZAMORA": {
+    "lat": 42.1492662,
+    "lng": -6.3440669
+  },
+  "CARRERA LA||AVILA": {
+    "lat": 40.3477767,
+    "lng": -5.5549706
+  },
+  "NAVALONGUILLA||AVILA": {
+    "lat": 40.2785512,
+    "lng": -5.500736
+  },
+  "MERINDAD DE VALDEPORRES||BURGOS": {
+    "lat": 43.0124136,
+    "lng": -3.7706887
+  },
+  "MERINDAD DE SOTOSCUEVA||BURGOS": {
+    "lat": 43.0374533,
+    "lng": -3.6287009
+  },
+  "FERROL||A CORUÑA": {
+    "lat": 43.5113053,
+    "lng": -8.2624767
+  },
+  "OROSO||A CORUÑA": {
+    "lat": 43.0000895,
+    "lng": -8.379909
+  },
+  "ROIS||A CORUÑA": {
+    "lat": 42.788576,
+    "lng": -8.7201919
+  },
+  "PASAIA||GUIPUZCOA": {
+    "lat": 43.3239952,
+    "lng": -1.9200587
+  },
+  "LUCILLO||LEON": {
+    "lat": 42.4094446,
+    "lng": -6.3027415
+  },
+  "PUENTE DE DOMINGO FLOREZ||LEON": {
+    "lat": 42.4202584,
+    "lng": -6.772208
+  },
+  "POLA DE GORDON LA||LEON": {
+    "lat": 42.8549828,
+    "lng": -5.6711735
+  },
+  "VALDELUGUEROS||LEON": {
+    "lat": 42.9779071,
+    "lng": -5.4172489
+  },
+  "CASTROCONTRIGO||LEON": {
+    "lat": 42.183727,
+    "lng": -6.1916204
+  },
+  "SOBER||LUGO": {
+    "lat": 42.4410063,
+    "lng": -7.5755184
+  },
+  "PORQUEIRA||OURENSE": {
+    "lat": 42.0249476,
+    "lng": -7.8402999
+  },
+  "BEARIZ||OURENSE": {
+    "lat": 42.4864858,
+    "lng": -8.2875733
+  },
+  "AVIÓN||OURENSE": {
+    "lat": 42.3873019,
+    "lng": -8.2655242
+  },
+  "VILAMARÍN||OURENSE": {
+    "lat": 42.4621348,
+    "lng": -7.8885167
+  },
+  "PADERNE DE ALLARIZ||OURENSE": {
+    "lat": 42.2737426,
+    "lng": -7.7463419
+  },
+  "OVIEDO||ASTURIAS": {
+    "lat": 43.3533452,
+    "lng": -5.8795096
+  },
+  "BELMONTE DE MIRANDA||ASTURIAS": {
+    "lat": 43.2730601,
+    "lng": -6.2613944
+  },
+  "CANGAS DEL NARCEA||ASTURIAS": {
+    "lat": 43.1161349,
+    "lng": -6.5646596
+  },
+  "DEGAÑA||ASTURIAS": {
+    "lat": 42.9447656,
+    "lng": -6.5431867
+  },
+  "IBIAS||ASTURIAS": {
+    "lat": 43.000135,
+    "lng": -6.821974
+  },
+  "NAVA||ASTURIAS": {
+    "lat": 43.3582544,
+    "lng": -5.5057607
+  },
+  "SIERO||ASTURIAS": {
+    "lat": 43.394024,
+    "lng": -5.6349173
+  },
+  "CABRALES||ASTURIAS": {
+    "lat": 43.2713716,
+    "lng": -4.8296951
+  },
+  "GIJÓN||ASTURIAS": {
+    "lat": 43.5449422,
+    "lng": -5.66275
+  },
+  "PESOZ||ASTURIAS": {
+    "lat": 43.2735627,
+    "lng": -6.861714
+  },
+  "CRECENTE||PONTEVEDRA": {
+    "lat": 42.1893623,
+    "lng": -8.1970656
+  },
+  "ALDEADAVILA DE LA RIBERA||SALAMANCA": {
+    "lat": 41.2185533,
+    "lng": -6.6197619
+  },
+  "HERMANDAD DE CAMPOO DE SUSO||CANTABRIA": {
+    "lat": 43.0335652,
+    "lng": -4.277964
+  },
+  "CAMPOO DE ENMEDIO||CANTABRIA": {
+    "lat": 43.0025933,
+    "lng": -4.1077467
+  },
+  "RASINES||CANTABRIA": {
+    "lat": 43.3068101,
+    "lng": -3.4261975
+  },
+  "VALDEPRADO DEL RÍO||CANTABRIA": {
+    "lat": 42.875519,
+    "lng": -4.0926302
+  },
+  "SAN PABLO DE LOS MONTES||TOLEDO": {
+    "lat": 39.5403833,
+    "lng": -4.3298383
+  },
+  "ROSINOS DE LA REQUEJADA||ZAMORA": {
+    "lat": 42.1312325,
+    "lng": -6.5116587
+  },
+  "CERNADILLA||ZAMORA": {
+    "lat": 42.0160946,
+    "lng": -6.4072583
+  },
+  "VILLARDECIERVOS||ZAMORA": {
+    "lat": 41.9415298,
+    "lng": -6.2975875
+  },
+  "MANZANAL DE ARRIBA||ZAMORA": {
+    "lat": 41.9702291,
+    "lng": -6.4430431
+  },
+  "MILLENA||ALICANTE": {
+    "lat": 38.7305669,
+    "lng": -0.3638185
+  },
+  "VELEFIQUE||ALMERIA": {
+    "lat": 37.1939294,
+    "lng": -2.4029018
+  },
+  "HORNILLO EL||AVILA": {
+    "lat": 40.250337,
+    "lng": -5.1037193
+  },
+  "OÑA||BURGOS": {
+    "lat": 42.7140206,
+    "lng": -3.3799034
+  },
+  "TORNAVACAS||CACERES": {
+    "lat": 40.2556866,
+    "lng": -5.6885137
+  },
+  "BENASAL||CASTELLON": {
+    "lat": 40.3796457,
+    "lng": -0.1422927
+  },
+  "MUROS||A CORUÑA": {
+    "lat": 42.79908,
+    "lng": -9.054745
+  },
+  "AMES||A CORUÑA": {
+    "lat": 42.8907624,
+    "lng": -8.6722375
+  },
+  "RIBEIRA||A CORUÑA": {
+    "lat": 42.5778204,
+    "lng": -9.0083426
+  },
+  "SIGÜENZA||GUADALAJARA": {
+    "lat": 41.0680324,
+    "lng": -2.6405659
+  },
+  "LEZO||GUIPUZCOA": {
+    "lat": 43.3273129,
+    "lng": -1.8802155
+  },
+  "ALOSNO||HUELVA": {
+    "lat": 37.5496719,
+    "lng": -7.115795
+  },
+  "VALDERRUEDA||LEON": {
+    "lat": 42.8244936,
+    "lng": -4.9807602
+  },
+  "TORENO||LEON": {
+    "lat": 42.7056632,
+    "lng": -6.5330433
+  },
+  "MURIAS DE PAREDES||LEON": {
+    "lat": 42.8502169,
+    "lng": -6.1912448
+  },
+  "OMAÑAS LAS||LEON": {
+    "lat": 42.6820104,
+    "lng": -5.8689876
+  },
+  "GUNTÍN||LUGO": {
+    "lat": 42.900644,
+    "lng": -7.6583307
+  },
+  "MONFORTE DE LEMOS||LUGO": {
+    "lat": 42.5105492,
+    "lng": -7.4875211
+  },
+  "QUIROGA||LUGO": {
+    "lat": 42.4658264,
+    "lng": -7.1849714
+  },
+  "CARBALLEDO||LUGO": {
+    "lat": 42.530768,
+    "lng": -7.8055203
+  },
+  "PALAS DE REI||LUGO": {
+    "lat": 42.8978229,
+    "lng": -7.8408123
+  },
+  "FOLGOSO DO COUREL||LUGO": {
+    "lat": 42.6164348,
+    "lng": -7.1485023
+  },
+  "INCIO, O||LUGO": {
+    "lat": 42.6533455,
+    "lng": -7.3653171
+  },
+  "MONTERROSO||LUGO": {
+    "lat": 42.806684,
+    "lng": -7.8168719
+  },
+  "RIBADAVIA||OURENSE": {
+    "lat": 42.2880044,
+    "lng": -8.1429521
+  },
+  "MANZANEDA||OURENSE": {
+    "lat": 42.2729555,
+    "lng": -7.2042469
+  },
+  "MONTERREI||OURENSE": {
+    "lat": 41.9488188,
+    "lng": -7.5058097
+  },
+  "VERÍN||OURENSE": {
+    "lat": 41.8954832,
+    "lng": -7.418129
+  },
+  "GUDIÑA, A||OURENSE": {
+    "lat": 42.0606543,
+    "lng": -7.1325071
+  },
+  "LOBEIRA||OURENSE": {
+    "lat": 42.0029828,
+    "lng": -8.0448022
+  },
+  "PIÑOR||OURENSE": {
+    "lat": 42.5233805,
+    "lng": -8.0246289
+  },
+  "AMOEIRO||OURENSE": {
+    "lat": 42.3927552,
+    "lng": -7.9565288
+  },
+  "LAROUCO||OURENSE": {
+    "lat": 42.359913,
+    "lng": -7.165319
+  },
+  "RIBADESELLA||ASTURIAS": {
+    "lat": 43.4456557,
+    "lng": -5.0835484
+  },
+  "SILLEDA||PONTEVEDRA": {
+    "lat": 42.6873638,
+    "lng": -8.2697931
+  },
+  "PONTE CALDELAS||PONTEVEDRA": {
+    "lat": 42.3837555,
+    "lng": -8.5168363
+  },
+  "LAMA, A||PONTEVEDRA": {
+    "lat": 42.445646,
+    "lng": -8.4036413
+  },
+  "FORCAREI||PONTEVEDRA": {
+    "lat": 42.5761413,
+    "lng": -8.3173768
+  },
+  "FORNELOS DE MONTES||PONTEVEDRA": {
+    "lat": 42.3278337,
+    "lng": -8.4353139
+  },
+  "SOUTOMAIOR||PONTEVEDRA": {
+    "lat": 42.3386253,
+    "lng": -8.5726276
+  },
+  "CERDEDO||PONTEVEDRA": {
+    "lat": 42.5503595,
+    "lng": -8.4072896
+  },
+  "ESTRADA, A||PONTEVEDRA": {
+    "lat": 42.1741006,
+    "lng": -8.5065713
+  },
+  "PAYO EL||SALAMANCA": {
+    "lat": 40.2858625,
+    "lng": -6.7274018
+  },
+  "PEREÑA DE LA RIBERA||SALAMANCA": {
+    "lat": 41.2394584,
+    "lng": -6.5233717
+  },
+  "SAUCELLE||SALAMANCA": {
+    "lat": 41.0481976,
+    "lng": -6.7513831
+  },
+  "BERMELLAR||SALAMANCA": {
+    "lat": 40.9994319,
+    "lng": -6.6710727
+  },
+  "ZARZA DE PUMAREDA LA||SALAMANCA": {
+    "lat": 41.1625985,
+    "lng": -6.6281923
+  },
+  "PASO, EL||S.C. TENERIFE": {
+    "lat": 40.0230734,
+    "lng": -1.2605264
+  },
+  "VILLA DE MAZO||S.C. TENERIFE": {
+    "lat": 28.5758899,
+    "lng": -17.7989146
+  },
+  "VILLAESCUSA||CANTABRIA": {
+    "lat": 43.3628514,
+    "lng": -3.864296
+  },
+  "PIÉLAGOS||CANTABRIA": {
+    "lat": 43.4024237,
+    "lng": -3.9515711
+  },
+  "SARO||CANTABRIA": {
+    "lat": 43.2598232,
+    "lng": -3.8424627
+  },
+  "RONQUILLO, EL||SEVILLA": {
+    "lat": 37.7297416,
+    "lng": -6.1751081
+  },
+  "BARX||VALENCIA": {
+    "lat": 39.0148124,
+    "lng": -0.302021
+  },
+  "GALENDE||ZAMORA": {
+    "lat": 42.1397915,
+    "lng": -6.7394256
+  },
+  "MUGA DE SAYAGO||ZAMORA": {
+    "lat": 41.387433,
+    "lng": -6.1983931
+  },
+  "PUEBLA DE SANABRIA||ZAMORA": {
+    "lat": 42.0201875,
+    "lng": -6.6011789
+  },
+  "RELLEU||ALICANTE": {
+    "lat": 38.5874435,
+    "lng": -0.3111354
+  },
+  "XÀBIA/JÁVEA||ALICANTE": {
+    "lat": 38.7893804,
+    "lng": 0.1634168
+  },
+  "BÉDAR||ALMERIA": {
+    "lat": 37.1909576,
+    "lng": -1.9806488
+  },
+  "MOMBELTRAN||AVILA": {
+    "lat": 40.2594639,
+    "lng": -5.0167649
+  },
+  "OTRA PROVINCIA||BURGOS": {
+    "lat": 42.3463473,
+    "lng": -3.6882879
+  },
+  "IGUEÑA||LEON": {
+    "lat": 42.7283798,
+    "lng": -6.2769782
+  },
+  "VAL DE SAN LORENZO||LEON": {
+    "lat": 42.4166478,
+    "lng": -6.1207377
+  },
+  "MOLINASECA||LEON": {
+    "lat": 42.5378376,
+    "lng": -6.5204633
+  },
+  "CASTROCALBON||LEON": {
+    "lat": 42.1953893,
+    "lng": -5.9799674
+  },
+  "PALACIOS DEL SIL||LEON": {
+    "lat": 42.8760994,
+    "lng": -6.4315336
+  },
+  "TRABADELO||LEON": {
+    "lat": 42.6550434,
+    "lng": -6.8548383
+  },
+  "OJÉN||MALAGA": {
+    "lat": 36.5645156,
+    "lng": -4.8565007
+  },
+  "GRADO||ASTURIAS": {
+    "lat": 43.2980596,
+    "lng": -6.1471901
+  },
+  "VILLARINO DE LOS AIRES||SALAMANCA": {
+    "lat": 41.2702654,
+    "lng": -6.4681957
+  },
+  "MONSAGRO||SALAMANCA": {
+    "lat": 40.5036793,
+    "lng": -6.2711505
+  },
+  "ARREDONDO||CANTABRIA": {
+    "lat": 43.2682082,
+    "lng": -3.6371446
+  },
+  "OTERO DE BODAS||ZAMORA": {
+    "lat": 41.9379897,
+    "lng": -6.1505683
+  },
+  "S JUSTO||ZAMORA": {
+    "lat": 42.1607213,
+    "lng": -6.6214177
+  },
+  "FONFRIA||ZAMORA": {
+    "lat": 41.6417666,
+    "lng": -6.1709655
+  },
+  "ALMANSA||ALBACETE": {
+    "lat": 38.8682065,
+    "lng": -1.0978627
+  },
+  "PLANES||ALICANTE": {
+    "lat": 38.7851609,
+    "lng": -0.3435236
+  },
+  "S ESTEBAN DEL VALLE||AVILA": {
+    "lat": 40.273668,
+    "lng": -4.98058
+  },
+  "PEDRO BERNARDO||AVILA": {
+    "lat": 40.2439312,
+    "lng": -4.9108472
+  },
+  "NAVAHONDILLA||AVILA": {
+    "lat": 40.3255013,
+    "lng": -4.4933129
+  },
+  "MEDINA DE POMAR||BURGOS": {
+    "lat": 42.9322092,
+    "lng": -3.4861165
+  },
+  "BOZOO||BURGOS": {
+    "lat": 42.739017,
+    "lng": -3.0953274
+  },
+  "PINOFRANQUEADO||CACERES": {
+    "lat": 40.3017563,
+    "lng": -6.3326162
+  },
+  "TRUJILLO||CACERES": {
+    "lat": 39.4605657,
+    "lng": -5.8816626
+  },
+  "BELMEZ||CORDOBA": {
+    "lat": 38.272413,
+    "lng": -5.2078919
+  },
+  "VALDEPIELAGO||LEON": {
+    "lat": 42.8707271,
+    "lng": -5.4002622
+  },
+  "VILLABLINO||LEON": {
+    "lat": 42.9388713,
+    "lng": -6.3183421
+  },
+  "OENCIA||LEON": {
+    "lat": 42.5424118,
+    "lng": -6.9897387
+  },
+  "STA MARIA DE ORDAS||LEON": {
+    "lat": 42.7269256,
+    "lng": -5.822626
+  },
+  "FOLGOSO DE LA RIBERA||LEON": {
+    "lat": 42.6437299,
+    "lng": -6.3195105
+  },
+  "TRUCHAS||LEON": {
+    "lat": 42.2856851,
+    "lng": -6.3775157
+  },
+  "BALBOA||LEON": {
+    "lat": 42.7101716,
+    "lng": -6.9147203
+  },
+  "VILLAMANÍN||LEON": {
+    "lat": 42.9832524,
+    "lng": -5.6950756
+  },
+  "NAVAS DEL REY||MADRID": {
+    "lat": 40.3863666,
+    "lng": -4.2508402
+  },
+  "GRANDAS DE SALIME||ASTURIAS": {
+    "lat": 43.1880725,
+    "lng": -6.9186966
+  },
+  "REGUERAS, LAS||ASTURIAS": {
+    "lat": 43.5578824,
+    "lng": -5.9265775
+  },
+  "TEVERGA||ASTURIAS": {
+    "lat": 43.1445043,
+    "lng": -6.1150972
+  },
+  "SAN BARTOLOMÉ DE TIRAJANA||LAS PALMAS": {
+    "lat": 27.849902,
+    "lng": -15.5879004
+  },
+  "AGALLAS||SALAMANCA": {
+    "lat": 40.4489784,
+    "lng": -6.4414485
+  },
+  "HINOJOSA DE DUERO||SALAMANCA": {
+    "lat": 40.9859156,
+    "lng": -6.7956914
+  },
+  "VILLAR DE CIERVO||SALAMANCA": {
+    "lat": 40.7377372,
+    "lng": -6.7390982
+  },
+  "SOBRADILLO||SALAMANCA": {
+    "lat": 40.9175505,
+    "lng": -6.7988431
+  },
+  "MIEZA||SALAMANCA": {
+    "lat": 41.1629627,
+    "lng": -6.6902782
+  },
+  "BEJAR||SALAMANCA": {
+    "lat": 40.3865812,
+    "lng": -5.7649619
+  },
+  "SELAYA||CANTABRIA": {
+    "lat": 43.216694,
+    "lng": -3.806861
+  },
+  "VILLACARRIEDO||CANTABRIA": {
+    "lat": 43.2306206,
+    "lng": -3.8049489
+  },
+  "SIMAT LA VALLDIGNA||VALENCIA": {
+    "lat": 39.0435012,
+    "lng": -0.3114531
+  },
+  "CHIVA||VALENCIA": {
+    "lat": 39.4726098,
+    "lng": -0.7178348
+  },
+  "ROBLEDA-CERVANTES||ZAMORA": {
+    "lat": 42.0770336,
+    "lng": -6.5875744
+  },
+  "PORTO||ZAMORA": {
+    "lat": 42.1553614,
+    "lng": -6.8651279
+  },
+  "TRABAZOS||ZAMORA": {
+    "lat": 41.735182,
+    "lng": -6.5156644
+  },
+  "MORAL DE SAYAGO||ZAMORA": {
+    "lat": 41.4725316,
+    "lng": -6.1010812
+  },
+  "FERMOSELLE||ZAMORA": {
+    "lat": 41.3174146,
+    "lng": -6.3949234
+  },
+  "MOMBUEY||ZAMORA": {
+    "lat": 42.0094932,
+    "lng": -6.3223507
+  },
+  "MORAL DE CALATRAVA||CIUDAD REAL": {
+    "lat": 38.8293937,
+    "lng": -3.5793395
+  },
+  "ARNEDILLO||LA RIOJA": {
+    "lat": 42.2157979,
+    "lng": -2.243677
+  },
+  "BARRUECOPARDO||SALAMANCA": {
+    "lat": 41.0725456,
+    "lng": -6.6662383
+  },
+  "S ESTEBAN DE LA SIERRA||SALAMANCA": {
+    "lat": 40.506534,
+    "lng": -5.9061444
+  },
+  "MILANO EL||SALAMANCA": {
+    "lat": 41.0923837,
+    "lng": -6.5984217
+  },
+  "TEJADO EL||SALAMANCA": {
+    "lat": 40.4426592,
+    "lng": -5.5388481
+  },
+  "AHIGAL DE LOS ACEITEROS||SALAMANCA": {
+    "lat": 40.8724904,
+    "lng": -6.7462417
+  },
+  "GUANCHA, LA||S.C. TENERIFE": {
+    "lat": 28.3738326,
+    "lng": -16.6515762
+  },
+  "MUELAS DEL PAN||ZAMORA": {
+    "lat": 41.5223667,
+    "lng": -5.9684562
+  },
+  "TABARA||ZAMORA": {
+    "lat": 41.8248097,
+    "lng": -5.9593227
+  },
+  "VILLALCAMPO||ZAMORA": {
+    "lat": 41.5232468,
+    "lng": -6.0460899
+  },
+  "BENIGEMBLA||ALICANTE": {
+    "lat": 38.7540842,
+    "lng": -0.1097443
+  },
+  "CALLOSA D'EN SARRIÁ||ALICANTE": {
+    "lat": 38.6513893,
+    "lng": -0.1225274
+  },
+  "NUÑOMORAL||CACERES": {
+    "lat": 40.4089198,
+    "lng": -6.2446212
+  },
+  "COLLADO||CACERES": {
+    "lat": 40.0573294,
+    "lng": -5.7209445
+  },
+  "CALZADA DE CALATRAVA||CIUDAD REAL": {
+    "lat": 38.7043087,
+    "lng": -3.7766972
+  },
+  "QUINTANA DEL CASTILLO||LEON": {
+    "lat": 42.6609431,
+    "lng": -6.0467428
+  },
+  "MAGAZ DE CEPEDA||LEON": {
+    "lat": 42.5398947,
+    "lng": -6.0740882
+  },
+  "BAZTAN||NAVARRA": {
+    "lat": 43.1628957,
+    "lng": -1.4935352
+  },
+  "ITUREN||NAVARRA": {
+    "lat": 43.1288633,
+    "lng": -1.7073185
+  },
+  "DONEZTEBE/SANTESTEBAN||NAVARRA": {
+    "lat": 43.1314091,
+    "lng": -1.6690844
+  },
+  "LLANES||ASTURIAS": {
+    "lat": 43.4211205,
+    "lng": -4.7530835
+  },
+  "FUENTES DE BEJAR||SALAMANCA": {
+    "lat": 40.5091667,
+    "lng": -5.6916642
+  },
+  "PESQUERA||CANTABRIA": {
+    "lat": 43.0820241,
+    "lng": -4.0789718
+  },
+  "SAN VICENTE DE LA BARQUERA||CANTABRIA": {
+    "lat": 43.38318,
+    "lng": -4.40027
+  },
+  "VEGA DE PAS||CANTABRIA": {
+    "lat": 43.1585436,
+    "lng": -3.7821043
+  },
+  "VALDÁLIGA||CANTABRIA": {
+    "lat": 43.3301421,
+    "lng": -4.3518153
+  },
+  "GALDAMES||VIZCAYA": {
+    "lat": 43.2541103,
+    "lng": -3.097637
+  },
+  "STA EUFEMIA DEL BARCO||ZAMORA": {
+    "lat": 41.6771943,
+    "lng": -5.8984013
+  },
+  "PORTUGAL||ZAMORA": {
+    "lat": 41.9446774,
+    "lng": -5.476792
+  },
+  "MAHIDE||ZAMORA": {
+    "lat": 41.8817624,
+    "lng": -6.3385541
+  },
+  "VILLAR DEL BUEY||ZAMORA": {
+    "lat": 41.3280793,
+    "lng": -6.1874419
+  },
+  "BURGOHONDO||AVILA": {
+    "lat": 40.414358,
+    "lng": -4.785769
+  },
+  "CAMPANARIO||BADAJOZ": {
+    "lat": 38.8633863,
+    "lng": -5.6180261
+  },
+  "FONTANAREJO||CIUDAD REAL": {
+    "lat": 39.2194954,
+    "lng": -4.5164688
+  },
+  "NAVALPINO||CIUDAD REAL": {
+    "lat": 39.2256128,
+    "lng": -4.5907981
+  },
+  "SACERUELA||CIUDAD REAL": {
+    "lat": 38.9434102,
+    "lng": -4.6083053
+  },
+  "ORDIZIA||GUIPUZCOA": {
+    "lat": 43.0539687,
+    "lng": -2.1795046
+  },
+  "VALVERDE DEL CAMINO||HUELVA": {
+    "lat": 37.5739612,
+    "lng": -6.7543559
+  },
+  "TORREFETA I FLOREJACS||LLEIDA": {
+    "lat": 41.7787656,
+    "lng": 1.2473908
+  },
+  "CEPEDA||SALAMANCA": {
+    "lat": 40.4651479,
+    "lng": -6.0407743
+  },
+  "FRONTERA||S.C. TENERIFE": {
+    "lat": 28.47478,
+    "lng": -16.4194881
+  },
+  "TORREGAMONES||ZAMORA": {
+    "lat": 41.4881346,
+    "lng": -6.1785457
+  },
+  "OLIVENZA||BADAJOZ": {
+    "lat": 38.6854813,
+    "lng": -7.0995738
+  },
+  "NAVAMORCUENDE||TOLEDO": {
+    "lat": 40.1560188,
+    "lng": -4.7865619
+  },
+  "TORRE DE LES MAÇANES, LA||ALICANTE": {
+    "lat": 38.6097541,
+    "lng": -0.4200047
+  },
+  "ALMANZA||LEON": {
+    "lat": 42.6581453,
+    "lng": -5.0361457
+  },
+  "GALLIPIENZO/GALIPENTZU||NAVARRA": {
+    "lat": 42.5243351,
+    "lng": -1.4100849
+  },
+  "GUIRGUILLANO||NAVARRA": {
+    "lat": 42.7224994,
+    "lng": -1.8678902
+  },
+  "JUSLAPEÑA||NAVARRA": {
+    "lat": 42.8983415,
+    "lng": -1.7018168
+  },
+  "SANTA EULALIA DE OSCOS||ASTURIAS": {
+    "lat": 43.2586817,
+    "lng": -7.0278744
+  },
+  "AMIEVA||ASTURIAS": {
+    "lat": 43.2450993,
+    "lng": -5.0730662
+  },
+  "VALLESECO||LAS PALMAS": {
+    "lat": 28.0451607,
+    "lng": -15.5825755
+  },
+  "FINESTRAT||ALICANTE": {
+    "lat": 38.5679236,
+    "lng": -0.2122319
+  },
+  "TORNADIZOS DE AVILA||AVILA": {
+    "lat": 40.6260978,
+    "lng": -4.6132023
+  },
+  "LOUSAME||A CORUÑA": {
+    "lat": 42.7733607,
+    "lng": -8.8329571
+  },
+  "CABRANES||ASTURIAS": {
+    "lat": 43.4071699,
+    "lng": -5.4239343
+  },
+  "PILOÑA||ASTURIAS": {
+    "lat": 43.3340915,
+    "lng": -5.331035
+  },
+  "VEGALATRAVE||ZAMORA": {
+    "lat": 41.701499,
+    "lng": -6.1070496
+  },
+  "RIOFRIO DE ALISTE||ZAMORA": {
+    "lat": 41.8307552,
+    "lng": -6.1601627
+  },
+  "SOBA||CANTABRIA": {
+    "lat": 43.1915054,
+    "lng": -3.5623672
+  },
+  "RUESGA||CANTABRIA": {
+    "lat": 43.2949477,
+    "lng": -3.5375132
+  },
+  "NAVALPERAL DE TORMES||AVILA": {
+    "lat": 40.3527558,
+    "lng": -5.301196
+  },
+  "MIERA||CANTABRIA": {
+    "lat": 43.2754402,
+    "lng": -3.7126373
+  },
+  "SANTA MARIA DE CAYÓN||CANTABRIA": {
+    "lat": 43.30976,
+    "lng": -3.85548
+  },
+  "OTRA PROVINCIA||CANTABRIA": {
+    "lat": 39.024241,
+    "lng": -5.6668481
+  },
+  "S EMILIANO||LEON": {
+    "lat": 42.9713176,
+    "lng": -6.0005184
+  },
+  "RIOTUERTO||CANTABRIA": {
+    "lat": 43.3326111,
+    "lng": -3.6961004
+  },
+  "PORTUGAL||OURENSE": {
+    "lat": 41.9842343,
+    "lng": -8.1574075
+  }
+}

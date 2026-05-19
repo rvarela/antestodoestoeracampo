@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { CASES } from "@/data/cases";
+import type { CaseSummary } from "@/types/case";
 
 const MapboxMap = dynamic(() => import("./MapboxMap"), {
   ssr: false,
@@ -10,7 +10,7 @@ const MapboxMap = dynamic(() => import("./MapboxMap"), {
   ),
 });
 
-export default function MapHero() {
+export default function MapHero({ cases }: { cases: CaseSummary[] }) {
   return (
     <section
       className="relative w-full"
@@ -18,7 +18,7 @@ export default function MapHero() {
     >
       {/* Mapbox map — fills the entire section */}
       <div className="absolute inset-0">
-        <MapboxMap />
+        <MapboxMap cases={cases} />
       </div>
 
       {/* Editorial headline — bottom-left floating panel */}
@@ -65,7 +65,7 @@ export default function MapHero() {
         style={{ backgroundColor: "var(--foreground)" }}
       >
         <span className="type-data text-[11px] md:text-[12px]" style={{ color: "white" }}>
-          {CASES.length} casos documentados
+          {cases.length} casos documentados
         </span>
       </div>
     </section>

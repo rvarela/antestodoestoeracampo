@@ -1,13 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { CASES, FILTERS, type Filter } from "@/data/cases";
+import { useState, useMemo } from "react";
+import type { CaseSummary } from "@/types/case";
 import CaseCard from "./CaseCard";
 
-export default function CasesSection() {
+type Filter = "Todos" | "Sentencia firme" | string;
+
+export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
   const [activeFilter, setActiveFilter] = useState<Filter>("Todos");
 
-  const filtered = CASES.filter((c) => {
+  // Build filter list dynamically from the data
+  const filters = useMemo<Filter[]>(() => {
+    const regions = [...new Set(cases.map((c) => c.region).filter(Boolean))].sort();
+    return ["Todos", "Sentencia firme", ...regions];
+  }, [cases]);
+
+  const filtered = cases.filter((c) => {
     if (activeFilter === "Todos") return true;
     if (activeFilter === "Sentencia firme") return c.status === "Sentencia firme";
     return c.region === activeFilter;
@@ -35,7 +43,7 @@ export default function CasesSection() {
 
       {/* Filter pills */}
       <div className="flex flex-wrap gap-2 mb-10">
-        {FILTERS.map((f) => {
+        {filters.map((f) => {
           const active = f === activeFilter;
           return (
             <button

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
+
+# Raw data files — too large for git
+scripts/data/*.csv
+scripts/data/geocode-log.txt

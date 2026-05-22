@@ -7,7 +7,7 @@ import type { CaseDetail } from "@/types/case";
 
 function heroImageUrl(c: CaseDetail): string | null {
   if (c.coverImage?.asset) {
-    return urlFor(c.coverImage).width(1800).height(900).fit("crop").auto("format").url();
+    return urlFor(c.coverImage).width(1280).height(720).fit("crop").auto("format").url();
   }
   if (c.coordinates) {
     const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -17,7 +17,7 @@ function heroImageUrl(c: CaseDetail): string | null {
       (Math.log(Math.max(1, ha)) - Math.log(100)) / (Math.log(200000) - Math.log(100))
     ));
     const zoom = Math.round(13 - t * 5);
-    return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/pin-l+C4622D(${lng},${lat})/${lng},${lat},${zoom}/1800x900?access_token=${token}`;
+    return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/pin-l+C4622D(${lng},${lat})/${lng},${lat},${zoom}/1280x720?access_token=${token}`;
   }
   return null;
 }
@@ -28,7 +28,6 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
     target: ref,
     offset: ["start start", "end start"],
   });
-  // Image moves at 40% of scroll speed — classic parallax
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
 
   const imageUrl = heroImageUrl(c);
@@ -37,46 +36,63 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
   return (
     <div
       ref={ref}
-      className="relative w-full overflow-hidden"
-      style={{ height: "80svh", minHeight: 480 }}
+      style={{
+        position: "relative",
+        width: "100%",
+        height: "80svh",
+        minHeight: 480,
+        overflow: "hidden",
+        backgroundColor: c.accentColor ?? "#2D4A3E",
+      }}
     >
-      {/* Parallax image layer */}
-      {imageUrl ? (
+      {/* Parallax image layer — oversized vertically so it has room to travel */}
+      {imageUrl && (
         <motion.div
-          className="absolute inset-0 w-full"
-          style={{ y, height: "140%", top: "-20%" }}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: "-20%",
+            height: "140%",
+            y,
+          }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={imageUrl}
             alt={c.coverImage?.alt ?? `Vista satélite — ${c.title}`}
-            className="w-full h-full object-cover"
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
           />
         </motion.div>
-      ) : (
-        // No image — solid dark background
-        <div
-          className="absolute inset-0"
-          style={{ backgroundColor: c.accentColor ?? "var(--forest)" }}
-        />
       )}
 
-      {/* Gradient overlay — heavy at bottom for text legibility */}
+      {/* Gradient overlay */}
       <div
-        className="absolute inset-0"
         style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.35) 40%, rgba(0,0,0,0.05) 100%)",
+          position: "absolute",
+          inset: 0,
+          background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.08) 100%)",
         }}
       />
 
-      {/* Text content — anchored bottom-left */}
-      <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-12 pb-10 md:pb-14">
+      {/* Text — bottom-left */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          padding: "clamp(24px, 5vw, 56px)",
+          paddingBottom: "clamp(32px, 5vw, 56px)",
+        }}
+      >
         {/* Eyebrow */}
         <p
-          className="type-label mb-4"
-          style={{ color: "rgba(255,255,255,0.65)", fontSize: "11px", letterSpacing: "1.5px" }}
+          className="type-label"
+          style={{ color: "rgba(255,255,255,0.6)", fontSize: "11px", letterSpacing: "1.5px", marginBottom: 16 }}
         >
-          {c.region} · {c.municipality} · {c.year}
+          {[c.region, c.municipality, c.year].filter(Boolean).join(" · ")}
         </p>
 
         {/* Title */}
@@ -89,22 +105,27 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
             fontWeight: 400,
             color: "#fff",
             maxWidth: "18ch",
-            textShadow: "0 2px 12px rgba(0,0,0,0.3)",
+            textShadow: "0 2px 16px rgba(0,0,0,0.4)",
+            margin: 0,
           }}
         >
           {c.title}
         </h1>
 
         {/* Status pill + hectares */}
-        <div className="flex flex-wrap items-center gap-3 mt-5">
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 12, marginTop: 20 }}>
           <span
-            className="inline-flex items-center px-3 py-1 rounded-full type-label"
+            className="type-label"
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              padding: "4px 12px",
+              borderRadius: 999,
               fontSize: "10px",
               backgroundColor: isConvicted ? "var(--accent)" : "rgba(255,255,255,0.15)",
               color: "#fff",
               border: isConvicted ? "none" : "1px solid rgba(255,255,255,0.3)",
-              backdropFilter: "blur(4px)",
+              backdropFilter: "blur(6px)",
             }}
           >
             {c.status}
@@ -112,7 +133,7 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
           {c.hectares && (
             <span
               className="type-data"
-              style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px" }}
+              style={{ color: "rgba(255,255,255,0.65)", fontSize: "13px" }}
             >
               {c.hectares.toLocaleString("es-ES")} ha calcinadas
             </span>

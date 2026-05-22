@@ -45,11 +45,11 @@ export default async function CasePage({
     <>
       <Navigation />
 
-      <main
-        className="pt-[52px] md:pt-16"
-        style={{ backgroundColor: "var(--background)" }}
-      >
-        {/* Back link */}
+      <main style={{ backgroundColor: "var(--background)" }}>
+        {/* Full-bleed hero — sits behind the fixed nav */}
+        <CaseHero case_={case_} />
+
+        {/* Back link — below hero */}
         <div className="px-6 md:px-12 pt-8">
           <Link
             href="/"
@@ -59,9 +59,6 @@ export default async function CasePage({
             ← Todos los casos
           </Link>
         </div>
-
-        {/* Hero */}
-        <CaseHero case_={case_} />
 
         {/* Overview — Portable Text */}
         {case_.overview && case_.overview.length > 0 && (

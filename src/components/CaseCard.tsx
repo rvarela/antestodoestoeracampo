@@ -43,6 +43,7 @@ export default function CaseCard({ case_: c }: CaseCardProps) {
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            unoptimized={imageUrl.includes("mapbox.com")}
           />
         )}
         {/* Gradient overlay so year label stays readable over images */}

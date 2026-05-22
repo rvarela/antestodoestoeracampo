@@ -66,12 +66,12 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
         </motion.div>
       )}
 
-      {/* Gradient overlay */}
+      {/* Gradient overlay — heavy bottom for text, soft top for nav */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          background: "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.08) 100%)",
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, transparent 28%), linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.2) 45%, transparent 70%)",
         }}
       />
 

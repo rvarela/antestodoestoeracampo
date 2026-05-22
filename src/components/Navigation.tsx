@@ -16,6 +16,10 @@ export default function Navigation() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  // Case detail pages have a dark satellite hero — use light nav until scrolled
+  const onDarkHero = pathname.startsWith("/casos/") && pathname !== "/casos";
+  const lightNav = onDarkHero && !scrolled;
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -38,8 +42,8 @@ export default function Navigation() {
           {/* Logo */}
           <Link
             href="/"
-            className="type-data text-[11px] md:text-[13px] tracking-tight"
-            style={{ color: "var(--foreground)" }}
+            className="type-data text-[11px] md:text-[13px] tracking-tight transition-colors duration-300"
+            style={{ color: lightNav ? "rgba(255,255,255,0.9)" : "var(--foreground)" }}
           >
             antestodoestoeracampo.es
           </Link>
@@ -50,9 +54,11 @@ export default function Navigation() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="type-small transition-colors duration-150"
+                  className="type-small transition-colors duration-300"
                   style={{
-                    color: pathname === link.href ? "var(--foreground)" : "var(--muted)",
+                    color: lightNav
+                      ? pathname === link.href ? "#fff" : "rgba(255,255,255,0.6)"
+                      : pathname === link.href ? "var(--foreground)" : "var(--muted)",
                   }}
                 >
                   {link.label}
@@ -67,27 +73,21 @@ export default function Navigation() {
             onClick={() => setMenuOpen((o) => !o)}
             aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
           >
-            <span
-              className="block w-5 h-px transition-all duration-200"
-              style={{
-                backgroundColor: "var(--foreground)",
-                transform: menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none",
-              }}
-            />
-            <span
-              className="block w-5 h-px transition-all duration-200"
-              style={{
-                backgroundColor: "var(--foreground)",
-                opacity: menuOpen ? 0 : 1,
-              }}
-            />
-            <span
-              className="block w-5 h-px transition-all duration-200"
-              style={{
-                backgroundColor: "var(--foreground)",
-                transform: menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none",
-              }}
-            />
+            {[
+              menuOpen ? "rotate(45deg) translate(4px, 4px)" : "none",
+              "none",
+              menuOpen ? "rotate(-45deg) translate(4px, -4px)" : "none",
+            ].map((transform, i) => (
+              <span
+                key={i}
+                className="block w-5 h-px transition-all duration-200"
+                style={{
+                  backgroundColor: lightNav ? "rgba(255,255,255,0.9)" : "var(--foreground)",
+                  transform,
+                  opacity: i === 1 && menuOpen ? 0 : 1,
+                }}
+              />
+            ))}
           </button>
         </nav>
       </header>

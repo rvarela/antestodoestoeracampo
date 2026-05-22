@@ -10,7 +10,10 @@
     "seed:egif": "tsx scripts/seed-from-egif.ts",
     "geocode:municipalities": "tsx scripts/geocode-municipalities.ts",
     "import:cases": "tsx scripts/import-case-data.ts",
-    "enrich:catastro": "tsx scripts/enrich-from-catastro.ts"
+    "enrich:catastro": "tsx scripts/enrich-from-catastro.ts",
+    "patch:catastro": "tsx scripts/patch-catastro-to-sanity.ts",
+    "publish:cases": "tsx scripts/publish-cases.ts",
+    "images:satellite": "tsx scripts/add-satellite-images.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

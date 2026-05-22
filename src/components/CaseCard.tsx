@@ -7,10 +7,22 @@ interface CaseCardProps {
   case_: CaseSummary;
 }
 
+function satelliteUrl(lat: number, lng: number, hectares: number): string {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+  // Log scale zoom: 100ha → 13, 200 000ha → 8
+  const t = Math.max(0, Math.min(1,
+    (Math.log(Math.max(1, hectares)) - Math.log(100)) / (Math.log(200000) - Math.log(100))
+  ));
+  const zoom = Math.round(13 - t * 5);
+  return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/pin-l+C4622D(${lng},${lat})/${lng},${lat},${zoom}/1200x630?access_token=${token}`;
+}
+
 export default function CaseCard({ case_: c }: CaseCardProps) {
   const isConvicted = c.status === "Sentencia firme";
   const imageUrl = c.coverImage?.asset
     ? urlFor(c.coverImage).width(800).height(416).fit("crop").auto("format").url()
+    : c.coordinates
+    ? satelliteUrl(c.coordinates.lat, c.coordinates.lng, c.hectares)
     : null;
 
   return (

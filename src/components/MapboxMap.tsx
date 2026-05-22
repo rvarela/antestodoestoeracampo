@@ -56,12 +56,9 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
     map.on("load", () => {
       // Apply editorial colour overrides
       STYLE_OVERRIDES.forEach(([layer, prop, value]) => {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          map.setPaintProperty(layer, prop as any, value);
-        } catch {
-          // Layer may not exist in this style version — skip silently
-        }
+        if (!map.getLayer(layer)) return;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        map.setPaintProperty(layer, prop as any, value);
       });
 
       // Add case markers (only cases with coordinates)

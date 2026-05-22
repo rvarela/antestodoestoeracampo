@@ -18,6 +18,15 @@ const STYLE_OVERRIDES: Array<[string, string, string]> = [
   ["admin-0-boundary",    "line-color",   "#B0B0AC"],
 ];
 
+// Log scale: 100ha → 8px, 100 000ha → 32px
+function pinSize(hectares: number): number {
+  const minPx = 8, maxPx = 32;
+  const t = Math.max(0, Math.min(1,
+    (Math.log(Math.max(1, hectares)) - Math.log(100)) / (Math.log(100000) - Math.log(100))
+  ));
+  return Math.round(minPx + t * (maxPx - minPx));
+}
+
 export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -57,12 +66,15 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
 
       // Add case markers (only cases with coordinates)
       cases.filter(c => c.coordinates).forEach((c) => {
+        const size = pinSize(c.hectares);
+        const ringInset = Math.round(size * 0.5);
+
         // Custom marker element
         const el = document.createElement("div");
         el.style.cssText = `
           position: relative;
-          width: 16px;
-          height: 16px;
+          width: ${size}px;
+          height: ${size}px;
           cursor: pointer;
         `;
 
@@ -70,7 +82,7 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         const ring = document.createElement("div");
         ring.style.cssText = `
           position: absolute;
-          inset: -8px;
+          inset: -${ringInset}px;
           border-radius: 50%;
           border: 1.5px solid ${c.accentColor}55;
           pointer-events: none;
@@ -80,8 +92,8 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         // Dot
         const dot = document.createElement("div");
         dot.style.cssText = `
-          width: 16px;
-          height: 16px;
+          width: ${size}px;
+          height: ${size}px;
           border-radius: 50%;
           background: ${c.accentColor};
           border: 2px solid white;
@@ -94,7 +106,7 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         el.addEventListener("mouseleave", () => { dot.style.transform = "scale(1)"; });
 
         const popup = new mapboxgl.Popup({
-          offset: 14,
+          offset: size / 2 + 6,
           closeButton: false,
           maxWidth: "260px",
           className: "antes-popup",

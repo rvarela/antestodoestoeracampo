@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { JudicialEvent, JudicialResult } from "@/types/case";
 
 const RESULT_LABELS: Record<JudicialResult, string> = {
@@ -20,13 +23,27 @@ export default function CaseJudicial({ events }: { events: JudicialEvent[] }) {
       className="px-6 md:px-12 py-12 md:py-16"
       style={{ borderTop: "1px solid var(--border)" }}
     >
-      <p className="type-label mb-8" style={{ color: "var(--muted)" }}>
+      <motion.p
+        className="type-label mb-8"
+        style={{ color: "var(--muted)" }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
         Historia judicial
-      </p>
+      </motion.p>
 
       <div className="flex flex-col gap-6 max-w-2xl">
         {events.map((e, i) => (
-          <div key={i} className="flex gap-5">
+          <motion.div
+            key={i}
+            className="flex gap-5"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+          >
             {/* Result indicator */}
             <div
               className="shrink-0 w-1 rounded-full"
@@ -66,7 +83,7 @@ export default function CaseJudicial({ events }: { events: JudicialEvent[] }) {
                 </p>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

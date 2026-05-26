@@ -45,6 +45,7 @@ export interface Source {
   label: string;
   url?: string;
   type: SourceType;
+  note?: string;
 }
 
 // Lean version for list/map

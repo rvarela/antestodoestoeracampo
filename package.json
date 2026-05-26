@@ -13,7 +13,11 @@
     "enrich:catastro": "tsx scripts/enrich-from-catastro.ts",
     "patch:catastro": "tsx scripts/patch-catastro-to-sanity.ts",
     "publish:cases": "tsx scripts/publish-cases.ts",
-    "images:satellite": "tsx scripts/add-satellite-images.ts"
+    "images:satellite": "tsx scripts/add-satellite-images.ts",
+    "enrich:all": "tsx scripts/enrich-all-cases.ts",
+    "search:boe": "tsx scripts/search-boe.ts",
+    "research:kit": "tsx scripts/generate-research-kit.ts",
+    "research:seed": "tsx scripts/seed-research-links.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

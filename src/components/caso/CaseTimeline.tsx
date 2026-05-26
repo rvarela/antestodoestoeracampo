@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { TimelineEvent, EventType } from "@/types/case";
 
 const TYPE_LABELS: Record<EventType, string> = {
@@ -43,9 +46,16 @@ export default function CaseTimeline({
       className="px-6 md:px-12 py-12 md:py-16"
       style={{ borderTop: "1px solid var(--border)" }}
     >
-      <p className="type-label mb-8" style={{ color: "var(--muted)" }}>
+      <motion.p
+        className="type-label mb-8"
+        style={{ color: "var(--muted)" }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
         Cronología
-      </p>
+      </motion.p>
 
       <div className="relative max-w-2xl">
         {/* Vertical line */}
@@ -56,7 +66,14 @@ export default function CaseTimeline({
 
         <div className="flex flex-col gap-8">
           {events.map((event, i) => (
-            <div key={i} className="flex gap-6 pl-1">
+            <motion.div
+              key={i}
+              className="flex gap-6 pl-1"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+            >
               <EventDot type={event.type} />
 
               <div className="pb-2">
@@ -100,7 +117,7 @@ export default function CaseTimeline({
                   </p>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -244,6 +244,12 @@ export const caseType = defineType({
                 list: ["EGIF", "Catastro", "BOE", "Sentencia", "Prensa", "Otro"],
               },
             }),
+            defineField({
+              name: "note",
+              title: "Nota de verificación",
+              type: "string",
+              description: "Aviso interno — si se rellena, se muestra junto a la fuente como advertencia de verificación.",
+            }),
           ],
         },
       ],

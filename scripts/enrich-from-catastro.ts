@@ -104,9 +104,18 @@ async function queryParcels(
 
   const url = `https://ovc.catastro.meh.es/INSPIRE/wfsCP.aspx?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=CP:CadastralParcel&SRSNAME=EPSG:4326&BBOX=${bbox},urn:ogc:def:crs:EPSG::4326`;
 
-  const res = await fetch(url, {
-    headers: { "User-Agent": "antestodoestoeracampo.es/research (data@antestodoestoeracampo.es)" },
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 12000);
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: { "User-Agent": "antestodoestoeracampo.es/research (data@antestodoestoeracampo.es)" },
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
 
   if (!res.ok) throw new Error(`WFS error ${res.status}`);
   const xml = await res.text();
@@ -249,7 +258,9 @@ async function main() {
       console.log(`  ✓ ${label} — ${parcels.length} parcels, ${suspiciousParcels.length} suspicious${urbanCount ? ` (${urbanCount} urban)` : ""}${flag}`);
       queried++;
     } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
+      const msg = err instanceof Error
+        ? (err.name === "AbortError" ? "timeout (12s)" : err.message)
+        : String(err);
       console.error(`  ✗ ${label}: ${msg}`);
       errors++;
     }
@@ -259,7 +270,7 @@ async function main() {
       writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2), "utf-8");
     }
 
-    await sleep(600); // ~1.5 req/s — respectful of the public API
+    await sleep(1500); // ~0.65 req/s — conservative to avoid WAF rate limits
   }
 
   writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2), "utf-8");

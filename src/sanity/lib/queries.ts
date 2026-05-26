@@ -37,7 +37,7 @@ export const caseBySlugQuery = groq`
     timeline,
     connections,
     judicial,
-    sources,
+    sources[]{ label, url, type, note },
   }
 `;
 

@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import type { PoliticalConnection } from "@/types/case";
 
 export default function CaseConnections({
@@ -10,19 +13,30 @@ export default function CaseConnections({
       className="px-6 md:px-12 py-12 md:py-16"
       style={{ borderTop: "1px solid var(--border)" }}
     >
-      <p className="type-label mb-8" style={{ color: "var(--muted)" }}>
+      <motion.p
+        className="type-label mb-8"
+        style={{ color: "var(--muted)" }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4 }}
+      >
         Conexiones políticas
-      </p>
+      </motion.p>
 
       <div className="flex flex-col gap-4 max-w-2xl">
         {connections.map((c, i) => (
-          <div
+          <motion.div
             key={i}
             className="p-5 md:p-6 rounded-sm"
             style={{
               backgroundColor: "var(--surface)",
               borderLeft: "3px solid var(--muted)",
             }}
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.4, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
               <div>
@@ -56,7 +70,7 @@ export default function CaseConnections({
             <p className="type-body" style={{ color: "var(--foreground)", whiteSpace: "normal" }}>
               {c.connection}
             </p>
-          </div>
+          </motion.div>
         ))}
       </div>
     </section>

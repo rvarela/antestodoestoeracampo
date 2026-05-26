@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
+import FadeIn from "@/components/FadeIn";
 import { client } from "@/sanity/lib/client";
 import { caseBySlugQuery, allCaseSlugsQuery } from "@/sanity/lib/queries";
 import type { CaseDetail } from "@/types/case";
@@ -66,26 +67,31 @@ export default async function CasePage({
             className="px-6 md:px-12 py-10 md:py-12"
             style={{ borderTop: "1px solid var(--border)" }}
           >
-            <div
-              className="max-w-2xl"
-              style={{
-                fontFamily: "var(--font-inter), system-ui, sans-serif",
-                fontSize: "18px",
-                lineHeight: "28px",
-                color: "var(--foreground)",
-              }}
-            >
-              <PortableText
-                value={case_.overview}
-                components={{
-                  block: {
-                    normal: ({ children }) => (
-                      <p className="mb-5 last:mb-0">{children}</p>
-                    ),
-                  },
+            <p className="type-label mb-8" style={{ color: "var(--muted)" }}>
+              El caso
+            </p>
+            <FadeIn>
+              <div
+                className="max-w-2xl"
+                style={{
+                  fontFamily: "var(--font-inter), system-ui, sans-serif",
+                  fontSize: "18px",
+                  lineHeight: "28px",
+                  color: "var(--foreground)",
                 }}
-              />
-            </div>
+              >
+                <PortableText
+                  value={case_.overview}
+                  components={{
+                    block: {
+                      normal: ({ children }) => (
+                        <p className="mb-5 last:mb-0">{children}</p>
+                      ),
+                    },
+                  }}
+                />
+              </div>
+            </FadeIn>
           </section>
         )}
 

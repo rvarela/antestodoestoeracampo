@@ -20,7 +20,7 @@ const STYLE_OVERRIDES: Array<[string, string, string]> = [
 
 // Log scale: 100ha → 8px, 100 000ha → 32px
 function pinSize(hectares: number): number {
-  const minPx = 8, maxPx = 32;
+  const minPx = 4, maxPx = 16;
   const t = Math.max(0, Math.min(1,
     (Math.log(Math.max(1, hectares)) - Math.log(100)) / (Math.log(100000) - Math.log(100))
   ));
@@ -96,8 +96,8 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         source: "cases",
         paint: {
           "circle-radius": ["interpolate", ["linear"], ["ln", ["max", ["get", "hectares"], 1]],
-            Math.log(100), 12,
-            Math.log(100000), 42,
+            Math.log(100), 6,
+            Math.log(100000), 20,
           ],
           "circle-color": "transparent",
           "circle-stroke-width": 1.5,
@@ -114,8 +114,8 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         source: "cases",
         paint: {
           "circle-radius": ["interpolate", ["linear"], ["ln", ["max", ["get", "hectares"], 1]],
-            Math.log(100), 8,
-            Math.log(100000), 32,
+            Math.log(100), 4,
+            Math.log(100000), 16,
           ],
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           "circle-color": ["get", "accentColor"] as any,

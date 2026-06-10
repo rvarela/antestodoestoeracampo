@@ -105,10 +105,23 @@ function summarise(entry: CacheEntry, fireYear: number): CatastroSummary {
 
 // ── Content generators ────────────────────────────────────────────────────────
 
+const ES_MINOR_WORDS = new Set(["de", "del", "la", "las", "el", "los", "y", "o", "en", "a"]);
+
+/** EGIF uppercase municipality → prose-friendly casing (SOLANA DE ÁVILA → Solana de Ávila) */
+function titleCaseEs(raw: string): string {
+  return raw
+    .toLowerCase()
+    .split(/\s+/)
+    .map((w, i) =>
+      i > 0 && ES_MINOR_WORDS.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)
+    )
+    .join(" ");
+}
+
 function makeExcerpt(doc: CaseDoc, s: CatastroSummary): string {
   const ha = doc.hectares.toLocaleString("es-ES", { maximumFractionDigits: 0 });
   const municipality = doc.municipality
-    ? doc.municipality.charAt(0) + doc.municipality.slice(1).toLowerCase()
+    ? titleCaseEs(doc.municipality)
     : "municipio desconocido";
   const lagYears = s.latestMod - doc.year;
 

@@ -105,7 +105,7 @@ async function queryParcels(
   const url = `https://ovc.catastro.meh.es/INSPIRE/wfsCP.aspx?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=CP:CadastralParcel&SRSNAME=EPSG:4326&BBOX=${bbox},urn:ogc:def:crs:EPSG::4326`;
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12000);
+  const timeout = setTimeout(() => controller.abort(), 90000);
 
   let res: Response;
   try {
@@ -155,6 +155,29 @@ async function queryParcels(
 
 function sleep(ms: number) {
   return new Promise(r => setTimeout(r, ms));
+}
+
+/**
+ * Query with shrinking bbox: the WFS server resets connections on responses
+ * that take longer than ~60s to stream, which happens in high-density parcel
+ * areas (Galicia minifundio, Canarias). Halve the radius and retry.
+ */
+async function queryParcelsAdaptive(
+  lat: number,
+  lng: number
+): Promise<{ parcels: Parcel[]; radiusDeg: number }> {
+  const radii = [0.02, 0.01, 0.005, 0.0025];
+  let lastErr: unknown;
+  for (const radiusDeg of radii) {
+    try {
+      const parcels = await queryParcels(lat, lng, radiusDeg);
+      return { parcels, radiusDeg };
+    } catch (err) {
+      lastErr = err;
+      await sleep(3000);
+    }
+  }
+  throw lastErr;
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────
@@ -238,7 +261,7 @@ async function main() {
     const label = `[${String(i + 1).padStart(3)}/${toProcess.length}] ${c.slug}`;
 
     try {
-      const parcels = await queryParcels(c.coordinates.lat, c.coordinates.lng);
+      const { parcels, radiusDeg } = await queryParcelsAdaptive(c.coordinates.lat, c.coordinates.lng);
 
       const suspiciousParcels = parcels.filter(p => {
         if (!p.modifiedYear || !c.year) return false;
@@ -255,11 +278,12 @@ async function main() {
 
       const flag = suspiciousParcels.length > 0 ? " ⚑" : "";
       const urbanCount = suspiciousParcels.filter(p => p.classification === "urbano").length;
-      console.log(`  ✓ ${label} — ${parcels.length} parcels, ${suspiciousParcels.length} suspicious${urbanCount ? ` (${urbanCount} urban)` : ""}${flag}`);
+      const radiusNote = radiusDeg < 0.02 ? ` [r=${radiusDeg}]` : "";
+      console.log(`  ✓ ${label} — ${parcels.length} parcels, ${suspiciousParcels.length} suspicious${urbanCount ? ` (${urbanCount} urban)` : ""}${flag}${radiusNote}`);
       queried++;
     } catch (err) {
       const msg = err instanceof Error
-        ? (err.name === "AbortError" ? "timeout (12s)" : err.message)
+        ? (err.name === "AbortError" ? "timeout (90s)" : err.message)
         : String(err);
       console.error(`  ✗ ${label}: ${msg}`);
       errors++;

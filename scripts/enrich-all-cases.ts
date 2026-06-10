@@ -124,10 +124,22 @@ function sanityBlock(text: string, key: string) {
   };
 }
 
+const ES_MINOR_WORDS = new Set(["de", "del", "la", "las", "el", "los", "y", "o", "en", "a"]);
+
+/** EGIF uppercase municipality → prose-friendly casing (SOLANA DE ÁVILA → Solana de Ávila) */
+function titleCaseEs(raw: string): string {
+  return raw
+    .toLowerCase()
+    .split(/\s+/)
+    .map((w, i) =>
+      i > 0 && ES_MINOR_WORDS.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)
+    )
+    .join(" ");
+}
+
 function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null): unknown[] {
   const blocks: unknown[] = [];
-  const municipalityTitle =
-    doc.municipality.charAt(0).toUpperCase() + doc.municipality.slice(1).toLowerCase();
+  const municipalityTitle = titleCaseEs(doc.municipality);
 
   // ── Para 1: Fire facts ──
   const fireEntry = doc.timeline?.find(t => t.type === "fire");

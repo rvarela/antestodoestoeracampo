@@ -45,3 +45,6 @@ next-env.d.ts
 # Raw data files — too large for git
 scripts/data/*.csv
 scripts/data/geocode-log.txt
+scripts/data/catastro-cache.json
+scripts/data/catastro-run.log
+scripts/data/boe-cache.json

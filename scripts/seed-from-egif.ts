@@ -131,6 +131,10 @@ const COMUNIDAD_MAP: Record<string, string> = {
   "COMUNIDAD FORAL DE NAVARRA": "Navarra",
   "PAÍS VASCO":                 "País Vasco",
   "PAIS VASCO":                 "País Vasco",
+  "CEUTA":                      "Ceuta",
+  "MELILLA":                    "Melilla",
+  "CIUDAD DE CEUTA":            "Ceuta",
+  "CIUDAD DE MELILLA":          "Melilla",
 };
 
 function normaliseRegion(raw: string): string {

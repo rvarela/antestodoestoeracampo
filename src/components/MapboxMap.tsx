@@ -126,7 +126,9 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         },
       });
 
-      // Popup
+      // Popup — stays open while the cursor travels from the dot into it
+      // (grace delay), and the whole card is one link so there's no tiny
+      // target to hit.
       const popup = new mapboxgl.Popup({
         closeButton: false,
         maxWidth: "260px",
@@ -134,13 +136,35 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
       });
 
       let hoveredId: string | number | null = null;
+      let closeTimer: number | null = null;
+
+      const clearHover = () => {
+        if (hoveredId !== null) map.setFeatureState({ source: "cases", id: hoveredId }, { hover: false });
+        hoveredId = null;
+      };
+
+      const cancelClose = () => {
+        if (closeTimer !== null) {
+          window.clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+      };
+
+      const scheduleClose = () => {
+        cancelClose();
+        closeTimer = window.setTimeout(() => {
+          popup.remove();
+          clearHover();
+        }, 300);
+      };
 
       map.on("mouseenter", "cases-dot", (e) => {
         map.getCanvas().style.cursor = "pointer";
         if (!e.features?.length) return;
+        cancelClose();
 
         const f = e.features[0];
-        if (hoveredId !== null) map.setFeatureState({ source: "cases", id: hoveredId }, { hover: false });
+        clearHover();
         hoveredId = f.id ?? null;
         if (hoveredId !== null) map.setFeatureState({ source: "cases", id: hoveredId }, { hover: true });
 
@@ -148,21 +172,28 @@ export default function MapboxMap({ cases }: { cases: CaseSummary[] }) {
         const coords = (f.geometry as GeoJSON.Point).coordinates as [number, number];
 
         popup.setLngLat(coords).setHTML(`
-          <div style="padding:4px 2px">
+          <a href="/casos/${props.slug}" style="display:block;padding:4px 2px;text-decoration:none;cursor:pointer">
             <p style="font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#8C8880;margin:0 0 6px">${props.year} · ${props.municipality}</p>
             <p style="font-size:17px;line-height:1.3;color:#1A180F;margin:0 0 6px;font-family:Georgia,serif;font-style:italic">${props.title}</p>
             <p style="font-size:13px;color:#1A180F;margin:0 0 2px;font-family:monospace">${Number(props.hectares).toLocaleString("es-ES")} ha</p>
             <p style="font-size:11px;color:#8C8880;margin:0 0 10px">superficie calcinada</p>
-            <a href="/casos/${props.slug}" style="font-size:12px;color:#C4622D;text-decoration:none;font-family:system-ui">Leer caso →</a>
-          </div>
+            <span style="font-size:12px;color:#C4622D;font-family:system-ui">Leer caso →</span>
+          </a>
         `).addTo(map);
+
+        // Keep the popup alive while the cursor is inside it. Property
+        // assignment (not addEventListener) so re-entering the dot never
+        // stacks duplicate handlers on a reused element.
+        const el = popup.getElement();
+        if (el) {
+          el.onmouseenter = cancelClose;
+          el.onmouseleave = scheduleClose;
+        }
       });
 
       map.on("mouseleave", "cases-dot", () => {
         map.getCanvas().style.cursor = "";
-        if (hoveredId !== null) map.setFeatureState({ source: "cases", id: hoveredId }, { hover: false });
-        hoveredId = null;
-        popup.remove();
+        scheduleClose();
       });
 
       map.on("click", "cases-dot", (e) => {

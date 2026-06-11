@@ -88,7 +88,7 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
   };
 
   return (
-    <section className="px-6 md:px-12 py-16 md:py-24">
+    <section id="casos" className="px-6 md:px-12 py-16 md:py-24 scroll-mt-14 md:scroll-mt-16">
       {/* Section header */}
       <div className="mb-10 md:mb-14">
         <p className="type-label mb-4" style={{ color: "var(--muted)" }}>

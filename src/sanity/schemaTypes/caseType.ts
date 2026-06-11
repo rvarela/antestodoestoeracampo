@@ -86,6 +86,13 @@ export const caseType = defineType({
       type: "number",
     }),
     defineField({
+      name: "urbanParcels",
+      title: "Parcelas urbanas modificadas (Catastro)",
+      type: "number",
+      description:
+        "Parcelas clasificadas como suelo urbano modificadas 1–15 años después del incendio. Rellenado automáticamente por patch:catastro — no editar a mano.",
+    }),
+    defineField({
       name: "status",
       title: "Estado judicial",
       type: "string",

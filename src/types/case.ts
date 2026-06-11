@@ -56,6 +56,8 @@ export interface CaseSummary {
   municipality: string;
   year: number;
   hectares: number;
+  /** Urban parcels modified 1–15 years post-fire (Catastro) — null/undefined when not enriched */
+  urbanParcels?: number;
   status: CaseStatus;
   outcome: string;
   accentColor: string;

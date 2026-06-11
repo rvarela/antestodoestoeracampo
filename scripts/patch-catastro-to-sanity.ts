@@ -293,6 +293,9 @@ async function main() {
     const withoutCatastro = existing.filter(t => t._key !== "catastro-rezoning");
     patch.timeline = [newEntry, ...withoutCatastro];
 
+    // Catastro signal — shown as a column on /casos
+    patch.urbanParcels = s.urbanCount;
+
     if (Object.keys(patch).length === 0) {
       console.log(`  ~ ${slug} — nothing to update, skipping`);
       skipped++;

@@ -40,11 +40,20 @@ export const researchLinkType = defineType({
           { title: "El País", value: "ElPais" },
           { title: "El Mundo", value: "ElMundo" },
           { title: "ABC", value: "ABC" },
+          { title: "Prensa (artículo)", value: "Prensa" },
           { title: "Catastro WFS", value: "Catastro" },
           { title: "Google Maps satélite", value: "Maps" },
           { title: "Otro", value: "Otro" },
         ],
       },
+    }),
+    defineField({
+      name: "isSearch",
+      title: "Es búsqueda (lead interno)",
+      type: "boolean",
+      initialValue: false,
+      description:
+        "Si está activado, el enlace es una página de resultados (no un documento) y nunca se envía a las fuentes públicas del caso.",
     }),
     defineField({
       name: "status",

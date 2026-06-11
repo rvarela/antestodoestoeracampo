@@ -3,6 +3,7 @@ import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { LinkCard } from "./LinkCard";
 import { PushButton } from "./PushButton";
+import { AddResultForm } from "./AddResultForm";
 
 export const revalidate = 0;
 
@@ -13,6 +14,7 @@ interface ResearchLink {
   sourceType: string;
   note: string;
   status: "pending" | "approved" | "rejected";
+  isSearch?: boolean;
 }
 
 interface CaseDoc {
@@ -42,8 +44,8 @@ export default async function ResearchCasePage({
       { slug }
     ),
     client.fetch<ResearchLink[]>(
-      `*[_type == "researchLink" && caseSlug == $slug] | order(sourceType asc){
-        _id, label, url, sourceType, note, status
+      `*[_type == "researchLink" && caseSlug == $slug] | order(isSearch asc, sourceType asc){
+        _id, label, url, sourceType, note, status, isSearch
       }`,
       { slug }
     ),
@@ -75,6 +77,26 @@ export default async function ResearchCasePage({
             <h1 style={{ fontFamily: "var(--font-newsreader)", fontSize: 32, fontStyle: "italic", fontWeight: 400, color: "var(--foreground)", margin: 0 }}>
               {caseDoc.title}
             </h1>
+            <a
+              href={`/casos/${slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="type-label"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginTop: 12,
+                fontSize: "10px",
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "1px solid var(--border)",
+                backgroundColor: "var(--surface)",
+                color: "var(--foreground)",
+              }}
+            >
+              Ver caso en una pestaña nueva ↗
+            </a>
           </div>
           <div style={{ display: "flex", gap: 20, alignItems: "center", flexShrink: 0 }}>
             <Stat label="pendientes" value={pending.length} color="var(--foreground)" />
@@ -106,21 +128,23 @@ export default async function ResearchCasePage({
           </div>
         )}
 
+        <AddResultForm slug={slug} />
+
         {pending.length > 0 && (
           <Section title="Por revisar" count={pending.length}>
-            {pending.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} />)}
+            {pending.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
           </Section>
         )}
 
         {approved.length > 0 && (
           <Section title="Aprobados" count={approved.length}>
-            {approved.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} />)}
+            {approved.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
           </Section>
         )}
 
         {rejected.length > 0 && (
           <Section title="Rechazados" count={rejected.length}>
-            {rejected.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} />)}
+            {rejected.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
           </Section>
         )}
       </div>

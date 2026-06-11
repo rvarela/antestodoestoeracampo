@@ -5,7 +5,7 @@ import { pushApprovedLinks } from "../actions";
 
 export function PushButton({ slug, approvedCount }: { slug: string; approvedCount: number }) {
   const [isPending, startTransition] = useTransition();
-  const [result, setResult] = useState<{ pushed?: number; alreadyPresent?: number } | null>(null);
+  const [result, setResult] = useState<{ pushed?: number; alreadyPresent?: number; skippedSearches?: number } | null>(null);
 
   if (approvedCount === 0) return null;
 
@@ -43,6 +43,9 @@ export function PushButton({ slug, approvedCount }: { slug: string; approvedCoun
             : result.alreadyPresent
             ? `Ya presentes en el caso`
             : "Nada nuevo que añadir"}
+          {result.skippedSearches
+            ? ` · ${result.skippedSearches} búsqueda${result.skippedSearches !== 1 ? "s" : ""} omitida${result.skippedSearches !== 1 ? "s" : ""} (no son documentos)`
+            : ""}
         </p>
       )}
     </div>

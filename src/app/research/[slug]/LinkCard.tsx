@@ -10,6 +10,7 @@ const SOURCE_LABELS: Record<string, string> = {
   ElPais: "El País",
   ElMundo: "El Mundo",
   ABC: "ABC",
+  Prensa: "Prensa",
   Catastro: "Catastro",
   Maps: "Maps",
   Otro: "Otro",
@@ -22,6 +23,7 @@ const SOURCE_COLORS: Record<string, string> = {
   ElPais: "#B45309",
   ElMundo: "#B45309",
   ABC: "#B45309",
+  Prensa: "#C4622D",
   Catastro: "#047857",
   Maps: "#6B7280",
   Otro: "#6B7280",
@@ -34,9 +36,10 @@ interface LinkCardProps {
   sourceType: string;
   note: string;
   status: "pending" | "approved" | "rejected";
+  isSearch?: boolean;
 }
 
-export function LinkCard({ id, label, url, sourceType, note, status: initialStatus }: LinkCardProps) {
+export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch }: LinkCardProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isPending, startTransition] = useTransition();
 
@@ -81,6 +84,25 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
       >
         {SOURCE_LABELS[sourceType] ?? sourceType}
       </span>
+
+      {isSearch && (
+        <span
+          className="type-label shrink-0"
+          title="Página de resultados — no se envía a las fuentes públicas del caso. Abre el enlace, encuentra el documento concreto y añádelo con «Añadir resultado»."
+          style={{
+            fontSize: "9px",
+            padding: "3px 8px",
+            borderRadius: 4,
+            backgroundColor: "var(--surface)",
+            color: "var(--muted)",
+            border: "1px dashed var(--border)",
+            marginTop: 2,
+            whiteSpace: "nowrap",
+          }}
+        >
+          búsqueda
+        </span>
+      )}
 
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>

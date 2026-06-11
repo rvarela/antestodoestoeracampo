@@ -17,7 +17,8 @@
     "enrich:all": "tsx scripts/enrich-all-cases.ts",
     "search:boe": "tsx scripts/search-boe.ts",
     "research:kit": "tsx scripts/generate-research-kit.ts",
-    "research:seed": "tsx scripts/seed-research-links.ts"
+    "research:seed": "tsx scripts/seed-research-links.ts",
+    "research:harvest": "tsx scripts/harvest-research-results.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

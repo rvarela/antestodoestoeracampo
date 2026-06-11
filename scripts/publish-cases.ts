@@ -52,6 +52,29 @@ interface CaseDoc {
   timeline?: unknown[];
 }
 
+// ── Never-publish guard ───────────────────────────────────────────────────────
+// Interprovincial duplicate rows (hectares merged into the surviving case) and
+// unresolvable OTRA PROVINCIA fragments. Publishing any of these would
+// double-count hectares or put a nonsense title on the map. See CLAUDE.md.
+
+const NEVER_PUBLISH = new Set([
+  // merged duplicates — share of a fire whose total lives on another case
+  "solana-de-avila-2003-2003050106",   // → otra-provincia-2003-2003370098 (Solana de Ávila)
+  "carrascalejo-2006-2006100366",      // → otra-provincia-2006-2006450196 (Carrascalejo)
+  "otra-provincia-2004-2004410050",    // → minas-de-riotinto-2004-2004210126
+  "alia-2005-2005100682",              // → otra-provincia-2005-2005450245 (Alía)
+  "otra-provincia-1998-1998252222",    // → cardona-1998-1998080180
+  "otra-provincia-2003-2003170169",    // → tordera-2003-2003080293
+  "otra-provincia-2004-2004410016",    // → escacena-del-campo-2004-2004210078
+  "otra-provincia-2010-2010030107",    // → ontinyent-2010-2010460119
+  "otra-provincia-2012-2012300087",    // → hellin-2012-2012020224
+  // unresolvable fragments — no UTM in EGIF (junk fallback coords) or ambiguous
+  "otra-provincia-1999-1999090225",
+  "otra-provincia-2008-2008390259",
+  "otra-provincia-2011-2011320166",
+  "otra-provincia-2011-2011322448",
+]);
+
 // ── Quality check ─────────────────────────────────────────────────────────────
 
 interface QualityResult {
@@ -157,9 +180,17 @@ async function main() {
   );
 
   // For --all, filter to hidden only (skip already published)
-  const candidates = publishAll
+  const prefiltered = publishAll
     ? docs.filter(d => d.hidden)
     : docs;
+
+  const blocked = prefiltered.filter(d => NEVER_PUBLISH.has(d.slug));
+  const candidates = prefiltered.filter(d => !NEVER_PUBLISH.has(d.slug));
+
+  if (blocked.length > 0) {
+    console.log(`\n  Blocked ${blocked.length} interprovincial duplicate/unresolvable fragment(s):`);
+    for (const d of blocked) console.log(`    ⛔ ${d.slug}`);
+  }
 
   console.log(`\nPublish cases`);
   if (dryRun) console.log(`  Mode: DRY RUN (no writes)`);

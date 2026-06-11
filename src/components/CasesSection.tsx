@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useMemo, useRef } from "react";
+import Link from "next/link";
 import type { CaseSummary } from "@/types/case";
 import CaseCard from "./CaseCard";
+
+// Homepage shows a window into the database; the full registry lives at /casos
+const DISPLAY_CAP = 12;
 
 type Filter = "Todos" | "Sentencia firme" | string;
 
@@ -219,11 +223,31 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
 
       {/* Grid */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
-          {filtered.map((c) => (
-            <CaseCard key={c.slug} case_={c} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 md:gap-6">
+            {filtered.slice(0, DISPLAY_CAP).map((c) => (
+              <CaseCard key={c.slug} case_={c} />
+            ))}
+          </div>
+          {filtered.length > DISPLAY_CAP && (
+            <div className="mt-10 text-center">
+              <Link
+                href={(() => {
+                  const p = new URLSearchParams();
+                  if (query.trim()) p.set("q", query.trim());
+                  if (activeFilter === "Sentencia firme") p.set("estado", "Sentencia firme");
+                  else if (activeFilter !== "Todos") p.set("region", activeFilter);
+                  const qs = p.toString();
+                  return qs ? `/casos?${qs}` : "/casos";
+                })()}
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full type-small transition-opacity duration-150 hover:opacity-85"
+                style={{ backgroundColor: "var(--foreground)", color: "white" }}
+              >
+                Ver los {filtered.length} casos en el archivo →
+              </Link>
+            </div>
+          )}
+        </>
       ) : (
         <p className="type-body" style={{ color: "var(--muted)" }}>
           {query.trim()

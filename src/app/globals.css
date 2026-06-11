@@ -52,6 +52,19 @@ a, button, [role="button"], [tabindex]:not([tabindex="-1"]) {
   cursor: pointer;
 }
 
+/* The * rule above puts cursor: default directly on every element, which
+   beats inheritance — children of clickables must opt back into pointer,
+   or the cursor flickers between hand and arrow across inner text spans. */
+a *, button *, [role="button"] *, [tabindex]:not([tabindex="-1"]) * {
+  cursor: pointer;
+}
+
+/* Map pin popup — the card is one link; the popup chrome around it should
+   read as clickable too */
+.antes-popup .mapboxgl-popup-content {
+  cursor: pointer;
+}
+
 /* ── Type scale ────────────────────────────────────────────────────────────── */
 /* type-* prefix avoids conflict with Tailwind v4 text-* utilities */
 

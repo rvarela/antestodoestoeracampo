@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Newsreader, Inter, JetBrains_Mono } from "next/font/google";
+import NavigationTracker from "@/components/NavigationTracker";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -39,7 +41,12 @@ export default function RootLayout({
       lang="es"
       className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Suspense fallback={null}>
+          <NavigationTracker />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

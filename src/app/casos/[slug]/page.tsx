@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PortableText } from "@portabletext/react";
 import FadeIn from "@/components/FadeIn";
+import BackLink from "@/components/BackLink";
 import { client } from "@/sanity/lib/client";
 import { caseBySlugQuery, allCaseSlugsQuery } from "@/sanity/lib/queries";
 import type { CaseDetail } from "@/types/case";
@@ -52,13 +53,13 @@ export default async function CasePage({
 
         {/* Back link — below hero */}
         <div className="px-6 md:px-12 pt-8">
-          <Link
-            href="/"
+          <BackLink
+            fallback="/casos"
             className="type-label inline-flex items-center gap-1 transition-colors"
             style={{ color: "var(--muted)", fontSize: "10px" }}
           >
             ← Todos los casos
-          </Link>
+          </BackLink>
         </div>
 
         {/* Overview — Portable Text */}
@@ -120,13 +121,13 @@ export default async function CasePage({
           className="px-6 md:px-12 py-12 flex items-center justify-between"
           style={{ borderTop: "1px solid var(--border)" }}
         >
-          <Link
-            href="/"
+          <BackLink
+            fallback="/casos"
             className="type-small transition-colors"
             style={{ color: "var(--muted)" }}
           >
             ← Volver a todos los casos
-          </Link>
+          </BackLink>
         </div>
       </main>
 

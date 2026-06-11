@@ -15,6 +15,7 @@ interface ResearchLink {
   note: string;
   status: "pending" | "approved" | "rejected";
   isSearch?: boolean;
+  confidence?: number;
 }
 
 interface CaseDoc {
@@ -44,8 +45,8 @@ export default async function ResearchCasePage({
       { slug }
     ),
     client.fetch<ResearchLink[]>(
-      `*[_type == "researchLink" && caseSlug == $slug] | order(isSearch asc, sourceType asc){
-        _id, label, url, sourceType, note, status, isSearch
+      `*[_type == "researchLink" && caseSlug == $slug] | order(isSearch asc, confidence desc, sourceType asc){
+        _id, label, url, sourceType, note, status, isSearch, confidence
       }`,
       { slug }
     ),
@@ -132,19 +133,19 @@ export default async function ResearchCasePage({
 
         {pending.length > 0 && (
           <Section title="Por revisar" count={pending.length}>
-            {pending.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
+            {pending.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
           </Section>
         )}
 
         {approved.length > 0 && (
           <Section title="Aprobados" count={approved.length}>
-            {approved.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
+            {approved.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
           </Section>
         )}
 
         {rejected.length > 0 && (
           <Section title="Rechazados" count={rejected.length}>
-            {rejected.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} />)}
+            {rejected.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
           </Section>
         )}
       </div>

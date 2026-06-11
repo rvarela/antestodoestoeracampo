@@ -48,6 +48,14 @@ export const researchLinkType = defineType({
       },
     }),
     defineField({
+      name: "confidence",
+      title: "Confianza (%)",
+      type: "number",
+      description:
+        "Relevancia estimada para el caso, 0–100. Heurística automática en enlaces cosechados; 100 en resultados añadidos a mano. Vacío en búsquedas.",
+      validation: (Rule) => Rule.min(0).max(100),
+    }),
+    defineField({
       name: "isSearch",
       title: "Es búsqueda (lead interno)",
       type: "boolean",

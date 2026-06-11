@@ -132,6 +132,13 @@ function relevanceLabel(s: number): string {
   return s >= 4 ? "probable" : s >= 2 ? "posible" : "dudosa";
 }
 
+// Score (0–7) → calibrated confidence %. Capped at 95 — it's a heuristic over
+// a headline, never a verified match.
+const CONFIDENCE = [10, 25, 40, 55, 70, 80, 90, 95];
+function confidencePct(s: number): number {
+  return CONFIDENCE[Math.max(0, Math.min(s, CONFIDENCE.length - 1))];
+}
+
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -206,11 +213,28 @@ async function main() {
       continue;
     }
 
+    // Know up front which items already exist (and whether they have a
+    // confidence value) — timestamps can't distinguish created from existing.
+    const existingDocs = await client.fetch<Array<{ _id: string; confidence?: number }>>(
+      `*[_type == "researchLink" && caseSlug == $slug && _id match "rl-*-news-*"]{ _id, confidence }`,
+      { slug: doc.slug }
+    );
+    const existingMap = new Map(existingDocs.map(d => [d._id, d.confidence]));
+
     let newForCase = 0;
     for (const item of ranked) {
       const id = `rl-${doc.slug}-news-${urlHash(item.url)}`;
+      const confidence = confidencePct(item.score);
       try {
-        const res = await client.createIfNotExists({
+        if (existingMap.has(id)) {
+          existing++;
+          // Backfill confidence on docs harvested before the field existed
+          if (existingMap.get(id) == null) {
+            await client.patch(id).set({ confidence }).commit();
+          }
+          continue;
+        }
+        await client.create({
           _type: "researchLink",
           _id: id,
           case: { _type: "reference", _ref: doc._id },
@@ -220,12 +244,10 @@ async function main() {
           sourceType: "Prensa",
           isSearch: false,
           status: "pending",
+          confidence,
           note: `Cosecha automática (Google News) · relevancia ${relevanceLabel(item.score)} · ${item.publisher}${item.pubYear ? ` · ${item.pubYear}` : ""}`,
         });
-        // createIfNotExists returns the existing doc when it already exists —
-        // count as new only when the revision was just created
-        if (res._createdAt === res._updatedAt) { created++; newForCase++; }
-        else existing++;
+        created++; newForCase++;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error(`  ✗ ${id}: ${msg}`);

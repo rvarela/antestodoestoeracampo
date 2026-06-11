@@ -119,6 +119,7 @@ export async function addManualLink(
     sourceType: data.sourceType || "Otro",
     isSearch: false,
     status: "approved",
+    confidence: 100,
     note: "Resultado añadido manualmente desde la herramienta de investigación.",
   });
 

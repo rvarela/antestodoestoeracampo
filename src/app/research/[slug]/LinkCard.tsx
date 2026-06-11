@@ -37,9 +37,16 @@ interface LinkCardProps {
   note: string;
   status: "pending" | "approved" | "rejected";
   isSearch?: boolean;
+  confidence?: number;
 }
 
-export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch }: LinkCardProps) {
+function confidenceColor(c: number): string {
+  if (c >= 70) return "#166534"; // green — likely the right fire
+  if (c >= 45) return "#B45309"; // amber — plausible, verify
+  return "#B91C1C";              // red — probably noise
+}
+
+export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence }: LinkCardProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isPending, startTransition] = useTransition();
 
@@ -84,6 +91,26 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
       >
         {SOURCE_LABELS[sourceType] ?? sourceType}
       </span>
+
+      {typeof confidence === "number" && (
+        <span
+          className="type-data shrink-0"
+          title="Relevancia estimada para este caso (heurística sobre el titular; 100% = añadido a mano). Orientativa — verifica antes de aprobar."
+          style={{
+            fontSize: "11px",
+            padding: "3px 8px",
+            borderRadius: 4,
+            backgroundColor: confidenceColor(confidence) + "14",
+            color: confidenceColor(confidence),
+            border: `1px solid ${confidenceColor(confidence)}30`,
+            marginTop: 2,
+            whiteSpace: "nowrap",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {confidence}%
+        </span>
+      )}
 
       {isSearch && (
         <span

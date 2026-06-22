@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { client } from "@/sanity/lib/client";
+import { client as cdnClient } from "@/sanity/lib/client";
+
+// Internal editorial tool — always read fresh so approvals/pushes reflect immediately
+const client = cdnClient.withConfig({ useCdn: false });
 import { LinkCard } from "./LinkCard";
 import { PushButton } from "./PushButton";
 import { AddResultForm } from "./AddResultForm";
@@ -27,6 +30,7 @@ interface CaseDoc {
   hectares: number;
   status: string;
   sourcesCount: number;
+  sourceUrls: Array<string | null>;
 }
 
 export default async function ResearchCasePage({
@@ -40,7 +44,8 @@ export default async function ResearchCasePage({
     client.fetch<CaseDoc | null>(
       `*[_type == "case" && slug.current == $slug][0]{
         _id, title, municipality, region, year, hectares, status,
-        "sourcesCount": count(sources)
+        "sourcesCount": count(sources),
+        "sourceUrls": sources[].url
       }`,
       { slug }
     ),
@@ -57,6 +62,12 @@ export default async function ResearchCasePage({
   const pending  = links.filter(l => l.status === "pending");
   const approved = links.filter(l => l.status === "approved");
   const rejected = links.filter(l => l.status === "rejected");
+
+  // Documents approved but not yet in the case's sources (search leads publish
+  // separately as "Búsquedas útiles" and never go through the push)
+  const caseUrls = new Set((caseDoc.sourceUrls ?? []).filter(Boolean));
+  const toPushCount = approved.filter(l => !l.isSearch && l.url && !caseUrls.has(l.url)).length;
+  const approvedSearches = approved.filter(l => l.isSearch).length;
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "var(--background)", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
@@ -110,7 +121,7 @@ export default async function ResearchCasePage({
         {/* Push button */}
         {approved.length > 0 && (
           <div style={{ marginTop: 20 }}>
-            <PushButton slug={slug} approvedCount={approved.length} />
+            <PushButton slug={slug} toPushCount={toPushCount} approvedSearches={approvedSearches} />
           </div>
         )}
       </div>

@@ -4,8 +4,9 @@ import { PortableText } from "@portabletext/react";
 import FadeIn from "@/components/FadeIn";
 import BackLink from "@/components/BackLink";
 import { client } from "@/sanity/lib/client";
-import { caseBySlugQuery, allCaseSlugsQuery } from "@/sanity/lib/queries";
+import { caseBySlugQuery, allCaseSlugsQuery, approvedSearchLinksQuery } from "@/sanity/lib/queries";
 import type { CaseDetail } from "@/types/case";
+import CaseSearchLinks, { type SearchLink } from "@/components/caso/CaseSearchLinks";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CaseHero from "@/components/caso/CaseHero";
@@ -39,7 +40,10 @@ export default async function CasePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const case_: CaseDetail | null = await client.fetch(caseBySlugQuery, { slug });
+  const [case_, searchLinks] = await Promise.all([
+    client.fetch<CaseDetail | null>(caseBySlugQuery, { slug }),
+    client.fetch<SearchLink[]>(approvedSearchLinksQuery, { slug }),
+  ]);
 
   if (!case_) notFound();
 
@@ -115,6 +119,40 @@ export default async function CasePage({
         {case_.sources && case_.sources.length > 0 && (
           <CaseSources sources={case_.sources} />
         )}
+
+        {/* Approved search leads */}
+        {searchLinks.length > 0 && <CaseSearchLinks links={searchLinks} />}
+
+        {/* Open data — per-case export */}
+        <section
+          className="px-6 md:px-12 py-8"
+          style={{ borderTop: "1px solid var(--border)" }}
+        >
+          <p className="type-label mb-3" style={{ color: "var(--muted)" }}>
+            Datos abiertos
+          </p>
+          <p className="type-small flex flex-wrap items-center gap-x-2" style={{ color: "var(--muted)" }}>
+            Descarga los datos de este caso:
+            <a
+              href={`/api/casos/${case_.slug}`}
+              className="type-data text-[12px] underline underline-offset-2"
+              style={{ color: "var(--accent)" }}
+            >
+              JSON
+            </a>
+            ·
+            <a
+              href={`/api/casos/${case_.slug}?format=csv`}
+              className="type-data text-[12px] underline underline-offset-2"
+              style={{ color: "var(--accent)" }}
+            >
+              CSV
+            </a>
+            <span>
+              — cita <Link href="/metodologia" className="underline underline-offset-2">antestodoestoeracampo.es</Link> como fuente.
+            </span>
+          </p>
+        </section>
 
         {/* Bottom nav */}
         <div

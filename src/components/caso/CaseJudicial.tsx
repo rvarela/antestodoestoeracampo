@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { JudicialEvent, JudicialResult } from "@/types/case";
+import { formatEventDate } from "@/lib/dates";
 
 const RESULT_LABELS: Record<JudicialResult, string> = {
   convicted: "Condenado",
@@ -63,7 +64,7 @@ export default function CaseJudicial({ events }: { events: JudicialEvent[] }) {
                   {RESULT_LABELS[e.result]}
                 </span>
                 <span className="type-data text-[12px]" style={{ color: "var(--muted)" }}>
-                  {e.date}
+                  {formatEventDate(e.date)}
                 </span>
               </div>
               <p

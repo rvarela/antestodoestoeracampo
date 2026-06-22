@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { client } from "@/sanity/lib/client";
+import { client as cdnClient } from "@/sanity/lib/client";
+
+// Internal editorial tool — always read fresh so approvals/pushes reflect immediately
+const client = cdnClient.withConfig({ useCdn: false });
 
 interface CaseRow {
   slug: string;

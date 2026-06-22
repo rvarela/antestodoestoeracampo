@@ -1,23 +1,51 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { pushApprovedLinks } from "../actions";
 
-export function PushButton({ slug, approvedCount }: { slug: string; approvedCount: number }) {
+export function PushButton({
+  slug,
+  toPushCount,
+  approvedSearches,
+}: {
+  slug: string;
+  toPushCount: number;
+  approvedSearches: number;
+}) {
   const [isPending, startTransition] = useTransition();
-  const [result, setResult] = useState<{ pushed?: number; alreadyPresent?: number; skippedSearches?: number } | null>(null);
+  const [result, setResult] = useState<{ pushed?: number } | null>(null);
+  const router = useRouter();
 
-  if (approvedCount === 0) return null;
+  // Local guard: after a successful push the button stays disabled even if
+  // the server re-render is briefly stale (CDN cache)
+  const nothingToPush = toPushCount === 0 || result !== null;
 
   function handlePush() {
     startTransition(async () => {
       const res = await pushApprovedLinks(slug);
       setResult(res);
+      router.refresh();
     });
   }
 
+  const searchNote = approvedSearches > 0
+    ? `${approvedSearches} búsqueda${approvedSearches !== 1 ? "s" : ""} aprobada${approvedSearches !== 1 ? "s" : ""} ya pública${approvedSearches !== 1 ? "s" : ""} en «Búsquedas útiles» del caso`
+    : null;
+
+  if (nothingToPush) {
+    return (
+      <p className="type-small" style={{ color: "var(--muted)", margin: 0 }}>
+        {result?.pushed
+          ? `✓ ${result.pushed} fuente${result.pushed !== 1 ? "s" : ""} añadida${result.pushed !== 1 ? "s" : ""} al caso`
+          : "✓ Todo lo aprobado ya está en el caso"}
+        {searchNote ? ` · ${searchNote}` : ""}
+      </p>
+    );
+  }
+
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
       <button
         onClick={handlePush}
         disabled={isPending}
@@ -34,18 +62,13 @@ export function PushButton({ slug, approvedCount }: { slug: string; approvedCoun
           transition: "background-color 0.15s",
         }}
       >
-        {isPending ? "Enviando…" : `Enviar ${approvedCount} aprobado${approvedCount !== 1 ? "s" : ""} a Sanity`}
+        {isPending
+          ? "Enviando…"
+          : `Enviar ${toPushCount} aprobado${toPushCount !== 1 ? "s" : ""} a Sanity`}
       </button>
-      {result && (
+      {searchNote && (
         <p className="type-small" style={{ color: "var(--muted)", margin: 0 }}>
-          {result.pushed
-            ? `✓ ${result.pushed} fuente${result.pushed !== 1 ? "s" : ""} añadida${result.pushed !== 1 ? "s" : ""} al caso`
-            : result.alreadyPresent
-            ? `Ya presentes en el caso`
-            : "Nada nuevo que añadir"}
-          {result.skippedSearches
-            ? ` · ${result.skippedSearches} búsqueda${result.skippedSearches !== 1 ? "s" : ""} omitida${result.skippedSearches !== 1 ? "s" : ""} (no son documentos)`
-            : ""}
+          {searchNote}
         </p>
       )}
     </div>

@@ -2,7 +2,7 @@ import { groq } from "next-sanity";
 
 // ── Case list (homepage map + grid) ──────────────────────────────────────────
 export const allCasesQuery = groq`
-  *[_type == "case" && hidden != true] | order(order asc, year asc) {
+  *[_type == "case" && hidden != true] | order(order asc, year asc, slug.current asc) {
     title,
     "slug": slug.current,
     region,
@@ -45,4 +45,10 @@ export const caseBySlugQuery = groq`
 // ── All slugs (for generateStaticParams) ─────────────────────────────────────
 export const allCaseSlugsQuery = groq`
   *[_type == "case" && hidden != true][].slug.current
+`;
+
+// ── Approved search leads (públicas como "Búsquedas útiles" en el caso) ──────
+export const approvedSearchLinksQuery = groq`
+  *[_type == "researchLink" && caseSlug == $slug && status == "approved" && isSearch == true]
+    | order(sourceType asc) { label, url, sourceType }
 `;

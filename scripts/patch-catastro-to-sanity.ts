@@ -10,6 +10,11 @@
  *
  *   2. A data-driven excerpt (only if the case has none already).
  *
+ *   3. The overview's Catastro paragraph — replaces the auto-generated
+ *      "p-nocatastro" placeholder (or refreshes an existing "p-catastro"
+ *      block) with the current findings. Overviews without either keyed
+ *      block (manually written) are left untouched.
+ *
  * Leaves hidden: true — publishing is a manual editorial decision.
  *
  * Usage:
@@ -58,6 +63,11 @@ interface CacheEntry {
   queriedAt: string;
 }
 
+interface OverviewBlock {
+  _key?: string;
+  [k: string]: unknown;
+}
+
 interface CaseDoc {
   _id: string;
   slug: string;
@@ -67,7 +77,11 @@ interface CaseDoc {
   year: number;
   hectares: number;
   excerpt?: string;
-  timeline?: Array<{ _key: string; type: string; title: string }>;
+  overview?: OverviewBlock[];
+  // Full timeline objects — written back verbatim on patch, so the fetch must
+  // NOT project a subset of fields (a `timeline[]{ _key, type, title }`
+  // projection here silently stripped date/description from every entry)
+  timeline?: Array<{ _key: string; type: string; title: string; [k: string]: unknown }>;
 }
 
 // ── Analysis helpers ──────────────────────────────────────────────────────────
@@ -132,6 +146,49 @@ function makeExcerpt(doc: CaseDoc, s: CatastroSummary): string {
     `${lagYears <= 5 ? "apenas" : "hasta"} ${lagYears} años después del incendio. ` +
     `El patrón —incendio, recalificación, construcción— es consistente con los casos documentados en esta base de datos.`
   );
+}
+
+function sanityBlock(text: string, key: string) {
+  return {
+    _type: "block",
+    _key: key,
+    style: "normal",
+    markDefs: [],
+    children: [{ _type: "span", _key: `${key}-s`, text, marks: [] }],
+  };
+}
+
+// Same text as the "p-catastro" paragraph in enrich-all-cases.ts — keep in sync
+function makeCatastroOverviewBlock(doc: CaseDoc, s: CatastroSummary): OverviewBlock {
+  const lag = s.latestMod - doc.year;
+  const lagWord = lag <= 5 ? "apenas" : "hasta";
+  const range = s.earliestMod === s.latestMod
+    ? String(s.earliestMod)
+    : `entre ${s.earliestMod} y ${s.latestMod}`;
+
+  const catPara =
+    `El análisis automatizado del Catastro INSPIRE detecta ${s.suspiciousCount.toLocaleString("es-ES")} parcelas modificadas en el área afectada por el incendio, ` +
+    `de las cuales ${s.urbanCount.toLocaleString("es-ES")} aparecen clasificadas como suelo urbano en los registros ${range}. ` +
+    `Esto representa una modificación en ${lagWord} ${lag} año${lag !== 1 ? "s" : ""} después del incendio. ` +
+    `El patrón —incendio forestal, reclasificación catastral, construcción— es consistente con los casos documentados en esta base de datos.`;
+
+  return sanityBlock(catPara, "p-catastro");
+}
+
+/**
+ * Swap the overview's auto-generated Catastro placeholder ("p-nocatastro")
+ * — or refresh a stale "p-catastro" block — with current findings.
+ * Returns null when there's nothing to replace (no overview, or a manually
+ * written one without the keyed blocks).
+ */
+function updatedOverview(doc: CaseDoc, s: CatastroSummary): OverviewBlock[] | null {
+  if (!doc.overview?.length) return null;
+  const idx = doc.overview.findIndex(b => b._key === "p-nocatastro" || b._key === "p-catastro");
+  if (idx === -1) return null;
+  const fresh = makeCatastroOverviewBlock(doc, s);
+  const next = [...doc.overview];
+  next[idx] = fresh;
+  return next;
 }
 
 function makeTimelineEntry(doc: CaseDoc, s: CatastroSummary): Record<string, unknown> {
@@ -216,7 +273,8 @@ async function main() {
   const docs = await client.fetch<CaseDoc[]>(
     `*[_type == "case" && slug.current in $slugs]{
       _id, "slug": slug.current, title, municipality, region, year, hectares, excerpt,
-      timeline[]{ _key, type, title }
+      overview,
+      timeline
     }`,
     { slugs: cachedSlugs }
   );
@@ -296,6 +354,10 @@ async function main() {
     // Catastro signal — shown as a column on /casos
     patch.urbanParcels = s.urbanCount;
 
+    // Overview: swap the "p-nocatastro" placeholder / stale "p-catastro" block
+    const overview = updatedOverview(doc, s);
+    if (overview) patch.overview = overview;
+
     if (Object.keys(patch).length === 0) {
       console.log(`  ~ ${slug} — nothing to update, skipping`);
       skipped++;
@@ -307,6 +369,7 @@ async function main() {
       const wrote = [];
       if (patch.excerpt) wrote.push("excerpt");
       if (patch.timeline) wrote.push("timeline entry");
+      if (patch.overview) wrote.push("overview para");
       console.log(`  ✓ ${slug} — patched: ${wrote.join(", ")}`);
       ok++;
     } catch (err) {

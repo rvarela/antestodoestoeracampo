@@ -159,6 +159,13 @@ function slugify(str: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** EGIF "31/08/2000 17:00:00" → ISO "2000-08-31" (timeline date convention) */
+function toIsoDate(dateStr: string): string | null {
+  const m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (!m) return null;
+  return `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+}
+
 function parseYear(dateStr: string): number {
   if (!dateStr) return 0;
   if (dateStr.includes("/")) {
@@ -341,7 +348,7 @@ async function main() {
       timeline: [
         {
           _key: "fire-0",
-          date: detectado || String(year),
+          date: toIsoDate(detectado) ?? String(year),
           title: "Incendio forestal",
           description: fireDesc,
           type: "fire",

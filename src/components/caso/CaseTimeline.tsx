@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { TimelineEvent, EventType } from "@/types/case";
+import { formatEventDate } from "@/lib/dates";
 
 const TYPE_LABELS: Record<EventType, string> = {
   fire: "Incendio",
@@ -90,7 +91,7 @@ export default function CaseTimeline({
                     {TYPE_LABELS[event.type]}
                   </span>
                   <span className="type-data text-[12px]" style={{ color: "var(--muted)" }}>
-                    {event.date}
+                    {formatEventDate(event.date)}
                   </span>
                 </div>
 

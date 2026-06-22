@@ -18,7 +18,8 @@
     "search:boe": "tsx scripts/search-boe.ts",
     "research:kit": "tsx scripts/generate-research-kit.ts",
     "research:seed": "tsx scripts/seed-research-links.ts",
-    "research:harvest": "tsx scripts/harvest-research-results.ts"
+    "research:harvest": "tsx scripts/harvest-research-results.ts",
+    "research:cendoj": "tsx scripts/harvest-cendoj.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

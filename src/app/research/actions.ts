@@ -43,8 +43,9 @@ export async function pushApprovedLinks(caseSlug: string) {
     { slug: caseSlug }
   );
 
-  // Search leads (results pages) never become public sources — only specific
-  // documents/articles do. Add concrete results via the "Añadir resultado" form.
+  // Search leads (results pages) never become public *sources* — approved ones
+  // publish separately as "Búsquedas útiles" on the case page (live query,
+  // no push needed). Only specific documents/articles go through here.
   const approved = allApproved.filter(l => !l.isSearch);
   const skippedSearches = allApproved.length - approved.length;
 

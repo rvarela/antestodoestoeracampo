@@ -181,16 +181,8 @@ function buildLinks(doc: {
     note: "Consulta WFS directa. Devuelve XML con parcelas en un radio de ~2km alrededor del centroide del incendio.",
   });
 
-  const mapsUrl = googleMapsUrl(doc.coordinates?.lat, doc.coordinates?.lng);
-  if (mapsUrl) {
-    links.push({
-      label: `Google Maps satélite — ${doc.municipality}`,
-      url: mapsUrl,
-      sourceType: "Maps",
-      isSearch: false,
-      note: "Vista satélite del área afectada. Usa el historial de imágenes para ver antes/después.",
-    });
-  }
+  // Maps deliberately not seeded — every case hero has a derived
+  // "Ver en Google Maps" button (coordinates-based, no approval needed)
 
   return links;
 }

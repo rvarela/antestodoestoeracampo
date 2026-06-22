@@ -22,6 +22,18 @@ function heroImageUrl(c: CaseDetail): string | null {
   return null;
 }
 
+/** Google Maps satellite view centred on the fire, zoom scaled to hectares */
+function googleMapsUrl(c: CaseDetail): string | null {
+  if (!c.coordinates) return null;
+  const { lat, lng } = c.coordinates;
+  const ha = c.hectares ?? 1000;
+  const t = Math.max(0, Math.min(1,
+    (Math.log(Math.max(1, ha)) - Math.log(100)) / (Math.log(200000) - Math.log(100))
+  ));
+  const zoom = Math.round(13 - t * 5);
+  return `https://www.google.com/maps/@?api=1&map_action=map&center=${lat},${lng}&zoom=${zoom}&basemap=satellite`;
+}
+
 export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -31,6 +43,7 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
 
   const imageUrl = heroImageUrl(c);
+  const mapsUrl = googleMapsUrl(c);
   const isConvicted = c.status === "Sentencia firme";
 
   return (
@@ -137,6 +150,27 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
             >
               {c.hectares.toLocaleString("es-ES")} ha calcinadas
             </span>
+          )}
+          {mapsUrl && (
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="type-label hover:opacity-90 transition-opacity duration-150"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "8px 16px",
+                borderRadius: 4,
+                fontSize: "10px",
+                color: "var(--accent-foreground)",
+                backgroundColor: "var(--accent)",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.25)",
+              }}
+            >
+              Ver en Google Maps ↗
+            </a>
           )}
         </div>
       </div>

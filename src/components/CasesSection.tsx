@@ -8,7 +8,14 @@ import CaseCard from "./CaseCard";
 // Homepage shows a window into the database; the full registry lives at /casos
 const DISPLAY_CAP = 12;
 
-type Filter = "Todos" | "Sentencia firme" | string;
+// Same toolbar vocabulary as CasosArchive
+const STATUSES = ["Sentencia firme", "En investigación", "Archivado", "Sobreseído"];
+
+const selectStyle: React.CSSProperties = {
+  backgroundColor: "var(--surface)",
+  border: "1px solid var(--border)",
+  color: "var(--foreground)",
+};
 
 /** Accent-insensitive lowercase for Spanish search (Ávila → avila) */
 function normalize(s: string) {
@@ -29,18 +36,19 @@ function matchesQuery(c: CaseSummary, q: string) {
 }
 
 export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
-  const [activeFilter, setActiveFilter] = useState<Filter>("Todos");
+  const [region, setRegion] = useState("");
+  const [status, setStatus] = useState("");
   const [input, setInput] = useState("");
   const [query, setQuery] = useState(""); // committed search
   const [open, setOpen] = useState(false);
   const [highlighted, setHighlighted] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Build filter list dynamically from the data
-  const filters = useMemo<Filter[]>(() => {
-    const regions = [...new Set(cases.map((c) => c.region).filter(Boolean))].sort();
-    return ["Todos", "Sentencia firme", ...regions];
-  }, [cases]);
+  // Region options built dynamically from the data
+  const regions = useMemo(
+    () => [...new Set(cases.map((c) => c.region).filter(Boolean))].sort(),
+    [cases]
+  );
 
   const suggestions = useMemo(() => {
     const q = normalize(input.trim());
@@ -49,8 +57,8 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
   }, [cases, input]);
 
   const filtered = cases.filter((c) => {
-    if (activeFilter === "Sentencia firme" && c.status !== "Sentencia firme") return false;
-    if (activeFilter !== "Todos" && activeFilter !== "Sentencia firme" && c.region !== activeFilter) return false;
+    if (region && c.region !== region) return false;
+    if (status && c.status !== status) return false;
     const q = normalize(query.trim());
     return !q || matchesQuery(c, q);
   });
@@ -111,8 +119,10 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
         </p>
       </div>
 
+      {/* Toolbar — same pattern as /casos archive */}
+      <div className="flex flex-wrap items-center gap-3 mb-10">
       {/* Search */}
-      <div className="relative max-w-md mb-6">
+      <div className="relative flex-1 min-w-[220px] max-w-md">
         <svg
           className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"
           width="15"
@@ -200,25 +210,33 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
         )}
       </div>
 
-      {/* Filter pills */}
-      <div className="flex flex-wrap gap-2 mb-10">
-        {filters.map((f) => {
-          const active = f === activeFilter;
-          return (
-            <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className="px-4 py-1.5 rounded-full type-small transition-all duration-150"
-              style={{
-                backgroundColor: active ? "var(--foreground)" : "var(--surface)",
-                color: active ? "white" : "var(--muted)",
-                border: active ? "none" : "1px solid var(--border)",
-              }}
-            >
-              {f}
-            </button>
-          );
-        })}
+      {/* Region */}
+      <select
+        aria-label="Filtrar por comunidad autónoma"
+        value={region}
+        onChange={(e) => setRegion(e.target.value)}
+        className="px-4 py-2.5 rounded-full type-small outline-none"
+        style={selectStyle}
+      >
+        <option value="">Todas las CCAA</option>
+        {regions.map((r) => (
+          <option key={r} value={r}>{r}</option>
+        ))}
+      </select>
+
+      {/* Status */}
+      <select
+        aria-label="Filtrar por estado judicial"
+        value={status}
+        onChange={(e) => setStatus(e.target.value)}
+        className="px-4 py-2.5 rounded-full type-small outline-none"
+        style={selectStyle}
+      >
+        <option value="">Todos los estados</option>
+        {STATUSES.map((s) => (
+          <option key={s} value={s}>{s}</option>
+        ))}
+      </select>
       </div>
 
       {/* Grid */}
@@ -235,8 +253,8 @@ export default function CasesSection({ cases }: { cases: CaseSummary[] }) {
                 href={(() => {
                   const p = new URLSearchParams();
                   if (query.trim()) p.set("q", query.trim());
-                  if (activeFilter === "Sentencia firme") p.set("estado", "Sentencia firme");
-                  else if (activeFilter !== "Todos") p.set("region", activeFilter);
+                  if (region) p.set("region", region);
+                  if (status) p.set("estado", status);
                   const qs = p.toString();
                   return qs ? `/casos?${qs}` : "/casos";
                 })()}

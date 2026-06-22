@@ -3,7 +3,7 @@ import Link from "next/link";
 const FOOTER_LINKS = [
   { href: "/metodologia", label: "Metodología" },
   { href: "/sobre", label: "Sobre el proyecto" },
-  { href: "/fuentes", label: "Fuentes" },
+  { href: "/metodologia#fuentes", label: "Fuentes" },
 ];
 
 export default function Footer() {

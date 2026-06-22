@@ -137,24 +137,36 @@ function titleCaseEs(raw: string): string {
     .join(" ");
 }
 
-function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null): unknown[] {
+const MONTHS_ES = [
+  "enero", "febrero", "marzo", "abril", "mayo", "junio",
+  "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
+];
+
+/**
+ * Parse "1992-08-11" (ISO) or "11/08/1992[ HH:MM:SS]" (EGIF, day-first) into
+ * Spanish long form. NEVER use new Date() on these strings — it reads
+ * "11/08/1992" as month-first and produced wrong dates in overviews.
+ */
+function formatFireDateEs(raw: string): string | null {
+  let m = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return `${parseInt(m[3])} de ${MONTHS_ES[parseInt(m[2]) - 1]} de ${m[1]}`;
+  m = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m && parseInt(m[2]) >= 1 && parseInt(m[2]) <= 12)
+    return `${parseInt(m[1])} de ${MONTHS_ES[parseInt(m[2]) - 1]} de ${m[3]}`;
+  return null;
+}
+
+function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null, wasQueried: boolean): unknown[] {
   const blocks: unknown[] = [];
   const municipalityTitle = titleCaseEs(doc.municipality);
 
   // ── Para 1: Fire facts ──
   const fireEntry = doc.timeline?.find(t => t.type === "fire");
-  let firePara = `Incendio forestal de ${doc.hectares.toLocaleString("es-ES", { maximumFractionDigits: 0 })} hectáreas registrado en ${municipalityTitle} (${doc.region}) en el año ${doc.year}.`;
-
-  if (fireEntry?.date && fireEntry.date.length > 4) {
-    // Try to format the date if it's a full date string
-    try {
-      const d = new Date(fireEntry.date);
-      if (!isNaN(d.getTime())) {
-        const formatted = d.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-        firePara = `Incendio forestal de ${doc.hectares.toLocaleString("es-ES", { maximumFractionDigits: 0 })} hectáreas registrado el ${formatted} en ${municipalityTitle} (${doc.region}).`;
-      }
-    } catch { /* keep default */ }
-  }
+  const ha = doc.hectares.toLocaleString("es-ES", { maximumFractionDigits: 0 });
+  const formatted = fireEntry?.date ? formatFireDateEs(fireEntry.date) : null;
+  let firePara = formatted
+    ? `Incendio forestal de ${ha} hectáreas registrado el ${formatted} en ${municipalityTitle} (${doc.region}).`
+    : `Incendio forestal de ${ha} hectáreas registrado en ${municipalityTitle} (${doc.region}) en el año ${doc.year}.`;
 
   firePara += ` El incendio está clasificado como intencionado en la Estadística General de Incendios Forestales (EGIF) del Ministerio para la Transición Ecológica.`;
   blocks.push(sanityBlock(firePara, "p-fire"));
@@ -174,13 +186,21 @@ function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null): unknown[]
       `El patrón —incendio forestal, reclasificación catastral, construcción— es consistente con los casos documentados en esta base de datos.`;
 
     blocks.push(sanityBlock(catPara, "p-catastro"));
+  } else if (wasQueried) {
+    // Queried and clean — a genuine negative result
+    const cleanPara =
+      `El análisis automatizado del Catastro INSPIRE no detecta reclasificaciones de suelo urbano significativas ` +
+      `en el área del incendio durante los quince años posteriores. ` +
+      `Esto no descarta otros movimientos —cambios de titularidad, segregaciones, desarrollos fuera del radio analizado—, ` +
+      `cuya investigación requiere revisión manual.`;
+    blocks.push(sanityBlock(cleanPara, "p-nocatastro"));
   } else {
-    // No catastro data yet — note it
-    const noCatPara =
-      `El análisis catastral automatizado no ha detectado reclasificaciones significativas de suelo en el área del incendio, ` +
-      `o los datos de Catastro INSPIRE aún no han sido procesados para este caso. ` +
-      `La investigación de posibles conexiones entre el incendio y cambios en la clasificación del suelo requiere revisión manual.`;
-    blocks.push(sanityBlock(noCatPara, "p-nocatastro"));
+    // Not yet queried — pending analysis
+    const pendingPara =
+      `El área de este incendio aún no ha sido contrastada con los datos del Catastro INSPIRE. ` +
+      `La investigación de posibles conexiones entre el incendio y cambios posteriores en la clasificación del suelo ` +
+      `está pendiente de análisis y requiere revisión manual.`;
+    blocks.push(sanityBlock(pendingPara, "p-nocatastro"));
   }
 
   // ── Para 3: Status + call to action ──
@@ -268,7 +288,7 @@ async function main() {
     if (!noOverview && (!doc.overview || doc.overview.length === 0)) {
       const catEntry = cache[doc.slug];
       const catastro = catEntry ? summariseCatastro(catEntry, doc.year) : null;
-      patch.overview = makeOverview(doc, catastro);
+      patch.overview = makeOverview(doc, catastro, !!catEntry);
       notes.push("overview");
     }
 

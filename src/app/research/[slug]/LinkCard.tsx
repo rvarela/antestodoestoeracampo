@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { setLinkStatus } from "../actions";
 
 const SOURCE_LABELS: Record<string, string> = {
@@ -49,11 +50,14 @@ function confidenceColor(c: number): string {
 export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence }: LinkCardProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function update(next: "approved" | "rejected" | "pending") {
     setStatus(next); // optimistic
     startTransition(async () => {
       await setLinkStatus(id, next);
+      // Re-render server data so the push button picks up the new approval
+      router.refresh();
     });
   }
 

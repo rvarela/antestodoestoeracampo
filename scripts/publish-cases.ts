@@ -73,7 +73,22 @@ const NEVER_PUBLISH = new Set([
   "otra-provincia-2008-2008390259",
   "otra-provincia-2011-2011320166",
   "otra-provincia-2011-2011322448",
+  // EGIF-verified same-fire duplicates (same muni+date+ignition time) — hidden 2026-06-22.
+  // High urbanParcels, so a --min-urban run would otherwise re-publish + double-count hectares.
+  "tineo-1997-1997330983",      // dup of tineo-1997-1997330972 (both 208ha, 08:30→22:30)
+  "tornavacas-1998-1998100909", // dup of tornavacas-1998-1998100549 (both ignite 06/12 11:00)
 ]);
+
+// Pseudo-municipalities EGIF assigns to the foreign/other-area fragment of a
+// cross-boundary fire. "PORTUGAL" rows live in the Ourense (32) dataset and sit
+// on/over the international border, where Spanish Catastro has no coverage — any
+// rezoning signal is spurious. "OTRA PROVINCIA" is the cross-province twin.
+// Robust to slug, so new fragments can never auto-publish (unlike NEVER_PUBLISH).
+const PSEUDO_MUNICIPALITIES = new Set(["PORTUGAL", "OTRA PROVINCIA"]);
+
+function isPseudoMunicipality(doc: CaseDoc): boolean {
+  return PSEUDO_MUNICIPALITIES.has((doc.municipality ?? "").trim().toUpperCase());
+}
 
 // ── Quality check ─────────────────────────────────────────────────────────────
 
@@ -184,12 +199,15 @@ async function main() {
     ? docs.filter(d => d.hidden)
     : docs;
 
-  const blocked = prefiltered.filter(d => NEVER_PUBLISH.has(d.slug));
-  const candidates = prefiltered.filter(d => !NEVER_PUBLISH.has(d.slug));
+  const blocked = prefiltered.filter(d => NEVER_PUBLISH.has(d.slug) || isPseudoMunicipality(d));
+  const candidates = prefiltered.filter(d => !NEVER_PUBLISH.has(d.slug) && !isPseudoMunicipality(d));
 
   if (blocked.length > 0) {
-    console.log(`\n  Blocked ${blocked.length} interprovincial duplicate/unresolvable fragment(s):`);
-    for (const d of blocked) console.log(`    ⛔ ${d.slug}`);
+    console.log(`\n  Blocked ${blocked.length} duplicate/fragment/cross-border case(s):`);
+    for (const d of blocked) {
+      const reason = isPseudoMunicipality(d) ? `pseudo-municipio "${d.municipality}"` : "interprovincial duplicate/unresolvable";
+      console.log(`    ⛔ ${d.slug.padEnd(52)} ${reason}`);
+    }
   }
 
   console.log(`\nPublish cases`);

@@ -12,7 +12,13 @@ const TYPE_LABELS: Record<SourceType, string> = {
   Otro: "Otro",
 };
 
+// Boilerplate note stamped on every source pushed from /research — shown once
+// as a section-level notice instead of repeating under each link
+const RESEARCH_TOOL_NOTE = /herramienta de investigación/i;
+
 export default function CaseSources({ sources }: { sources: Source[] }) {
+  const hasResearchToolSources = sources.some((s) => s.note && RESEARCH_TOOL_NOTE.test(s.note));
+
   return (
     <section
       className="px-6 md:px-12 py-12 md:py-16"
@@ -69,7 +75,7 @@ export default function CaseSources({ sources }: { sources: Source[] }) {
                   {s.label}
                 </span>
               )}
-              {s.note && (
+              {s.note && !RESEARCH_TOOL_NOTE.test(s.note) && (
                 <span
                   className="type-label"
                   style={{ fontSize: "9px", color: "var(--accent)", letterSpacing: "0.5px" }}
@@ -81,6 +87,25 @@ export default function CaseSources({ sources }: { sources: Source[] }) {
           </motion.li>
         ))}
       </ul>
+
+      {hasResearchToolSources && (
+        <motion.p
+          className="type-small max-w-2xl mt-6 px-4 py-3 rounded-sm"
+          style={{
+            fontSize: "12px",
+            color: "var(--muted)",
+            backgroundColor: "var(--surface)",
+            border: "1px solid var(--border)",
+          }}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+        >
+          ⚠ Enlaces aprobados mediante la herramienta de investigación — se
+          recomienda verificar antes de publicar.
+        </motion.p>
+      )}
     </section>
   );
 }

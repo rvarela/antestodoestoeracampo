@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import type { TriageCase } from "./page";
 import { setCaseHidden } from "./actions";
 
@@ -33,16 +32,14 @@ function Chip({ label, value, tone }: { label: string; value: string; tone?: str
   );
 }
 
-function Card({ c, token }: { c: TriageCase; token: string }) {
-  const [hidden, setHidden] = useState(c.hidden);
+function Card({ c, token, hidden, onToggle }: { c: TriageCase; token: string; hidden: boolean; onToggle: (slug: string, hidden: boolean) => void }) {
   const [isPending, start] = useTransition();
-  const router = useRouter();
   const map = staticMap(token, c.lat, c.lng);
   const b = BUCKET[c.bucket];
 
   function act(next: boolean) {
-    setHidden(next);
-    start(async () => { await setCaseHidden(c.slug, next); router.refresh(); });
+    onToggle(c.slug, next); // optimistic — re-sorts the grid immediately
+    start(async () => { await setCaseHidden(c.slug, next); });
   }
 
   return (
@@ -125,14 +122,21 @@ function Card({ c, token }: { c: TriageCase; token: string }) {
 export default function TriageReview({ cases, counts, mapboxToken }:
   { cases: TriageCase[]; counts: Record<string, number>; mapboxToken: string }) {
   const [filter, setFilter] = useState<Filter>("todos");
+  // Hidden state lifted here so hiding a card re-sorts it to the bottom instantly
+  const [hidden, setHidden] = useState<Record<string, boolean>>(
+    () => Object.fromEntries(cases.map((c) => [c.slug, c.hidden]))
+  );
+  const onToggle = (slug: string, h: boolean) => setHidden((m) => ({ ...m, [slug]: h }));
 
   const visible = useMemo(() => {
-    if (filter === "ocultos") return cases.filter((c) => c.hidden);
-    if (filter === "todos") return cases;
-    return cases.filter((c) => c.bucket === filter);
-  }, [cases, filter]);
+    let rows = cases;
+    if (filter === "ocultos") rows = cases.filter((c) => hidden[c.slug]);
+    else if (filter !== "todos") rows = cases.filter((c) => c.bucket === filter);
+    // hidden cards sink to the bottom, original order preserved within each group
+    return [...rows].sort((a, b) => Number(hidden[a.slug] ?? false) - Number(hidden[b.slug] ?? false));
+  }, [cases, filter, hidden]);
 
-  const hiddenCount = cases.filter((c) => c.hidden).length;
+  const hiddenCount = cases.filter((c) => hidden[c.slug]).length;
 
   const pills: { key: Filter; label: string; n: number; color?: string }[] = [
     { key: "todos", label: "Todos", n: cases.length },
@@ -182,7 +186,7 @@ export default function TriageReview({ cases, counts, mapboxToken }:
       <div style={{ padding: "24px 40px 80px" }}>
         <p className="type-data" style={{ fontSize: 12, color: "var(--muted)", marginBottom: 16 }}>{visible.length} casos</p>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 18 }}>
-          {visible.map((c) => <Card key={c.slug} c={c} token={mapboxToken} />)}
+          {visible.map((c) => <Card key={c.slug} c={c} token={mapboxToken} hidden={hidden[c.slug] ?? false} onToggle={onToggle} />)}
         </div>
       </div>
     </div>

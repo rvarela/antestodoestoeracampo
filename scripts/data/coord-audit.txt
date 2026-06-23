@@ -1,0 +1,70 @@
+[REGION] Paso, El, S.C. Tenerife (1998)  ·  filed: PASO, EL (Canarias)  →  coords resolve to: Casas Bajas, Comunidad Valenciana  ·  paso-el-1998-1998380039
+[MUNI] Iruela, La, Jaen (2001)  ·  filed: IRUELA, LA (Andalucía)  →  coords resolve to: Cazorla, Andalucía  ·  iruela-la-2001-2001230084
+[MUNI] Tineo (2015)  ·  filed: Tineo (Asturias)  →  coords resolve to: Allande, Asturias  ·  tineo-2015-0009
+[MUNI] Victoria De Acentejo, La, S.C. Tenerife (1995)  ·  filed: VICTORIA DE ACENTEJO, LA (Canarias)  →  coords resolve to: La Matanza de Acentejo, Canarias  ·  victoria-de-acentejo-la-1995-1995380028
+[MUNI] Frontera, S.C. Tenerife (2003)  ·  filed: FRONTERA (Canarias)  →  coords resolve to: El Sauzal, Canarias  ·  frontera-2003-2003380026
+[MUNI] Tojos, Los, Cantabria (2010)  ·  filed: TOJOS, LOS (Cantabria)  →  coords resolve to: Correpoco, Cantabria  ·  tojos-los-2010-2010390501
+[MUNI] Tojos, Los, Cantabria (2015)  ·  filed: TOJOS, LOS (Cantabria)  →  coords resolve to: Correpoco, Cantabria  ·  tojos-los-2015-2015390540
+[MUNI] Tojos, Los, Cantabria (2015)  ·  filed: TOJOS, LOS (Cantabria)  →  coords resolve to: ?, Cantabria  ·  tojos-los-2015-2015390696
+[MUNI] Candin, Leon (1995)  ·  filed: CANDIN (Castilla y León)  →  coords resolve to: Valle de Ancares / El Bierzo, Castilla y León  ·  candin-1995-1995240368
+[MUNI] Candin, Leon (2000)  ·  filed: CANDIN (Castilla y León)  →  coords resolve to: Valle de Ancares / El Bierzo, Castilla y León  ·  candin-2000-2000240946
+[MUNI] S Esteban Del Valle, Avila (2000)  ·  filed: S ESTEBAN DEL VALLE (Castilla y León)  →  coords resolve to: San Esteban del Valle, Castilla y León  ·  s-esteban-del-valle-2000-2000050156
+[MUNI] Sta Maria De Ordas, Leon (2000)  ·  filed: STA MARIA DE ORDAS (Castilla y León)  →  coords resolve to: Santa María de Ordás, Castilla y León  ·  sta-maria-de-ordas-2000-2000240617
+[MUNI] S Esteban De La Sierra, Salamanca (2001)  ·  filed: S ESTEBAN DE LA SIERRA (Castilla y León)  →  coords resolve to: San Esteban de la Sierra, Castilla y León  ·  s-esteban-de-la-sierra-2001-2001370100
+[MUNI] Sta Eufemia Del Barco, Zamora (2002)  ·  filed: STA EUFEMIA DEL BARCO (Castilla y León)  →  coords resolve to: Santa Eufemia del Barco, Castilla y León  ·  sta-eufemia-del-barco-2002-2002490305
+[MUNI] Agallas, Salamanca (2003)  ·  filed: AGALLAS (Castilla y León)  →  coords resolve to: Zamarra, Castilla y León  ·  agallas-2003-2003370144
+[MUNI] Ferreruela, Zamora (2003)  ·  filed: FERRERUELA (Castilla y León)  →  coords resolve to: Losacio, Castilla y León  ·  ferreruela-2003-2003490136
+[MUNI] Porto, Zamora (2005)  ·  filed: PORTO (Castilla y León)  →  coords resolve to: Pías, Castilla y León  ·  porto-2005-2005490021
+[MUNI] S Martin Del Pimpollar, Avila (2006)  ·  filed: S MARTIN DEL PIMPOLLAR (Castilla y León)  →  coords resolve to: San Martín del Pimpollar, Castilla y León  ·  s-martin-del-pimpollar-2006-2006050122
+[MUNI] Castrillo De La Valduerna, Leon (2008)  ·  filed: CASTRILLO DE LA VALDUERNA (Castilla y León)  →  coords resolve to: Destriana, Castilla y León  ·  castrillo-de-la-valduerna-2008-2008240457
+[MUNI] S Emiliano, Leon (2009)  ·  filed: S EMILIANO (Castilla y León)  →  coords resolve to: San Emiliano, Castilla y León  ·  s-emiliano-2009-2009240703
+[MUNI] Hermisende, Zamora (2009)  ·  filed: HERMISENDE (Castilla y León)  →  coords resolve to: Lubián, Castilla y León  ·  hermisende-2009-2009490238
+[MUNI] S Justo, Zamora (2012)  ·  filed: S JUSTO (Castilla y León)  →  coords resolve to: San Justo, Castilla y León  ·  s-justo-2012-2012490206
+[MUNI] S Justo, Zamora (2016)  ·  filed: S JUSTO (Castilla y León)  →  coords resolve to: San Justo, Castilla y León  ·  s-justo-2016-2016490107
+[MUNI] Sta Colomba De Curueño, Leon (2018)  ·  filed: STA COLOMBA DE CURUEÑO (Castilla y León)  →  coords resolve to: Santa Colomba de Curueño, Castilla y León  ·  sta-colomba-de-curueno-2018-2018240080
+[MUNI] Santa Cristina D' Aro, Girona (2012)  ·  filed: SANTA CRISTINA D' ARO (Cataluña)  →  coords resolve to: Santa Cristina d'Aro / Bajo Ampurdán, Cataluña  ·  santa-cristina-d-aro-2012-2012170122
+[MUNI] Artés (2022)  ·  filed: Artés (Cataluña)  →  coords resolve to: el Pont de Vilomara i Rocafort / Bages, Cataluña  ·  artes-2022-0005
+[MUNI] Baldomar (2019)  ·  filed: Baldomar (Cataluña)  →  coords resolve to: Agramunt / Urgel, Cataluña  ·  baldomar-2019-0006
+[MUNI] Sant Julià De Ramis (2022)  ·  filed: Sant Julià de Ramis (Cataluña)  →  coords resolve to: Sant Gregori / Gironés, Cataluña  ·  sant-julia-de-ramis-2022-0007
+[MUNI] Ceuta, Ceuta (2022)  ·  filed: CEUTA (Ceuta)  →  coords resolve to: ?, Ceuta  ·  ceuta-2022-2022510001
+[MUNI] Cabanes, Castellon (2005)  ·  filed: CABANES (Comunidad Valenciana)  →  coords resolve to: Torreblanca, Comunidad Valenciana  ·  cabanes-2005-2005120005
+[MUNI] Cabanes, Castellon (2008)  ·  filed: CABANES (Comunidad Valenciana)  →  coords resolve to: Torreblanca, Comunidad Valenciana  ·  cabanes-2008-2008120011
+[MUNI] Simat La Valldigna, Valencia (2005)  ·  filed: SIMAT LA VALLDIGNA (Comunidad Valenciana)  →  coords resolve to: Simat de Valldigna, Comunidad Valenciana  ·  simat-la-valldigna-2005-2005460285
+[MUNI] Simat La Valldigna, Valencia (2010)  ·  filed: SIMAT LA VALLDIGNA (Comunidad Valenciana)  →  coords resolve to: Simat de Valldigna, Comunidad Valenciana  ·  simat-la-valldigna-2010-2010460120
+[MUNI] Benicolet, Valencia (2011)  ·  filed: BENICOLET (Comunidad Valenciana)  →  coords resolve to: Llutxent, Comunidad Valenciana  ·  benicolet-2011-2011460066
+[MUNI] Carcaixent, Valencia (2016)  ·  filed: CARCAIXENT (Comunidad Valenciana)  →  coords resolve to: Carcagente, Comunidad Valenciana  ·  carcaixent-2016-2016460113
+[MUNI] Terra Mítica (Benidorm 1992)  ·  filed: Benidorm (Comunidad Valenciana)  →  coords resolve to: Altea, Comunidad Valenciana  ·  benidorm-1992-0000
+[MUNI] Llíria (2019)  ·  filed: Llíria (Comunidad Valenciana)  →  coords resolve to: Bétera, Comunidad Valenciana  ·  lliria-2019-0002
+[MUNI] Bolo, O, Ourense (1996)  ·  filed: BOLO, O (Galicia)  →  coords resolve to: O Bolo / Valdeorras, Galicia  ·  bolo-o-1996-1996320485
+[MUNI] Pobra De Trives, A, Ourense (1996)  ·  filed: POBRA DE TRIVES, A (Galicia)  →  coords resolve to: A Pobra de Trives / Terra de Trives, Galicia  ·  pobra-de-trives-a-1996-1996322322
+[MUNI] Veiga, A, Ourense (1998)  ·  filed: VEIGA, A (Galicia)  →  coords resolve to: A Bola / Tierra de Celanova, Galicia  ·  veiga-a-1998-1998323245
+[MUNI] Gudiña, A, Ourense (2005)  ·  filed: GUDIÑA, A (Galicia)  →  coords resolve to: Chandrexa de Queixa / Terra de Trives, Galicia  ·  gudina-a-2005-2005323099
+[MUNI] Pobla Do Brollón, A, Lugo (2003)  ·  filed: POBLA DO BROLLÓN, A (Galicia)  →  coords resolve to: A Pobra do Brollón / Tierra de Lemos, Galicia  ·  pobla-do-brollon-a-2003-2003270322
+[MUNI] Incio, O, Lugo (2003)  ·  filed: INCIO, O (Galicia)  →  coords resolve to: O Incio / Sarria, Galicia  ·  incio-o-2003-2003271450
+[MUNI] Pontes De Garcia Rodriguez, As, A Coruña (2004)  ·  filed: PONTES DE GARCIA RODRIGUEZ, AS (Galicia)  →  coords resolve to: As Pontes de García Rodríguez / Eume, Galicia  ·  pontes-de-garcia-rodriguez-as-2004-2004151581
+[MUNI] Laza, Ourense (2005)  ·  filed: LAZA (Galicia)  →  coords resolve to: Chandrexa de Queixa / Terra de Trives, Galicia  ·  laza-2005-2005322723
+[MUNI] Vilardevós, Ourense (2005)  ·  filed: VILARDEVÓS (Galicia)  →  coords resolve to: O Pereiro de Aguiar / Ourense, Galicia  ·  vilardevos-2005-2005322927
+[MUNI] Xinzo De Limia, Ourense (2005)  ·  filed: XINZO DE LIMIA (Galicia)  →  coords resolve to: Parada de Sil / Terra de Caldelas, Galicia  ·  xinzo-de-limia-2005-2005322969
+[MUNI] Avión, Ourense (2005)  ·  filed: AVIÓN (Galicia)  →  coords resolve to: Montederramo / Terra de Caldelas, Galicia  ·  avion-2005-2005323138
+[MUNI] Entrimo, Ourense (2005)  ·  filed: ENTRIMO (Galicia)  →  coords resolve to: Montederramo / Terra de Caldelas, Galicia  ·  entrimo-2005-2005323140
+[MUNI] Vilardevós, Ourense (2005)  ·  filed: VILARDEVÓS (Galicia)  →  coords resolve to: Montederramo / Terra de Caldelas, Galicia  ·  vilardevos-2005-2005323144
+[MUNI] Calvos De Randín, Ourense (2005)  ·  filed: CALVOS DE RANDÍN (Galicia)  →  coords resolve to: Montederramo / Terra de Caldelas, Galicia  ·  calvos-de-randin-2005-2005323463
+[MUNI] Melón, Ourense (2005)  ·  filed: MELÓN (Galicia)  →  coords resolve to: Montederramo / Terra de Caldelas, Galicia  ·  melon-2005-2005323468
+[MUNI] Vilariño De Conso, Ourense (2005)  ·  filed: VILARIÑO DE CONSO (Galicia)  →  coords resolve to: Chandrexa de Queixa / Terra de Trives, Galicia  ·  vilarino-de-conso-2005-2005323646
+[MUNI] Irixo, O, Ourense (2005)  ·  filed: IRIXO, O (Galicia)  →  coords resolve to: Xunqueira de Ambía / Allariz-Maceda, Galicia  ·  irixo-o-2005-2005323785
+[MUNI] Caldas De Reis, Pontevedra (2005)  ·  filed: CALDAS DE REIS (Galicia)  →  coords resolve to: Vilanova de Arousa / O Salnés, Galicia  ·  caldas-de-reis-2005-2005363088
+[MUNI] Cotobade, Pontevedra (2005)  ·  filed: COTOBADE (Galicia)  →  coords resolve to: Gondomar / Vigo, Galicia  ·  cotobade-2005-2005363510
+[MUNI] Laracha, A, A Coruña (2006)  ·  filed: LARACHA, A (Galicia)  →  coords resolve to: A Laracha / Bergantiños, Galicia  ·  laracha-a-2006-2006151824
+[MUNI] Vimianzo, A Coruña (2006)  ·  filed: VIMIANZO (Galicia)  →  coords resolve to: Muxía / Fisterra, Galicia  ·  vimianzo-2006-2006152127
+[MUNI] Gudiña, A, Ourense (2006)  ·  filed: GUDIÑA, A (Galicia)  →  coords resolve to: A Gudiña / Viana, Galicia  ·  gudina-a-2006-2006321205
+[MUNI] Soutomaior, Pontevedra (2006)  ·  filed: SOUTOMAIOR (Galicia)  →  coords resolve to: Redondela / Vigo, Galicia  ·  soutomaior-2006-2006361577
+[MUNI] Estrada, A, Pontevedra (2006)  ·  filed: ESTRADA, A (Galicia)  →  coords resolve to: A Estrada / Tabeirós - Tierra de Montes, Galicia  ·  estrada-a-2006-2006361716
+[MUNI] Muros, A Coruña (2007)  ·  filed: MUROS (Galicia)  →  coords resolve to: Outes / Noia, Galicia  ·  muros-2007-2007150341
+[MUNI] Montederramo, Ourense (2011)  ·  filed: MONTEDERRAMO (Galicia)  →  coords resolve to: Parada de Sil / Terra de Caldelas, Galicia  ·  montederramo-2011-2011322310
+[MUNI] Veiga, A, Ourense (2012)  ·  filed: VEIGA, A (Galicia)  →  coords resolve to: A Veiga / Valdeorras, Galicia  ·  veiga-a-2012-2012320503
+[MUNI] Mezquita, A, Ourense (2012)  ·  filed: MEZQUITA, A (Galicia)  →  coords resolve to: A Mezquita / Viana, Galicia  ·  mezquita-a-2012-2012320504
+[MUNI] Fonsagrada, A, Lugo (2013)  ·  filed: FONSAGRADA, A (Galicia)  →  coords resolve to: A Fonsagrada / A Fonsagrada, Galicia  ·  fonsagrada-a-2013-2013270446
+[MUNI] Mezquita, A, Ourense (2013)  ·  filed: MEZQUITA, A (Galicia)  →  coords resolve to: A Mezquita / Viana, Galicia  ·  mezquita-a-2013-2013320836
+[MUNI] Merca, A, Ourense (2013)  ·  filed: MERCA, A (Galicia)  →  coords resolve to: A Merca / Tierra de Celanova, Galicia  ·  merca-a-2013-2013321079
+[MUNI] Gudiña, A, Ourense (2019)  ·  filed: GUDIÑA, A (Galicia)  →  coords resolve to: A Gudiña / Viana, Galicia  ·  gudina-a-2019-2019320638
+[MUNI] Nigrán (2001)  ·  filed: Nigrán (Galicia)  →  coords resolve to: Gondomar / Vigo, Galicia  ·  nigran-2001-0001

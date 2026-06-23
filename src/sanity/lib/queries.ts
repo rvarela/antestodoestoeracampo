@@ -2,7 +2,13 @@ import { groq } from "next-sanity";
 
 // ── Case list (homepage map + grid) ──────────────────────────────────────────
 export const allCasesQuery = groq`
-  *[_type == "case" && hidden != true] | order(order asc, year asc, slug.current asc) {
+  *[_type == "case" && hidden != true] | order(
+      order asc,
+      select(status == "Sentencia firme" => 0, defined(catastroSignal) => 1, 2) asc,
+      coalesce(catastroSignal, -1) desc,
+      year asc,
+      slug.current asc
+    ) {
     title,
     "slug": slug.current,
     region,

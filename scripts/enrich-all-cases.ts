@@ -183,7 +183,8 @@ function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null, wasQueried
       `El análisis automatizado del Catastro INSPIRE detecta ${catastro.suspiciousCount.toLocaleString("es-ES")} parcelas modificadas en el área afectada por el incendio, ` +
       `de las cuales ${catastro.urbanCount.toLocaleString("es-ES")} aparecen clasificadas como suelo urbano en los registros ${range}. ` +
       `Esto representa una modificación en ${lagWord} ${lag} año${lag !== 1 ? "s" : ""} después del incendio. ` +
-      `El patrón —incendio forestal, reclasificación catastral, construcción— es consistente con los casos documentados en esta base de datos.`;
+      `Es una señal que conviene investigar, no una prueba: indica que esas parcelas figuran hoy como suelo urbano en la zona quemada, ` +
+      `no que su clasificación cambiara a causa del incendio —un casco urbano preexistente o una actualización administrativa del Catastro también podrían explicarlo.`;
 
     blocks.push(sanityBlock(catPara, "p-catastro"));
   } else if (wasQueried) {

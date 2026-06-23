@@ -141,10 +141,9 @@ function makeExcerpt(doc: CaseDoc, s: CatastroSummary): string {
 
   return (
     `Incendio forestal de ${ha} hectáreas en ${municipality} (${doc.region}) en ${doc.year}. ` +
-    `El análisis catastral detecta ${s.urbanCount.toLocaleString("es-ES")} parcelas ` +
-    `reclasificadas como suelo urbano entre ${s.earliestMod} y ${s.latestMod}, ` +
-    `${lagYears <= 5 ? "apenas" : "hasta"} ${lagYears} años después del incendio. ` +
-    `El patrón —incendio, recalificación, construcción— es consistente con los casos documentados en esta base de datos.`
+    `En la zona quemada, el Catastro registra ${s.urbanCount.toLocaleString("es-ES")} parcelas ` +
+    `clasificadas como suelo urbano, con modificaciones hasta ${lagYears} años después. ` +
+    `Señal para investigar, no prueba de recalificación.`
   );
 }
 
@@ -170,7 +169,8 @@ function makeCatastroOverviewBlock(doc: CaseDoc, s: CatastroSummary): OverviewBl
     `El análisis automatizado del Catastro INSPIRE detecta ${s.suspiciousCount.toLocaleString("es-ES")} parcelas modificadas en el área afectada por el incendio, ` +
     `de las cuales ${s.urbanCount.toLocaleString("es-ES")} aparecen clasificadas como suelo urbano en los registros ${range}. ` +
     `Esto representa una modificación en ${lagWord} ${lag} año${lag !== 1 ? "s" : ""} después del incendio. ` +
-    `El patrón —incendio forestal, reclasificación catastral, construcción— es consistente con los casos documentados en esta base de datos.`;
+    `Es una señal que conviene investigar, no una prueba: indica que esas parcelas figuran hoy como suelo urbano en la zona quemada, ` +
+    `no que su clasificación cambiara a causa del incendio —un casco urbano preexistente o una actualización administrativa del Catastro también podrían explicarlo.`;
 
   return sanityBlock(catPara, "p-catastro");
 }
@@ -340,8 +340,10 @@ async function main() {
   for (const { slug, doc, summary: s } of candidates) {
     const patch: Record<string, unknown> = {};
 
-    // Add excerpt only if missing
-    if (!doc.excerpt) {
+    // Write excerpt if missing, or overwrite a stale auto-generated one
+    // (older versions overclaimed "reclasificadas … es consistente"). Manually
+    // written excerpts never contain that phrasing, so they're left untouched.
+    if (!doc.excerpt || /reclasificadas como suelo urbano/.test(doc.excerpt)) {
       patch.excerpt = makeExcerpt(doc, s);
     }
 

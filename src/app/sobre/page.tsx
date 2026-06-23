@@ -127,9 +127,17 @@ export default async function SobrePage() {
             publicidad y sin fines comerciales. No pertenece a ningún medio,
             partido ni organización.
           </p>
-          <p style={{ color: "var(--muted)" }}>
-            [POR COMPLETAR — quién eres y cuánto quieres contar: nombre o
-            seudónimo, oficio, por qué te importa. Un párrafo basta.]
+          <p>
+            No hace falta que confíes en quién está detrás: cada caso enlaza
+            sus fuentes públicas —la estadística oficial de incendios (EGIF) y
+            el Catastro— para que cualquiera pueda comprobarlo por su cuenta.
+          </p>
+          <p>
+            Lo mantiene una sola persona, a título individual. Nació como un
+            experimento personal de un diseñador para aprender a trabajar con
+            herramientas de IA y, de paso, dejar algo útil. Ni más, ni menos:
+            ninguna agenda más allá de hacer accesibles unos datos que ya son
+            públicos. Si eso cambiara, se diría aquí.
           </p>
         </Section>
 

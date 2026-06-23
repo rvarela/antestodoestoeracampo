@@ -93,6 +93,13 @@ export const caseType = defineType({
         "Parcelas clasificadas como suelo urbano modificadas 1–15 años después del incendio. Rellenado automáticamente por patch:catastro — no editar a mano.",
     }),
     defineField({
+      name: "catastroSignal",
+      title: "Señal Catastro (fiabilidad)",
+      type: "number",
+      description:
+        "Señal depurada: prioriza incendios sobre terreno mayoritariamente rural con parcelas urbanas repartidas en varios años, y penaliza cascos ya urbanizados y los picos de re-versionado catastral masivo. Rellenado por patch:catastro-signal — no editar a mano.",
+    }),
+    defineField({
       name: "status",
       title: "Estado judicial",
       type: "string",
@@ -266,6 +273,7 @@ export const caseType = defineType({
   orderings: [
     { title: "Orden de visualización", name: "orderAsc", by: [{ field: "order", direction: "asc" }] },
     { title: "Año (reciente primero)", name: "yearDesc", by: [{ field: "year", direction: "desc" }] },
+    { title: "Señal Catastro (mayor primero)", name: "signalDesc", by: [{ field: "catastroSignal", direction: "desc" }] },
   ],
 
   preview: {

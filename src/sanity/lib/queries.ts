@@ -10,6 +10,7 @@ export const allCasesQuery = groq`
     year,
     hectares,
     urbanParcels,
+    catastroSignal,
     status,
     outcome,
     accentColor,

@@ -58,6 +58,8 @@ export interface CaseSummary {
   hectares: number;
   /** Urban parcels modified 1–15 years post-fire (Catastro) — null/undefined when not enriched */
   urbanParcels?: number;
+  /** De-noised Catastro signal (rural box + spread-out post-fire urbanisation) — higher = stronger lead */
+  catastroSignal?: number;
   status: CaseStatus;
   outcome: string;
   accentColor: string;

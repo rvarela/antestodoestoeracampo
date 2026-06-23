@@ -6,7 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { CaseSummary } from "@/types/case";
 import CaseCard from "./CaseCard";
 
-type SortKey = "year" | "hectares" | "urbanParcels";
+type SortKey = "year" | "hectares" | "urbanParcels" | "catastroSignal";
 type SortDir = "asc" | "desc";
 type View = "tabla" | "tarjetas";
 
@@ -73,7 +73,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
   const [q, setQ] = useState(sp.get("q") ?? "");
   const [region, setRegion] = useState(sp.get("region") ?? "");
   const [status, setStatus] = useState(sp.get("estado") ?? "");
-  const [sort, setSort] = useState<SortKey>((sp.get("orden") as SortKey) || "year");
+  const [sort, setSort] = useState<SortKey>((sp.get("orden") as SortKey) || "catastroSignal");
   const [dir, setDir] = useState<SortDir>((sp.get("dir") as SortDir) || "desc");
   const [view, setView] = useState<View>((sp.get("vista") as View) || "tabla");
   const firstRender = useRef(true);
@@ -88,7 +88,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
       if (q.trim()) p.set("q", q.trim());
       if (region) p.set("region", region);
       if (status) p.set("estado", status);
-      if (sort !== "year") p.set("orden", sort);
+      if (sort !== "catastroSignal") p.set("orden", sort);
       if (dir !== "desc") p.set("dir", dir);
       if (view !== "tabla") p.set("vista", view);
       const qs = p.toString();
@@ -246,7 +246,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
         </p>
       ) : view === "tabla" ? (
         <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-          <table className="w-full min-w-[720px] border-collapse">
+          <table className="w-full min-w-[820px] border-collapse">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--foreground)" }}>
                 <th className="px-3 py-2.5 text-left">
@@ -257,6 +257,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
                 </th>
                 {thButton("year", "Año")}
                 {thButton("hectares", "Hectáreas")}
+                {thButton("catastroSignal", "Señal")}
                 {thButton("urbanParcels", "Parcelas urbanas")}
                 <th className="px-3 py-2.5 text-left whitespace-nowrap">
                   <span className="type-label" style={{ color: "var(--muted)" }}>Estado</span>
@@ -293,7 +294,13 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
                     </td>
                     <td
                       className="px-3 py-3 type-data text-[13px] text-right"
-                      style={{ color: c.urbanParcels ? "var(--accent)" : "var(--muted)" }}
+                      style={{ color: c.catastroSignal ? "var(--accent)" : "var(--muted)" }}
+                    >
+                      {c.catastroSignal ?? "—"}
+                    </td>
+                    <td
+                      className="px-3 py-3 type-data text-[13px] text-right"
+                      style={{ color: "var(--muted)" }}
                     >
                       {c.urbanParcels ?? "—"}
                     </td>
@@ -325,12 +332,21 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
       )}
 
       {/* Column note */}
-      <p className="type-small mt-8 max-w-2xl" style={{ color: "var(--muted)" }}>
-        «Parcelas urbanas» = parcelas clasificadas como suelo urbano en el Catastro
-        modificadas entre 1 y 15 años después del incendio, detectadas por consulta
-        automatizada al WFS INSPIRE del Catastro. Es una señal para investigar, no
-        una prueba de recalificación irregular.
-      </p>
+      <div className="type-small mt-8 max-w-2xl space-y-2" style={{ color: "var(--muted)" }}>
+        <p>
+          «Parcelas urbanas» = parcelas clasificadas como suelo urbano en el Catastro
+          modificadas entre 1 y 15 años después del incendio, detectadas por consulta
+          automatizada al WFS INSPIRE del Catastro.
+        </p>
+        <p>
+          «Señal» es una versión depurada de ese recuento: prioriza incendios sobre
+          terreno mayoritariamente rural cuyas parcelas urbanas aparecen repartidas en
+          varios años, y descarta los cascos ya urbanizados y los picos de re-versionado
+          catastral masivo (que inflan el recuento bruto sin indicar recalificación). El
+          archivo se ordena por esta señal de forma predeterminada. Sigue siendo una pista
+          para investigar, no una prueba de recalificación irregular.
+        </p>
+      </div>
     </div>
   );
 }

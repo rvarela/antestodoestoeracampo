@@ -180,9 +180,14 @@ export default async function SobrePage() {
             de recalificación, actas municipales, fotografías con fecha.
             Aceptamos documentación de forma confidencial.
           </p>
-          <p className="type-data text-[14px]" style={{ color: "var(--accent)" }}>
-            [POR COMPLETAR — dirección de contacto, idealmente una dedicada,
-            p. ej. hola@antestodoestoeracampo.es]
+          <p style={{ color: "var(--muted)" }}>
+            Estamos habilitando una dirección de contacto dedicada. Mientras
+            tanto, todas las fuentes están enlazadas en cada caso y los datos
+            completos pueden consultarse y descargarse desde{" "}
+            <Link href="/metodologia" className="underline underline-offset-2">
+              Metodología
+            </Link>
+            .
           </p>
         </Section>
       </main>

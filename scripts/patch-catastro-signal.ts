@@ -72,8 +72,8 @@ async function main() {
   const client = createClient({ projectId, dataset, apiVersion: "2026-05-19", token, useCdn: false });
 
   const cache: Record<string, Entry> = JSON.parse(readFileSync(path.join(process.cwd(), "scripts/data/catastro-cache.json"), "utf-8"));
-  const ids = new Map<string, string>(); // slug -> _id
-  for (const c of await client.fetch<any[]>(`*[_type=="case"]{ _id, "slug": slug.current }`)) ids.set(c.slug, c._id);
+  const docs = new Map<string, { _id: string; year?: number }>(); // slug -> doc
+  for (const c of await client.fetch<any[]>(`*[_type=="case"]{ _id, "slug": slug.current, year }`)) docs.set(c.slug, c);
 
   let slugs = Object.keys(cache);
   if (onlySlug) slugs = slugs.filter((s) => s === onlySlug);
@@ -83,8 +83,11 @@ async function main() {
   let tx = client.transaction();
   let pending = 0;
   for (const slug of slugs) {
-    const fy = fireYearFromSlug(slug);
-    const id = ids.get(slug);
+    const doc = docs.get(slug);
+    // Sanity's year field is authoritative; curated index slugs (-0000..-0009)
+    // have no parseable EGIF ref, which used to skip them here
+    const fy = doc?.year ?? fireYearFromSlug(slug);
+    const id = doc?._id;
     if (fy == null || !id) { skipped++; continue; }
     const signal = computeSignal(cache[slug].parcels || [], fy);
     if (DRY) { if (patched < 25) console.log(`  ${String(signal).padStart(5)}  ${slug}`); patched++; continue; }

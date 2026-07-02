@@ -174,16 +174,16 @@ function makeOverview(doc: CaseDoc, catastro: CatastroSummary | null, wasQueried
   // ── Para 2: Catastro findings (if any) ──
   if (catastro && catastro.urbanCount > 0) {
     const lag = catastro.latestMod - doc.year;
-    const lagWord = lag <= 5 ? "apenas" : "hasta";
+    const lagPhrase = lag <= 5 ? "en apenas" : "hasta";
     const range = catastro.earliestMod === catastro.latestMod
       ? String(catastro.earliestMod)
       : `entre ${catastro.earliestMod} y ${catastro.latestMod}`;
 
     const catPara =
-      `El análisis automatizado del Catastro INSPIRE detecta ${catastro.suspiciousCount.toLocaleString("es-ES")} parcelas modificadas en el área afectada por el incendio, ` +
+      `El análisis automatizado del Catastro INSPIRE detecta ${catastro.suspiciousCount.toLocaleString("es-ES")} parcelas modificadas en el área analizada en torno al incendio, ` +
       `de las cuales ${catastro.urbanCount.toLocaleString("es-ES")} aparecen clasificadas como suelo urbano en los registros ${range}. ` +
-      `Esto representa una modificación en ${lagWord} ${lag} año${lag !== 1 ? "s" : ""} después del incendio. ` +
-      `Es una señal que conviene investigar, no una prueba: indica que esas parcelas figuran hoy como suelo urbano en la zona quemada, ` +
+      `Esto representa una modificación ${lagPhrase} ${lag} año${lag !== 1 ? "s" : ""} después del incendio. ` +
+      `Es una señal que conviene investigar, no una prueba: indica que esas parcelas figuran hoy como suelo urbano en el área analizada, ` +
       `no que su clasificación cambiara a causa del incendio —un casco urbano preexistente o una actualización administrativa del Catastro también podrían explicarlo.`;
 
     blocks.push(sanityBlock(catPara, "p-catastro"));

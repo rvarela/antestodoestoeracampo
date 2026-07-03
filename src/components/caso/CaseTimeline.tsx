@@ -117,6 +117,19 @@ export default function CaseTimeline({
                     {event.description}
                   </p>
                 )}
+
+                {/* Supporting document */}
+                {event.sourceUrl && (
+                  <a
+                    href={event.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="type-label inline-flex items-center gap-1 mt-2 hover:underline"
+                    style={{ fontSize: "10px", color: "var(--accent)" }}
+                  >
+                    Fuente ↗
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}

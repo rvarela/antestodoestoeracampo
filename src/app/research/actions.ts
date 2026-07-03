@@ -94,6 +94,7 @@ interface TimelineEntry {
   title?: string;
   description?: string;
   type?: string;
+  sourceUrl?: string;
 }
 
 export async function pushLinkToTimeline(
@@ -108,8 +109,8 @@ export async function pushLinkToTimeline(
     return { ok: false as const, error: "Fecha y título son obligatorios." };
   }
 
-  const link = await client.fetch<{ caseSlug: string } | null>(
-    `*[_type == "researchLink" && _id == $id][0]{ caseSlug }`,
+  const link = await client.fetch<{ caseSlug: string; url?: string } | null>(
+    `*[_type == "researchLink" && _id == $id][0]{ caseSlug, url }`,
     { id: linkId }
   );
   if (!link) return { ok: false as const, error: "Enlace no encontrado." };
@@ -127,6 +128,8 @@ export async function pushLinkToTimeline(
     title,
     description: data.description.trim(),
     type: data.type || "other",
+    // the pushed document is the entry's receipt — shown as «Fuente ↗»
+    ...(link.url ? { sourceUrl: link.url } : {}),
   };
 
   // Replace an earlier push of the same link, then insert chronologically:

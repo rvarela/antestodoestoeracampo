@@ -25,6 +25,7 @@ export interface TimelineEvent {
   title: string;
   description?: string;
   type: EventType;
+  sourceUrl?: string;
 }
 
 export interface PoliticalConnection {

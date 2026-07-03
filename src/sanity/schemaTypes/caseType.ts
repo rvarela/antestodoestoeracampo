@@ -177,6 +177,12 @@ export const caseType = defineType({
               options: { list: EVENT_TYPES },
               initialValue: "other",
             }),
+            defineField({
+              name: "sourceUrl",
+              title: "URL de la fuente",
+              type: "url",
+              description: "Documento que respalda este hecho — se muestra como «Fuente ↗» en la cronología pública.",
+            }),
           ],
         },
       ],

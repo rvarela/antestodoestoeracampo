@@ -3,6 +3,7 @@ import type { PortableTextBlock } from "@portabletext/react";
 export type CaseStatus =
   | "Sentencia firme"
   | "En investigación"
+  | "Absuelto"
   | "Archivado"
   | "Sobreseído";
 

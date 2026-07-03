@@ -1,6 +1,7 @@
 export type CaseStatus =
   | "Sentencia firme"
   | "En investigación"
+  | "Absuelto"
   | "Archivado"
   | "Sobreseído";
 

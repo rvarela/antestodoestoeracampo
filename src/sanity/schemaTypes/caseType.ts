@@ -107,6 +107,7 @@ export const caseType = defineType({
         list: [
           "Sentencia firme",
           "En investigación",
+          "Absuelto",
           "Archivado",
           "Sobreseído",
         ],

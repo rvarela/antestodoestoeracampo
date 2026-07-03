@@ -9,7 +9,7 @@ import CaseCard from "./CaseCard";
 const DISPLAY_CAP = 12;
 
 // Same toolbar vocabulary as CasosArchive
-const STATUSES = ["Sentencia firme", "En investigación", "Archivado", "Sobreseído"];
+const STATUSES = ["Sentencia firme", "En investigación", "Absuelto", "Archivado", "Sobreseído"];
 
 const selectStyle: React.CSSProperties = {
   backgroundColor: "var(--surface)",

@@ -10,7 +10,7 @@ type SortKey = "year" | "hectares" | "urbanParcels" | "catastroSignal";
 type SortDir = "asc" | "desc";
 type View = "tabla" | "tarjetas";
 
-const STATUSES = ["Sentencia firme", "En investigación", "Archivado", "Sobreseído"];
+const STATUSES = ["Sentencia firme", "En investigación", "Absuelto", "Archivado", "Sobreseído"];
 
 /** Accent-insensitive lowercase for Spanish search (Ávila → avila) */
 function normalize(s: string) {

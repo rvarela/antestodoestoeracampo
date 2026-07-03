@@ -34,6 +34,7 @@ function useMeasuredWidth(ref: React.RefObject<SVGSVGElement | null>) {
 const STATUS_COLORS: Record<CaseStatus, string> = {
   "Sentencia firme":   ACCENT,
   "En investigación":  FOREST,
+  "Absuelto":          "#A3814B", // ocre apagado — juzgado sin condena
   "Archivado":         MUTED,
   "Sobreseído":        "#B5B0A8",
 };
@@ -240,7 +241,7 @@ function ChartByStatus({ cases }: { cases: CaseSummary[] }) {
     if (!svgRef.current || !cases.length || !width) return;
 
     const byStatus = d3.rollup(cases, v => v.length, d => d.status ?? "Archivado");
-    const statuses: CaseStatus[] = ["Sentencia firme", "En investigación", "Archivado", "Sobreseído"];
+    const statuses: CaseStatus[] = ["Sentencia firme", "En investigación", "Absuelto", "Archivado", "Sobreseído"];
     const data = statuses
       .map(s => ({ status: s, count: byStatus.get(s) ?? 0 }))
       .filter(d => d.count > 0);

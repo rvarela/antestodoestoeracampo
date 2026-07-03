@@ -102,8 +102,9 @@ export default function CaseSources({ sources }: { sources: Source[] }) {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          ⚠ Enlaces aprobados mediante la herramienta de investigación — se
-          recomienda verificar antes de publicar.
+          ⚠ Parte de estos enlaces se localizaron mediante búsqueda documental
+          asistida — se recomienda contrastar el documento original antes de
+          reutilizar cualquier información de esta web.
         </motion.p>
       )}
     </section>

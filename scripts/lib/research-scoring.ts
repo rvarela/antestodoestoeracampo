@@ -299,8 +299,11 @@ export interface CendojHitMeta {
 
 // A resumen mentioning none of these is about something else entirely
 // (the query matched a surname + an incidental "incendio forestal").
+// "responsabilidad patrimonial" is included: liability claims for fire
+// damage/deaths are a real thread (Riotinto 2004 — families sued both the
+// Junta and the State over the two fatalities).
 const RESUMEN_RELEVANT =
-  /incendi|forestal|urbanis|urbanistic|recalificac|prevaricac|suelo|medio ambiente|montes/;
+  /incendi|forestal|urbanis|urbanistic|recalificac|prevaricac|suelo|medio ambiente|montes|responsabilidad patrimonial/;
 
 export function cendojConfidence(
   hit: CendojHitMeta,
@@ -316,7 +319,12 @@ export function cendojConfidence(
     return { confidence: 15, flag: `Sala de lo ${hit.sala} — jurisdicción ajena a incendios forestales` };
   }
   if (parsed && AN_ORGANS.has(parsed.organo)) {
-    return { confidence: 15, flag: "Audiencia Nacional — no enjuicia incendios forestales" };
+    // The AN never *prosecutes* forest fires, but its Sala de lo Contencioso
+    // hears state-liability claims over them (e.g. Riotinto 2004 fatalities) —
+    // a resumen mentioning the fire keeps the hit alive.
+    if (!/incendi/.test(normalize(hit.resumen ?? ""))) {
+      return { confidence: 15, flag: "Audiencia Nacional — no enjuicia incendios forestales (salvo contencioso contra el Estado)" };
+    }
   }
 
   // Territory: fires are tried where they happen. Province-level check for

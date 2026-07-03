@@ -7,6 +7,7 @@ const client = cdnClient.withConfig({ useCdn: false });
 import { LinkCard } from "./LinkCard";
 import { PushButton } from "./PushButton";
 import { AddResultForm } from "./AddResultForm";
+import { timelineKeyForLink } from "../timeline-key";
 
 export const revalidate = 0;
 
@@ -31,6 +32,7 @@ interface CaseDoc {
   status: string;
   sourcesCount: number;
   sourceUrls: Array<string | null>;
+  timelineKeys: Array<string | null> | null;
 }
 
 export default async function ResearchCasePage({
@@ -45,7 +47,8 @@ export default async function ResearchCasePage({
       `*[_type == "case" && slug.current == $slug][0]{
         _id, title, municipality, region, year, hectares, status,
         "sourcesCount": count(sources),
-        "sourceUrls": sources[].url
+        "sourceUrls": sources[].url,
+        "timelineKeys": timeline[]._key
       }`,
       { slug }
     ),
@@ -68,6 +71,22 @@ export default async function ResearchCasePage({
   const caseUrls = new Set((caseDoc.sourceUrls ?? []).filter(Boolean));
   const toPushCount = approved.filter(l => !l.isSearch && l.url && !caseUrls.has(l.url)).length;
   const approvedSearches = approved.filter(l => l.isSearch).length;
+
+  const timelineKeys = new Set((caseDoc.timelineKeys ?? []).filter(Boolean));
+  const card = (l: ResearchLink) => (
+    <LinkCard
+      key={l._id}
+      id={l._id}
+      label={l.label}
+      url={l.url}
+      sourceType={l.sourceType}
+      note={l.note}
+      status={l.status}
+      isSearch={l.isSearch}
+      confidence={l.confidence}
+      inTimeline={timelineKeys.has(timelineKeyForLink(l._id))}
+    />
+  );
 
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "var(--background)", fontFamily: "var(--font-inter), system-ui, sans-serif" }}>
@@ -144,19 +163,19 @@ export default async function ResearchCasePage({
 
         {pending.length > 0 && (
           <Section title="Por revisar" count={pending.length}>
-            {pending.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
+            {pending.map(card)}
           </Section>
         )}
 
         {approved.length > 0 && (
           <Section title="Aprobados" count={approved.length}>
-            {approved.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
+            {approved.map(card)}
           </Section>
         )}
 
         {rejected.length > 0 && (
           <Section title="Rechazados" count={rejected.length}>
-            {rejected.map(l => <LinkCard key={l._id} id={l._id} label={l.label} url={l.url} sourceType={l.sourceType} note={l.note} status={l.status} isSearch={l.isSearch} confidence={l.confidence} />)}
+            {rejected.map(card)}
           </Section>
         )}
       </div>

@@ -2,7 +2,35 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { setLinkStatus } from "../actions";
+import { setLinkStatus, pushLinkToTimeline } from "../actions";
+
+const EVENT_TYPES = [
+  { value: "fire", title: "🔥 Incendio" },
+  { value: "purchase", title: "🏠 Compraventa" },
+  { value: "rezoning", title: "📋 Recalificación" },
+  { value: "permit", title: "🔨 Permiso de obra" },
+  { value: "construction", title: "🏗️ Construcción" },
+  { value: "judicial", title: "⚖️ Judicial" },
+  { value: "political", title: "🏛️ Político" },
+  { value: "other", title: "📰 Otro" },
+];
+
+const SPANISH_MONTHS: Record<string, string> = {
+  enero: "01", febrero: "02", marzo: "03", abril: "04", mayo: "05", junio: "06",
+  julio: "07", agosto: "08", septiembre: "09", octubre: "10", noviembre: "11", diciembre: "12",
+};
+
+/** Best-effort ISO date from a link label ("a 17 de septiembre de 2009", "29/07/2004"). */
+function dateFromLabel(label: string): string {
+  const es = label.match(/\ba?\s*(\d{1,2}) de (\p{L}+) de (\d{4})/iu);
+  if (es) {
+    const month = SPANISH_MONTHS[es[2].toLowerCase()];
+    if (month) return `${es[3]}-${month}-${es[1].padStart(2, "0")}`;
+  }
+  const dmy = label.match(/\b(\d{2})\/(\d{2})\/(\d{4})\b/);
+  if (dmy) return `${dmy[3]}-${dmy[2]}-${dmy[1]}`;
+  return "";
+}
 
 const SOURCE_LABELS: Record<string, string> = {
   CENDOJ: "CENDOJ",
@@ -39,6 +67,8 @@ interface LinkCardProps {
   status: "pending" | "approved" | "rejected";
   isSearch?: boolean;
   confidence?: number;
+  /** this link already has an entry in the case timeline */
+  inTimeline?: boolean;
 }
 
 function confidenceColor(c: number): string {
@@ -47,10 +77,18 @@ function confidenceColor(c: number): string {
   return "#B91C1C";              // red — probably noise
 }
 
-export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence }: LinkCardProps) {
+export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence, inTimeline: initialInTimeline }: LinkCardProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  const [showTimelineForm, setShowTimelineForm] = useState(false);
+  const [inTimeline, setInTimeline] = useState(!!initialInTimeline);
+  const [tlDate, setTlDate] = useState(() => dateFromLabel(label));
+  const [tlType, setTlType] = useState(sourceType === "CENDOJ" ? "judicial" : "other");
+  const [tlTitle, setTlTitle] = useState(label.length > 120 ? label.slice(0, 117) + "…" : label);
+  const [tlDescription, setTlDescription] = useState("");
+  const [tlError, setTlError] = useState<string | null>(null);
 
   function update(next: "approved" | "rejected" | "pending") {
     setStatus(next); // optimistic
@@ -61,9 +99,35 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
     });
   }
 
+  function submitTimeline() {
+    setTlError(null);
+    startTransition(async () => {
+      const res = await pushLinkToTimeline(id, {
+        date: tlDate, type: tlType, title: tlTitle, description: tlDescription,
+      });
+      if (!res.ok) {
+        setTlError(res.error);
+        return;
+      }
+      setInTimeline(true);
+      setShowTimelineForm(false);
+      router.refresh();
+    });
+  }
+
   const color = SOURCE_COLORS[sourceType] ?? "#6B7280";
   const isApproved = status === "approved";
   const isRejected = status === "rejected";
+
+  const inputStyle: React.CSSProperties = {
+    fontSize: 12,
+    padding: "6px 8px",
+    borderRadius: 4,
+    border: "1px solid var(--border)",
+    backgroundColor: "var(--background)",
+    color: "var(--foreground)",
+    width: "100%",
+  };
 
   return (
     <div
@@ -76,6 +140,7 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
         display: "flex",
         gap: 14,
         alignItems: "flex-start",
+        flexWrap: "wrap",
         transition: "opacity 0.15s, background-color 0.15s",
       }}
     >
@@ -215,7 +280,129 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
             ↺
           </button>
         )}
+        {!isSearch && !isRejected && (
+          inTimeline ? (
+            <button
+              onClick={() => setShowTimelineForm(v => !v)}
+              disabled={isPending}
+              className="type-label"
+              title="Ya tiene entrada en la cronología del caso — pulsa para editarla y volver a empujar."
+              style={{
+                fontSize: "10px",
+                padding: "4px 10px",
+                borderRadius: 4,
+                border: "1px solid #BFDBFE",
+                backgroundColor: "#EFF6FF",
+                color: "#1D4ED8",
+                cursor: "pointer",
+                opacity: isPending ? 0.5 : 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              ✓ en cronología
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowTimelineForm(v => !v)}
+              disabled={isPending}
+              className="type-label"
+              title="Crear una entrada en la cronología del caso a partir de este enlace (fecha, tipo y texto editables antes de empujar)."
+              style={{
+                fontSize: "10px",
+                padding: "4px 10px",
+                borderRadius: 4,
+                border: "1px solid var(--border)",
+                backgroundColor: "transparent",
+                color: "var(--foreground)",
+                cursor: "pointer",
+                opacity: isPending ? 0.5 : 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              → Cronología
+            </button>
+          )
+        )}
       </div>
+
+      {/* Inline timeline form */}
+      {showTimelineForm && (
+        <div
+          style={{
+            flexBasis: "100%",
+            borderTop: "1px dashed var(--border)",
+            paddingTop: 12,
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              value={tlDate}
+              onChange={e => setTlDate(e.target.value)}
+              placeholder="AAAA-MM-DD o AAAA"
+              style={{ ...inputStyle, maxWidth: 150 }}
+            />
+            <select value={tlType} onChange={e => setTlType(e.target.value)} style={{ ...inputStyle, maxWidth: 190 }}>
+              {EVENT_TYPES.map(t => (
+                <option key={t.value} value={t.value}>{t.title}</option>
+              ))}
+            </select>
+          </div>
+          <input
+            value={tlTitle}
+            onChange={e => setTlTitle(e.target.value)}
+            placeholder="Título del evento"
+            style={inputStyle}
+          />
+          <textarea
+            value={tlDescription}
+            onChange={e => setTlDescription(e.target.value)}
+            placeholder="Descripción (opcional) — redacta el hecho en tono editorial; cita el documento como respaldo"
+            rows={3}
+            style={{ ...inputStyle, resize: "vertical" }}
+          />
+          {tlError && (
+            <p className="type-small" style={{ color: "#B91C1C", margin: 0, fontSize: 11 }}>{tlError}</p>
+          )}
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={submitTimeline}
+              disabled={isPending || !tlDate.trim() || !tlTitle.trim()}
+              className="type-label"
+              style={{
+                fontSize: "10px",
+                padding: "6px 14px",
+                borderRadius: 4,
+                border: "1px solid #BFDBFE",
+                backgroundColor: "#EFF6FF",
+                color: "#1D4ED8",
+                cursor: "pointer",
+                opacity: isPending || !tlDate.trim() || !tlTitle.trim() ? 0.5 : 1,
+              }}
+            >
+              {inTimeline ? "Actualizar entrada" : "Empujar a la cronología"}
+            </button>
+            <button
+              onClick={() => setShowTimelineForm(false)}
+              disabled={isPending}
+              className="type-label"
+              style={{
+                fontSize: "10px",
+                padding: "6px 14px",
+                borderRadius: 4,
+                border: "1px solid var(--border)",
+                backgroundColor: "transparent",
+                color: "var(--muted)",
+                cursor: "pointer",
+              }}
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

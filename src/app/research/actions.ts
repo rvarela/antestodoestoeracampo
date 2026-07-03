@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@sanity/client";
+import { timelineKeyForLink } from "./timeline-key";
 
 function serverClient() {
   return createClient({
@@ -85,6 +86,66 @@ export async function pushApprovedLinks(caseSlug: string) {
 
   // Mark pushed links as "pushed" (we keep status approved but could track this)
   return { pushed: newSources.length, skippedSearches };
+}
+
+interface TimelineEntry {
+  _key: string;
+  date?: string;
+  title?: string;
+  description?: string;
+  type?: string;
+}
+
+export async function pushLinkToTimeline(
+  linkId: string,
+  data: { date: string; type: string; title: string; description: string }
+) {
+  const client = serverClient();
+
+  const date = data.date.trim();
+  const title = data.title.trim();
+  if (!date || !title) {
+    return { ok: false as const, error: "Fecha y título son obligatorios." };
+  }
+
+  const link = await client.fetch<{ caseSlug: string } | null>(
+    `*[_type == "researchLink" && _id == $id][0]{ caseSlug }`,
+    { id: linkId }
+  );
+  if (!link) return { ok: false as const, error: "Enlace no encontrado." };
+
+  // Full timeline — never write back a projected fetch (see Conventions)
+  const caseDoc = await client.fetch<{ _id: string; timeline?: TimelineEntry[] } | null>(
+    `*[_type == "case" && slug.current == $slug][0]{ _id, timeline }`,
+    { slug: link.caseSlug }
+  );
+  if (!caseDoc) return { ok: false as const, error: `Caso no encontrado: ${link.caseSlug}` };
+
+  const entry: TimelineEntry = {
+    _key: timelineKeyForLink(linkId),
+    date,
+    title,
+    description: data.description.trim(),
+    type: data.type || "other",
+  };
+
+  // Replace an earlier push of the same link, then insert chronologically:
+  // before the first entry with a strictly later sortable date (ties and
+  // free-text dates keep their position — CaseTimeline renders array order).
+  const timeline = (caseDoc.timeline ?? []).filter(e => e._key !== entry._key);
+  const sortable = (d?: string) => (/^\d{4}(-\d{2}(-\d{2})?)?$/.test(d ?? "") ? d! : null);
+  const d = sortable(entry.date);
+  let idx = timeline.length;
+  if (d) {
+    for (let i = 0; i < timeline.length; i++) {
+      const ed = sortable(timeline[i].date);
+      if (ed && ed > d) { idx = i; break; }
+    }
+  }
+  timeline.splice(idx, 0, entry);
+
+  await client.patch(caseDoc._id).set({ timeline }).commit();
+  return { ok: true as const };
 }
 
 export async function addManualLink(

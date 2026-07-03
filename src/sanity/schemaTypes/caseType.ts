@@ -100,6 +100,52 @@ export const caseType = defineType({
         "Señal depurada: prioriza incendios sobre terreno mayoritariamente rural con parcelas urbanas repartidas en varios años, y penaliza cascos ya urbanizados y los picos de re-versionado catastral masivo. Rellenado por patch:catastro-signal — no editar a mano.",
     }),
     defineField({
+      name: "catastroYears",
+      title: "Catastro: modificaciones por año",
+      type: "array",
+      description: "Parcelas modificadas por año en el área analizada (urbano/rústico). Rellenado por patch:catastro-viz — no editar a mano.",
+      of: [
+        {
+          type: "object",
+          preview: { select: { title: "year" } },
+          fields: [
+            defineField({ name: "year", title: "Año", type: "number" }),
+            defineField({ name: "urbano", title: "Urbano", type: "number" }),
+            defineField({ name: "rustico", title: "Rústico", type: "number" }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "catastroParcels",
+      title: "Catastro: parcelas señaladas",
+      type: "array",
+      description: "Parcelas urbanas modificadas post-incendio fuera del año dominante (no re-versionado masivo), enlazables a la Sede del Catastro. Rellenado por patch:catastro-viz — no editar a mano.",
+      of: [
+        {
+          type: "object",
+          preview: { select: { title: "rc", subtitle: "year" } },
+          fields: [
+            defineField({ name: "rc", title: "Referencia catastral", type: "string" }),
+            defineField({ name: "areaM2", title: "Superficie (m²)", type: "number" }),
+            defineField({ name: "year", title: "Año de modificación", type: "number" }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "catastroBoxTotal",
+      title: "Catastro: parcelas en el área analizada",
+      type: "number",
+      description: "Rellenado por patch:catastro-viz — no editar a mano.",
+    }),
+    defineField({
+      name: "catastroBoxUrban",
+      title: "Catastro: parcelas urbanas en el área",
+      type: "number",
+      description: "Rellenado por patch:catastro-viz — no editar a mano.",
+    }),
+    defineField({
       name: "status",
       title: "Estado judicial",
       type: "string",

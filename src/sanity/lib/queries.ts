@@ -35,6 +35,8 @@ export const caseBySlugQuery = groq`
     municipality,
     year,
     hectares,
+    urbanParcels,
+    catastroSignal,
     status,
     outcome,
     accentColor,
@@ -46,6 +48,10 @@ export const caseBySlugQuery = groq`
     connections,
     judicial,
     sources[]{ label, url, type, note },
+    catastroYears[]{ year, urbano, rustico },
+    catastroParcels[]{ rc, areaM2, year },
+    catastroBoxTotal,
+    catastroBoxUrban,
   }
 `;
 

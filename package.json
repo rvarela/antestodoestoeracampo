@@ -12,6 +12,7 @@
     "import:cases": "tsx scripts/import-case-data.ts",
     "enrich:catastro": "tsx scripts/enrich-from-catastro.ts",
     "patch:catastro": "tsx scripts/patch-catastro-to-sanity.ts",
+    "patch:catastro-viz": "tsx scripts/patch-catastro-viz.ts",
     "publish:cases": "tsx scripts/publish-cases.ts",
     "images:satellite": "tsx scripts/add-satellite-images.ts",
     "enrich:all": "tsx scripts/enrich-all-cases.ts",

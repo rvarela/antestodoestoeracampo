@@ -293,26 +293,11 @@ async function main() {
       notes.push("overview");
     }
 
-    // ── Catastro source entry ──
-    const catEntry = cache[doc.slug];
-    if (catEntry) {
-      const alreadyHasCatastroSource = doc.sources?.some(s =>
-        s.type === "Catastro" || s.label?.includes("Catastro")
-      );
-      if (!alreadyHasCatastroSource) {
-        const existingSources = doc.sources ?? [];
-        patch.sources = [
-          ...existingSources,
-          {
-            _key: "src-catastro",
-            label: "Catastro INSPIRE WFS — Sede Electrónica del Catastro (Ministerio de Hacienda)",
-            type: "Catastro",
-            url: "https://ovc.catastro.meh.es/INSPIRE/wfsCP.aspx",
-          },
-        ];
-        notes.push("Catastro source");
-      }
-    }
+    // Catastro source entry no longer added — the raw WFS endpoint is a
+    // machine URL; the case page documents the analysis (overview paragraph,
+    // timeline entry, per-parcel Sede del Catastro links) and /metodologia
+    // cites the source properly. Legacy "src-catastro" entries were removed
+    // by scripts/remove-catastro-wfs-links.ts (2026-07-03).
 
     if (Object.keys(patch).length === 0) {
       skipped++;

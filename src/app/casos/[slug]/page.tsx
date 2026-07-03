@@ -14,6 +14,7 @@ import CaseTimeline from "@/components/caso/CaseTimeline";
 import CaseConnections from "@/components/caso/CaseConnections";
 import CaseJudicial from "@/components/caso/CaseJudicial";
 import CaseSources from "@/components/caso/CaseSources";
+import CaseCatastro from "@/components/caso/CaseCatastro";
 
 export async function generateStaticParams() {
   const slugs: string[] = await client.fetch(allCaseSlugsQuery);
@@ -103,6 +104,19 @@ export default async function CasePage({
         {/* Timeline */}
         {case_.timeline && case_.timeline.length > 0 && (
           <CaseTimeline events={case_.timeline} accentColor={case_.accentColor} />
+        )}
+
+        {/* Catastro — modification histogram + flagged parcels */}
+        {case_.catastroYears && case_.catastroYears.length > 0 && (
+          <CaseCatastro
+            years={case_.catastroYears}
+            parcels={case_.catastroParcels ?? []}
+            boxTotal={case_.catastroBoxTotal}
+            boxUrban={case_.catastroBoxUrban}
+            fireYear={case_.year}
+            urbanParcels={case_.urbanParcels}
+            catastroSignal={case_.catastroSignal}
+          />
         )}
 
         {/* Political connections */}

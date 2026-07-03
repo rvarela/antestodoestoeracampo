@@ -70,6 +70,20 @@ export interface CaseSummary {
   coverImage?: { asset: { _ref: string }; alt?: string };
 }
 
+/** Parcelas modificadas por año en el área analizada (Catastro INSPIRE) */
+export interface CatastroYear {
+  year: number;
+  urbano: number;
+  rustico: number;
+}
+
+/** Parcela urbana modificada post-incendio (fuera del año dominante) */
+export interface CatastroParcel {
+  rc: string;
+  areaM2: number;
+  year: number;
+}
+
 // Full version for case page
 export interface CaseDetail extends CaseSummary {
   overview?: PortableTextBlock[];
@@ -78,4 +92,8 @@ export interface CaseDetail extends CaseSummary {
   connections?: PoliticalConnection[];
   judicial?: JudicialEvent[];
   sources?: Source[];
+  catastroYears?: CatastroYear[];
+  catastroParcels?: CatastroParcel[];
+  catastroBoxTotal?: number;
+  catastroBoxUrban?: number;
 }

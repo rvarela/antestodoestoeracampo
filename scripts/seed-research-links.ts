@@ -92,12 +92,6 @@ function abcUrl(m: string, y: number): string {
   return `https://www.google.com/search?q=site:abc.es+${enc(`"${m}" incendio ${y}`)}`;
 }
 
-function catastroUrl(lat?: number, lng?: number): string {
-  if (!lat || !lng) return "https://www.sedecatastro.gob.es/";
-  const r = 0.02;
-  return `https://ovc.catastro.meh.es/INSPIRE/wfsCP.aspx?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&TYPENAMES=CP:CadastralParcel&SRSNAME=EPSG:4326&BBOX=${lat - r},${lng - r},${lat + r},${lng + r},urn:ogc:def:crs:EPSG::4326`;
-}
-
 function googleMapsUrl(lat?: number, lng?: number): string {
   if (!lat || !lng) return "";
   return `https://www.google.com/maps/@${lat},${lng},14z/data=!3m1!1e3`;
@@ -172,15 +166,9 @@ function buildLinks(doc: {
     note: "Búsqueda site:abc.es en Google — la hemeroteca de ABC no acepta parámetros de búsqueda en la URL.",
   });
 
-  const catUrl = catastroUrl(doc.coordinates?.lat, doc.coordinates?.lng);
-  links.push({
-    label: `Catastro INSPIRE WFS — parcelas en área del incendio`,
-    url: catUrl,
-    sourceType: "Catastro",
-    isSearch: false,
-    note: "Consulta WFS directa. Devuelve XML con parcelas en un radio de ~2km alrededor del centroide del incendio.",
-  });
-
+  // Catastro deliberately not seeded — the raw WFS XML is machine territory:
+  // the enrich:catastro pipeline queries it, and the case page shows the
+  // per-parcel findings with human links to the Sede del Catastro.
   // Maps deliberately not seeded — every case hero has a derived
   // "Ver en Google Maps" button (coordinates-based, no approval needed)
 

@@ -340,14 +340,16 @@ async function main() {
   for (const { slug, doc, summary: s } of candidates) {
     const patch: Record<string, unknown> = {};
 
-    // Write excerpt if missing, or overwrite a stale auto-generated one
-    // (older versions overclaimed "reclasificadas … es consistente" or placed
-    // the parcels "en la zona quemada" when the query is a box, not the burn
-    // perimeter). Manually written excerpts never contain those exact
-    // phrasings, so they're left untouched.
+    // Write excerpt if missing, or overwrite a stale auto-generated one:
+    // older versions overclaimed ("reclasificadas … es consistente") or placed
+    // the parcels "en la zona quemada" (the query is a box, not the burn
+    // perimeter), and current-template excerpts go stale when a case is
+    // re-queried (e.g. after a coordinate fix — parcel counts change). The
+    // closing sentence is the auto-template signature; manually written
+    // excerpts never contain these exact phrasings, so they're left untouched.
     if (
       !doc.excerpt ||
-      /reclasificadas como suelo urbano|En la zona quemada, el Catastro registra/.test(doc.excerpt)
+      /reclasificadas como suelo urbano|En la zona quemada, el Catastro registra|Señal para investigar, no prueba de recalificación/.test(doc.excerpt)
     ) {
       patch.excerpt = makeExcerpt(doc, s);
     }

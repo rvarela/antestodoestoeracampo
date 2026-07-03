@@ -98,6 +98,8 @@ interface CendojHit {
   ecli: string | null;
   resolYear: number | null;
   isSentencia: boolean;
+  sala: string | null;    // "Militar", "Social", … from result metadata
+  resumen: string | null; // CENDOJ's official one-line summary
 }
 
 let sessionCookie: string | null = null;
@@ -146,12 +148,15 @@ async function fetchCendoj(municipality: string, recordsPerPage: number): Promis
   for (const chunk of chunks) {
     const url = chunk.match(/data-link="(https:\/\/www\.poderjudicial\.es\/search\/AN\/openDocument\/[a-f0-9]+\/\d+)"/)?.[1];
     if (!url) continue;
-    const text = decodeEntities(chunk.slice(0, 4000).replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
+    const text = decodeEntities(chunk.slice(0, 8000).replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ").trim();
     const title = text.match(/^(.{10,180}?ROJ:\s*[A-Z]+(?: [A-Z]+)? \d+\/\d+)/)?.[1] ?? text.slice(0, 140);
     const ecli = chunk.match(/ECLI:[A-Z]{2}:[A-Z0-9]+:\d{4}:\d+/)?.[0] ?? null;
     const resolYear = ecli ? parseInt(ecli.split(":")[3]) : null;
     const isSentencia = /^S/.test(title.trim());
-    hits.push({ title, url, ecli, resolYear, isSentencia });
+    const sala = text.match(/Sala de lo (\p{L}+)/u)?.[1] ?? null;
+    const resumen =
+      text.match(/RESUMEN:\s*(.+?)\s*(?:Resoluciones del Caso|Legislación|$)/)?.[1]?.slice(0, 220) ?? null;
+    hits.push({ title, url, ecli, resolYear, isSentencia, sala, resumen });
   }
   return hits;
 }
@@ -205,7 +210,7 @@ async function main() {
 
   console.log(`  Cases: ${Math.min(cases.length, limit)}\n`);
 
-  let created = 0, existing = 0, failed = 0, noHits = 0;
+  let created = 0, updated = 0, existing = 0, failed = 0, noHits = 0;
 
   for (const doc of cases.slice(0, limit)) {
     const muni = naturalMunicipality(doc.municipality);
@@ -221,7 +226,7 @@ async function main() {
     }
 
     const ranked = hits
-      .map(h => ({ ...h, ...cendojConfidence(h, doc.year, doc.region) }))
+      .map(h => ({ ...h, ...cendojConfidence(h, doc.year, doc.region, doc.slug) }))
       .sort((a, b) => b.confidence - a.confidence)
       .slice(0, maxItems);
 
@@ -234,24 +239,34 @@ async function main() {
     if (dryRun) {
       console.log(`  [DRY RUN] ${doc.slug} (${muni}, ${doc.year}) — ${ranked.length} resoluciones`);
       ranked.forEach(h =>
-        console.log(`    [${h.confidence}%|${cendojRelevanceLabel(h.confidence)}${h.territoryMismatch ? `|otra CCAA (${h.territory})` : ""}] ${h.title.slice(0, 100)}`)
+        console.log(`    [${h.confidence}%|${cendojRelevanceLabel(h.confidence)}${h.flag ? `|⚠ ${h.flag}` : ""}] ${h.title.slice(0, 100)}`)
       );
       await sleep(2500);
       continue;
     }
 
-    const existingDocs = await client.fetch<Array<{ _id: string }>>(
-      `*[_type == "researchLink" && caseSlug == $slug && _id match "rl-*-cendoj-*"]{ _id }`,
+    const existingDocs = await client.fetch<Array<{ _id: string; status: string; confidence?: number; note?: string }>>(
+      `*[_type == "researchLink" && caseSlug == $slug && _id match "rl-*-cendoj-*"]{ _id, status, confidence, note }`,
       { slug: doc.slug }
     );
-    const existingIds = new Set(existingDocs.map(d => d._id));
+    const existingMap = new Map(existingDocs.map(d => [d._id, d]));
 
-    let newForCase = 0;
+    let newForCase = 0, updatedForCase = 0;
     for (const hit of ranked) {
       const id = `rl-${doc.slug}-cendoj-${urlHash(hit.url)}`;
+      const note = cendojNote(hit, hit.resolYear, doc.year, hit.resumen);
       try {
-        if (existingIds.has(id)) {
-          existing++;
+        const prior = existingMap.get(id);
+        if (prior) {
+          // Refresh score + note on pending links (fresh metadata: sala,
+          // resumen, current heuristics) — reviewed links stay untouched.
+          if (prior.status === "pending" && (prior.confidence !== hit.confidence || prior.note !== note)) {
+            await client.patch(id).set({ confidence: hit.confidence, note }).commit();
+            updated++;
+            updatedForCase++;
+          } else {
+            existing++;
+          }
           continue;
         }
         await client.create({
@@ -265,7 +280,7 @@ async function main() {
           isSearch: false,
           status: "pending",
           confidence: hit.confidence,
-          note: cendojNote(hit, hit.resolYear, doc.year, doc.region),
+          note,
         });
         created++;
         newForCase++;
@@ -276,13 +291,14 @@ async function main() {
       }
     }
 
-    console.log(`  ✓ ${doc.slug.padEnd(50)} ${String(ranked.length).padStart(2)} hits · ${newForCase} nuevos`);
+    console.log(`  ✓ ${doc.slug.padEnd(50)} ${String(ranked.length).padStart(2)} hits · ${newForCase} nuevos · ${updatedForCase} actualizados`);
     await sleep(2500);
   }
 
   console.log(`\n── Summary ──────────────────────────────────────────`);
   console.log(`   Created:   ${created}`);
-  console.log(`   Existing:  ${existing} (status preserved)`);
+  console.log(`   Updated:   ${updated} (pending — score/note refreshed)`);
+  console.log(`   Existing:  ${existing} (unchanged; reviewed links never touched)`);
   console.log(`   No hits:   ${noHits} case(s)`);
   if (failed) console.log(`   Failed:    ${failed}`);
   console.log(`\nReview: http://localhost:3000/research (orden por confianza)\n`);

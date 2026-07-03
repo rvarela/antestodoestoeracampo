@@ -31,6 +31,7 @@ import {
   newsNote,
   cendojConfidence,
   cendojNote,
+  resumenFromNote,
 } from "./lib/research-scoring";
 
 function loadEnvLocal() {
@@ -140,9 +141,13 @@ async function main() {
     } else {
       const resolYear = parseResolYear(link.note);
       const isSentencia = /^\s*S/.test(link.label);
-      const score = cendojConfidence({ title: link.label, resolYear, isSentencia }, c.year, c.region);
+      const resumen = resumenFromNote(link.note); // sala isn't stored — the harvester re-run covers that
+      const score = cendojConfidence(
+        { title: link.label, resolYear, isSentencia, resumen },
+        c.year, c.region, link.caseSlug
+      );
       confidence = score.confidence;
-      note = cendojNote(score, resolYear, c.year, c.region);
+      note = cendojNote(score, resolYear, c.year, resumen);
     }
 
     if (confidence >= 70) nowHigh++;

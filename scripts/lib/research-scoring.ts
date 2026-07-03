@@ -114,6 +114,103 @@ export function newsNote(
 
 // ── CENDOJ scoring ────────────────────────────────────────────────────────────
 
+// INE province code (digits 5–6 of the EGIF ref embedded in every slug,
+// e.g. quiroga-2006-2006__27__0737 → 27 = Lugo) → province + CCAA.
+const INE_PROVINCE: Record<string, { name: string; ccaa: string }> = {
+  "01": { name: "alava", ccaa: "País Vasco" },
+  "02": { name: "albacete", ccaa: "Castilla-La Mancha" },
+  "03": { name: "alicante", ccaa: "Comunidad Valenciana" },
+  "04": { name: "almeria", ccaa: "Andalucía" },
+  "05": { name: "avila", ccaa: "Castilla y León" },
+  "06": { name: "badajoz", ccaa: "Extremadura" },
+  "07": { name: "baleares", ccaa: "Baleares" },
+  "08": { name: "barcelona", ccaa: "Cataluña" },
+  "09": { name: "burgos", ccaa: "Castilla y León" },
+  "10": { name: "caceres", ccaa: "Extremadura" },
+  "11": { name: "cadiz", ccaa: "Andalucía" },
+  "12": { name: "castellon", ccaa: "Comunidad Valenciana" },
+  "13": { name: "ciudad real", ccaa: "Castilla-La Mancha" },
+  "14": { name: "cordoba", ccaa: "Andalucía" },
+  "15": { name: "a coruna", ccaa: "Galicia" },
+  "16": { name: "cuenca", ccaa: "Castilla-La Mancha" },
+  "17": { name: "girona", ccaa: "Cataluña" },
+  "18": { name: "granada", ccaa: "Andalucía" },
+  "19": { name: "guadalajara", ccaa: "Castilla-La Mancha" },
+  "20": { name: "gipuzkoa", ccaa: "País Vasco" },
+  "21": { name: "huelva", ccaa: "Andalucía" },
+  "22": { name: "huesca", ccaa: "Aragón" },
+  "23": { name: "jaen", ccaa: "Andalucía" },
+  "24": { name: "leon", ccaa: "Castilla y León" },
+  "25": { name: "lleida", ccaa: "Cataluña" },
+  "26": { name: "la rioja", ccaa: "La Rioja" },
+  "27": { name: "lugo", ccaa: "Galicia" },
+  "28": { name: "madrid", ccaa: "Madrid" },
+  "29": { name: "malaga", ccaa: "Andalucía" },
+  "30": { name: "murcia", ccaa: "Murcia" },
+  "31": { name: "navarra", ccaa: "Navarra" },
+  "32": { name: "ourense", ccaa: "Galicia" },
+  "33": { name: "asturias", ccaa: "Asturias" },
+  "34": { name: "palencia", ccaa: "Castilla y León" },
+  "35": { name: "las palmas", ccaa: "Canarias" },
+  "36": { name: "pontevedra", ccaa: "Galicia" },
+  "37": { name: "salamanca", ccaa: "Castilla y León" },
+  "38": { name: "santa cruz de tenerife", ccaa: "Canarias" },
+  "39": { name: "cantabria", ccaa: "Cantabria" },
+  "40": { name: "segovia", ccaa: "Castilla y León" },
+  "41": { name: "sevilla", ccaa: "Andalucía" },
+  "42": { name: "soria", ccaa: "Castilla y León" },
+  "43": { name: "tarragona", ccaa: "Cataluña" },
+  "44": { name: "teruel", ccaa: "Aragón" },
+  "45": { name: "toledo", ccaa: "Castilla-La Mancha" },
+  "46": { name: "valencia", ccaa: "Comunidad Valenciana" },
+  "47": { name: "valladolid", ccaa: "Castilla y León" },
+  "48": { name: "bizkaia", ccaa: "País Vasco" },
+  "49": { name: "zamora", ccaa: "Castilla y León" },
+  "50": { name: "zaragoza", ccaa: "Aragón" },
+  "51": { name: "ceuta", ccaa: "Ceuta" },
+  "52": { name: "melilla", ccaa: "Melilla" },
+};
+
+/**
+ * Case's province from the EGIF ref in its slug. Only trusted when its CCAA
+ * agrees with the case's `region` — retitled cross-border fragments (OTRA
+ * PROVINCIA) keep the filing province in the slug but a corrected region.
+ */
+export function provinceFromSlug(slug: string | null, region: string | null): string | null {
+  const m = (slug ?? "").match(/-((?:19|20)\d{2})(\d{2})\d+$/);
+  if (!m) return null;
+  const prov = INE_PROVINCE[m[2]];
+  if (!prov) return null;
+  if (region && prov.ccaa !== region) return null;
+  return prov.name;
+}
+
+// Judicial seat (normalize()d) → province name, for province-bound órganos
+// (SAP/AAP/SJP/SJCA/SJPI…). Most seats are the province itself.
+const SEAT_TO_PROVINCE: Record<string, string> = {
+  "oviedo": "asturias", "gijon": "asturias",
+  "santander": "cantabria",
+  "merida": "badajoz",
+  "vigo": "pontevedra", "santiago de compostela": "a coruna",
+  "coruna": "a coruna", "la coruna": "a coruna",
+  "orense": "ourense",
+  "gerona": "girona", "lerida": "lleida",
+  "bilbao": "bizkaia", "vizcaya": "bizkaia",
+  "vitoria": "alava", "araba": "alava",
+  "donostia": "gipuzkoa", "san sebastian": "gipuzkoa", "guipuzcoa": "gipuzkoa",
+  "logrono": "la rioja",
+  "pamplona": "navarra",
+  "palma": "baleares", "palma de mallorca": "baleares", "illes balears": "baleares",
+  "tenerife": "santa cruz de tenerife",
+};
+
+function seatProvince(seat: string): string | null {
+  const n = normalize(seat);
+  if (SEAT_TO_PROVINCE[n]) return SEAT_TO_PROVINCE[n];
+  // most provincial seats are named after the province itself
+  return Object.values(INE_PROVINCE).some(p => p.name === n) ? n : null;
+}
+
 // Province / judicial seat → CCAA, keyed on normalize()d name. Matches the
 // `region` values used on case docs in Sanity.
 const TERRITORY_TO_CCAA: Record<string, string> = {
@@ -171,43 +268,94 @@ const TERRITORY_TO_CCAA: Record<string, string> = {
   "ceuta": "Ceuta", "melilla": "Melilla",
 };
 
-// Órganos with national jurisdiction — territory check does not apply.
-const NATIONAL_ORGANS = new Set(["STS", "ATS", "SAN", "AAN", "STC", "ATC"]);
+// Órganos with truly national scope — no territory check. The Audiencia
+// Nacional is national too but never tries forest fires (terrorism /
+// macro-crime), so it gets its own hard penalty below.
+const SUPREME_ORGANS = new Set(["STS", "ATS", "STC", "ATC"]);
+const AN_ORGANS = new Set(["SAN", "AAN"]);
 
-/**
- * Extract the court's CCAA from a CENDOJ result title like
- * "SAP Cantabria, a 03 de marzo de 2020 - ROJ: SAP S 950/2020".
- * Returns null when the órgano is national or the seat is unrecognised.
- */
-export function cendojTerritory(title: string): string | null {
-  const m = title.trim().match(/^([A-Z]{2,5})\s+([^,]+?),\s*a\s+\d/);
-  if (!m) return null;
-  if (NATIONAL_ORGANS.has(m[1])) return null;
-  return TERRITORY_TO_CCAA[normalize(m[2].trim())] ?? null;
+function parseOrgano(title: string): { organo: string; seat: string | null } | null {
+  const withSeat = title.trim().match(/^([A-Z]{2,5})\s+([^,]+?),\s*a\s+\d/);
+  if (withSeat) return { organo: withSeat[1], seat: withSeat[2].trim() };
+  const bare = title.trim().match(/^([A-Z]{2,5}),?\s*a\s+\d/);
+  return bare ? { organo: bare[1], seat: null } : null;
 }
 
 export interface CendojScore {
   confidence: number;
-  /** court sits in a different CCAA than the fire → probable homonymous municipality */
-  territoryMismatch: boolean;
-  territory: string | null;
+  /** human-readable warning for the note (⚠ …), null when nothing is suspicious */
+  flag: string | null;
 }
 
+export interface CendojHitMeta {
+  title: string;
+  resolYear: number | null;
+  isSentencia: boolean;
+  /** "Sala de lo X" text if present in the search result metadata */
+  sala?: string | null;
+  /** CENDOJ's official one-line RESUMEN if present */
+  resumen?: string | null;
+}
+
+// A resumen mentioning none of these is about something else entirely
+// (the query matched a surname + an incidental "incendio forestal").
+const RESUMEN_RELEVANT =
+  /incendi|forestal|urbanis|urbanistic|recalificac|prevaricac|suelo|medio ambiente|montes/;
+
 export function cendojConfidence(
-  hit: { title: string; resolYear: number | null; isSentencia: boolean },
+  hit: CendojHitMeta,
   fireYear: number,
-  region: string | null
+  region: string | null,
+  slug: string | null = null
 ): CendojScore {
-  const territory = cendojTerritory(hit.title);
-  const territoryMismatch = !!(territory && region && territory !== region);
-  if (territoryMismatch) return { confidence: 15, territoryMismatch, territory };
-  if (hit.resolYear !== null && hit.resolYear < fireYear) {
-    return { confidence: 15, territoryMismatch: false, territory }; // earlier fire
+  const parsed = parseOrgano(hit.title);
+
+  // Wrong jurisdiction: these can never be a forest-fire prosecution.
+  const sala = normalize(hit.sala ?? "");
+  if (/militar|social/.test(sala)) {
+    return { confidence: 15, flag: `Sala de lo ${hit.sala} — jurisdicción ajena a incendios forestales` };
   }
+  if (parsed && AN_ORGANS.has(parsed.organo)) {
+    return { confidence: 15, flag: "Audiencia Nacional — no enjuicia incendios forestales" };
+  }
+
+  // Territory: fires are tried where they happen. Province-level check for
+  // provincial órganos (case province from the EGIF ref in the slug), CCAA
+  // fallback when either side is unresolvable.
+  if (parsed && parsed.seat && !SUPREME_ORGANS.has(parsed.organo)) {
+    const caseProv = provinceFromSlug(slug, region);
+    const courtProv = parsed.organo === "STSJ" || parsed.organo === "ATSJ" ? null : seatProvince(parsed.seat);
+    if (courtProv && caseProv) {
+      if (courtProv !== caseProv) {
+        return { confidence: 15, flag: `Órgano de ${titleCaseEs(courtProv)}; incendio en ${titleCaseEs(caseProv)} — probable municipio homónimo` };
+      }
+    } else {
+      const courtCcaa = TERRITORY_TO_CCAA[normalize(parsed.seat)] ?? null;
+      if (courtCcaa && region && courtCcaa !== region) {
+        return { confidence: 15, flag: `Órgano de ${courtCcaa}; incendio en ${region} — probable municipio homónimo` };
+      }
+    }
+  }
+
+  if (hit.resolYear !== null && hit.resolYear < fireYear) {
+    return { confidence: 15, flag: "Resolución anterior al incendio — otro incendio" };
+  }
+
   let c = 45;
   if (hit.resolYear !== null && hit.resolYear >= fireYear && hit.resolYear <= fireYear + 18) c += 25;
   if (hit.isSentencia) c += 10;
-  return { confidence: Math.min(c, 85), territoryMismatch: false, territory };
+
+  // CENDOJ's own summary says what the ruling is about — the strongest
+  // signal against surname false-positives.
+  if (hit.resumen) {
+    const r = normalize(hit.resumen);
+    if (!RESUMEN_RELEVANT.test(r)) {
+      return { confidence: 30, flag: "Resumen CENDOJ sin relación aparente con incendios" };
+    }
+    if (/incendi/.test(r)) c += 5;
+  }
+
+  return { confidence: Math.min(c, 85), flag: null }; // headline-level heuristic, never a verified match
 }
 
 export function cendojRelevanceLabel(c: number): string {
@@ -218,12 +366,16 @@ export function cendojNote(
   score: CendojScore,
   resolYear: number | null,
   fireYear: number,
-  region: string | null
+  resumen: string | null = null
 ): string {
   let n = `Cosecha CENDOJ («incendio forestal» + municipio) · relevancia ${cendojRelevanceLabel(score.confidence)} · resolución ${resolYear ?? "?"}, incendio ${fireYear}.`;
-  if (score.territoryMismatch) {
-    n += ` ⚠ Órgano de ${score.territory}, incendio en ${region} — probablemente un municipio homónimo.`;
-  }
+  if (resumen) n += ` Resumen CENDOJ: «${resumen}».`;
+  if (score.flag) n += ` ⚠ ${score.flag}.`;
   n += ` Comprobar que la resolución corresponde a este incendio.`;
   return n;
+}
+
+/** Recover the stored resumen from a note written by cendojNote (for rescoring). */
+export function resumenFromNote(note: string | null): string | null {
+  return (note ?? "").match(/Resumen CENDOJ: «([^»]+)»/)?.[1] ?? null;
 }

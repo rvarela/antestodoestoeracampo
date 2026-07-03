@@ -11,9 +11,10 @@
  * only applies to bot-looking traffic. Be a polite client: one query per case,
  * 2.5s between requests.
  *
- * Relevance heuristic: resolución dated between the fire year and +18 years
- * scores high (criminal proceedings lag years behind the fire); resoluciones
- * BEFORE the fire are almost certainly another fire in the same municipality.
+ * Relevance heuristic (lib/research-scoring.ts): resolución dated between the
+ * fire year and +18 years scores high (criminal proceedings lag years behind
+ * the fire); resoluciones BEFORE the fire, or from a court in a different
+ * CCAA (homonymous municipality), are almost certainly another fire.
  *
  * Usage:
  *   npm run research:cendoj                      # all published cases
@@ -25,6 +26,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 import { createClient } from "@sanity/client";
+import { cendojConfidence, cendojRelevanceLabel, cendojNote } from "./lib/research-scoring";
 
 function loadEnvLocal() {
   try {
@@ -154,19 +156,9 @@ async function fetchCendoj(municipality: string, recordsPerPage: number): Promis
   return hits;
 }
 
-// ── Relevance heuristic ───────────────────────────────────────────────────────
-
-function confidencePct(hit: CendojHit, fireYear: number): number {
-  if (hit.resolYear !== null && hit.resolYear < fireYear) return 15; // earlier fire
-  let c = 45;
-  if (hit.resolYear !== null && hit.resolYear >= fireYear && hit.resolYear <= fireYear + 18) c += 25;
-  if (hit.isSentencia) c += 10;
-  return Math.min(c, 85); // headline-level heuristic, never a verified match
-}
-
-function relevanceLabel(c: number): string {
-  return c >= 70 ? "probable" : c >= 45 ? "posible" : "dudosa";
-}
+// Relevance heuristic lives in ./lib/research-scoring: year window + sentencia
+// bonus + court-territory check (an órgano from another CCAA = probable
+// homonymous municipality → 15%).
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -203,11 +195,11 @@ async function main() {
   if (dryRun) console.log(`  Mode: DRY RUN`);
 
   const cases = await client.fetch<Array<{
-    _id: string; slug: string; municipality: string; year: number;
+    _id: string; slug: string; municipality: string; year: number; region: string | null;
   }>>(
     slugFilter
-      ? `*[_type == "case" && hidden == false && slug.current == $slug]{ _id, "slug": slug.current, municipality, year }`
-      : `*[_type == "case" && hidden == false]{ _id, "slug": slug.current, municipality, year }`,
+      ? `*[_type == "case" && hidden == false && slug.current == $slug]{ _id, "slug": slug.current, municipality, year, region }`
+      : `*[_type == "case" && hidden == false]{ _id, "slug": slug.current, municipality, year, region }`,
     slugFilter ? { slug: slugFilter } : {}
   );
 
@@ -229,7 +221,7 @@ async function main() {
     }
 
     const ranked = hits
-      .map(h => ({ ...h, confidence: confidencePct(h, doc.year) }))
+      .map(h => ({ ...h, ...cendojConfidence(h, doc.year, doc.region) }))
       .sort((a, b) => b.confidence - a.confidence)
       .slice(0, maxItems);
 
@@ -242,7 +234,7 @@ async function main() {
     if (dryRun) {
       console.log(`  [DRY RUN] ${doc.slug} (${muni}, ${doc.year}) — ${ranked.length} resoluciones`);
       ranked.forEach(h =>
-        console.log(`    [${h.confidence}%|${relevanceLabel(h.confidence)}] ${h.title.slice(0, 100)}`)
+        console.log(`    [${h.confidence}%|${cendojRelevanceLabel(h.confidence)}${h.territoryMismatch ? `|otra CCAA (${h.territory})` : ""}] ${h.title.slice(0, 100)}`)
       );
       await sleep(2500);
       continue;
@@ -273,7 +265,7 @@ async function main() {
           isSearch: false,
           status: "pending",
           confidence: hit.confidence,
-          note: `Cosecha CENDOJ («incendio forestal» + municipio) · relevancia ${relevanceLabel(hit.confidence)} · resolución ${hit.resolYear ?? "?"}, incendio ${doc.year}. Comprobar que la resolución corresponde a este incendio.`,
+          note: cendojNote(hit, hit.resolYear, doc.year, doc.region),
         });
         created++;
         newForCase++;

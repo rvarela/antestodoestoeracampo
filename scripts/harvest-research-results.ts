@@ -6,8 +6,9 @@
  * one pending researchLink per article — so editorial review approves real
  * documents, not search pages.
  *
- * Relevance is scored heuristically (municipality in title, "incendio",
- * publication date within fire year + 15) and written into the note as
+ * Relevance is scored heuristically (see lib/research-scoring.ts: municipality
+ * in title, "incendio", contemporary vs late publication date, breaking-news
+ * vocabulary years later = another fire) and written into the note as
  * "probable / posible / dudosa". Items are deduped by URL hash, and re-runs
  * never reset the status of already-reviewed items (createIfNotExists).
  *
@@ -21,6 +22,13 @@
 import { readFileSync } from "fs";
 import path from "path";
 import { createClient } from "@sanity/client";
+import {
+  naturalMunicipality,
+  scoreNewsItem,
+  newsRelevanceLabel,
+  newsConfidencePct,
+  newsNote,
+} from "./lib/research-scoring";
 
 function loadEnvLocal() {
   try {
@@ -39,26 +47,6 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
-
-function normalize(s: string) {
-  return s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-}
-
-function titleCaseEs(s: string) {
-  const minor = new Set(["de", "del", "la", "las", "el", "los", "y", "a", "en"]);
-  return s
-    .toLowerCase()
-    .split(/\s+/)
-    .map((w, i) => (i > 0 && minor.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
-    .join(" ");
-}
-
-/** EGIF files articles as suffix ("VICTORIA DE ACENTEJO, LA") — restore natural order */
-function naturalMunicipality(raw: string) {
-  const m = raw.trim().match(/^(.+?),\s*(la|el|los|las|l')$/i);
-  const reordered = m ? `${m[2]} ${m[1]}` : raw;
-  return titleCaseEs(reordered);
-}
 
 function decodeEntities(s: string) {
   return s
@@ -115,29 +103,8 @@ async function fetchNews(municipality: string): Promise<NewsItem[]> {
   return items;
 }
 
-// ── Relevance heuristic ───────────────────────────────────────────────────────
-
-function score(item: NewsItem, municipality: string, fireYear: number): number {
-  const t = normalize(item.title);
-  let s = 0;
-  if (t.includes(normalize(municipality))) s += 2;
-  if (t.includes("incendio")) s += 1;
-  if (item.pubYear !== null && item.pubYear >= fireYear && item.pubYear <= fireYear + 15) s += 1;
-  if (/urbaniz|recalific|pgou|plan parcial|suelo/.test(t)) s += 2; // the pattern itself
-  if (/intencionado|provocado|detenid|condena|juicio|investiga/.test(t)) s += 1;
-  return s;
-}
-
-function relevanceLabel(s: number): string {
-  return s >= 4 ? "probable" : s >= 2 ? "posible" : "dudosa";
-}
-
-// Score (0–7) → calibrated confidence %. Capped at 95 — it's a heuristic over
-// a headline, never a verified match.
-const CONFIDENCE = [10, 25, 40, 55, 70, 80, 90, 95];
-function confidencePct(s: number): number {
-  return CONFIDENCE[Math.max(0, Math.min(s, CONFIDENCE.length - 1))];
-}
+// Relevance heuristic lives in ./lib/research-scoring (shared with the
+// rescore pass so harvest-time and rescored confidences can't drift).
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
@@ -200,14 +167,14 @@ async function main() {
     }
 
     const ranked = items
-      .map(i => ({ ...i, score: score(i, muni, doc.year) }))
+      .map(i => ({ ...i, ...scoreNewsItem(i.title, i.pubYear, muni, doc.year) }))
       .sort((a, b) => b.score - a.score)
       .slice(0, maxItems);
 
     if (dryRun) {
       console.log(`  [DRY RUN] ${doc.slug} — ${ranked.length} items`);
       ranked.forEach(i =>
-        console.log(`    [${i.score}|${relevanceLabel(i.score)}] ${i.title.slice(0, 90)}`)
+        console.log(`    [${i.score}|${newsRelevanceLabel(i.score)}${i.otherFire ? "|otro incendio" : ""}] ${i.title.slice(0, 90)}`)
       );
       await sleep(1500);
       continue;
@@ -224,7 +191,7 @@ async function main() {
     let newForCase = 0;
     for (const item of ranked) {
       const id = `rl-${doc.slug}-news-${urlHash(item.url)}`;
-      const confidence = confidencePct(item.score);
+      const confidence = newsConfidencePct(item.score);
       try {
         if (existingMap.has(id)) {
           existing++;
@@ -245,7 +212,7 @@ async function main() {
           isSearch: false,
           status: "pending",
           confidence,
-          note: `Cosecha automática (Google News) · relevancia ${relevanceLabel(item.score)} · ${item.publisher}${item.pubYear ? ` · ${item.pubYear}` : ""}`,
+          note: newsNote(item, item.publisher, item.pubYear, doc.year),
         });
         created++; newForCase++;
       } catch (err) {

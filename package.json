@@ -19,7 +19,8 @@
     "research:kit": "tsx scripts/generate-research-kit.ts",
     "research:seed": "tsx scripts/seed-research-links.ts",
     "research:harvest": "tsx scripts/harvest-research-results.ts",
-    "research:cendoj": "tsx scripts/harvest-cendoj.ts"
+    "research:cendoj": "tsx scripts/harvest-cendoj.ts",
+    "research:rescore": "tsx scripts/rescore-research-links.ts"
   },
   "dependencies": {
     "@portabletext/react": "^6.2.0",

@@ -354,11 +354,21 @@ async function main() {
       patch.excerpt = makeExcerpt(doc, s);
     }
 
-    // Build updated timeline — replace catastro entry if it exists, otherwise append
+    // Build updated timeline — replace the catastro entry if it exists, then
+    // insert chronologically (prepending it put the post-fire entry before
+    // fire-0 on 1,217 cases — healed by scripts/fix-timeline-order.ts).
     const newEntry = makeTimelineEntry(doc, s);
-    const existing = doc.timeline ?? [];
-    const withoutCatastro = existing.filter(t => t._key !== "catastro-rezoning");
-    patch.timeline = [newEntry, ...withoutCatastro];
+    const withoutCatastro = (doc.timeline ?? []).filter(t => t._key !== "catastro-rezoning");
+    const sortableDate = (d: unknown) => (typeof d === "string" && /^\d{4}(-\d{2}(-\d{2})?)?$/.test(d) ? d : null);
+    const newDate = sortableDate(newEntry.date);
+    let insertAt = withoutCatastro.length;
+    if (newDate) {
+      for (let i = 0; i < withoutCatastro.length; i++) {
+        const ed = sortableDate(withoutCatastro[i].date);
+        if (ed && ed > newDate) { insertAt = i; break; }
+      }
+    }
+    patch.timeline = [...withoutCatastro.slice(0, insertAt), newEntry, ...withoutCatastro.slice(insertAt)];
 
     // Catastro signal — shown as a column on /casos
     patch.urbanParcels = s.urbanCount;

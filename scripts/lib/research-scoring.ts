@@ -379,3 +379,8 @@ export function cendojNote(
 export function resumenFromNote(note: string | null): string | null {
   return (note ?? "").match(/Resumen CENDOJ: «([^»]+)»/)?.[1] ?? null;
 }
+
+/** Recover the sala from a harvester-written flag (only source of sala when rescoring). */
+export function salaFromNote(note: string | null): string | null {
+  return (note ?? "").match(/⚠ Sala de lo (\p{L}+)/u)?.[1] ?? null;
+}

@@ -32,6 +32,7 @@ import {
   cendojConfidence,
   cendojNote,
   resumenFromNote,
+  salaFromNote,
 } from "./lib/research-scoring";
 
 function loadEnvLocal() {
@@ -141,9 +142,10 @@ async function main() {
     } else {
       const resolYear = parseResolYear(link.note);
       const isSentencia = /^\s*S/.test(link.label);
-      const resumen = resumenFromNote(link.note); // sala isn't stored — the harvester re-run covers that
+      const resumen = resumenFromNote(link.note);
+      const sala = salaFromNote(link.note); // only recoverable from a harvester-written flag
       const score = cendojConfidence(
-        { title: link.label, resolYear, isSentencia, resumen },
+        { title: link.label, resolYear, isSentencia, resumen, sala },
         c.year, c.region, link.caseSlug
       );
       confidence = score.confidence;

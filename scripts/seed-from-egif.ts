@@ -143,6 +143,28 @@ function normaliseRegion(raw: string): string {
 
 // ── Utilities ────────────────────────────────────────────────────────────────
 
+// Prepositions/articles never capitalised inside a toponym — but kept
+// capitalised at the start of a comma segment ("Madroño, El" · "A Coruña").
+// Mirror of scripts/fix-title-casing.ts.
+const MINOR_WORDS = new Set([
+  "de", "del", "la", "las", "el", "los", "y", "a", "en",
+  "i", "do", "da", "dos", "das",
+]);
+
+function titleCasePlace(raw: string): string {
+  return raw
+    .split(",")
+    .map(segment =>
+      segment
+        .trim()
+        .toLowerCase()
+        .split(/\s+/)
+        .map((w, i) => (i > 0 && MINOR_WORDS.has(w) ? w : w.charAt(0).toUpperCase() + w.slice(1)))
+        .join(" ")
+    )
+    .join(", ");
+}
+
 function utmToWgs84(x: number, y: number, zone: number): { lat: number; lng: number } {
   const utm = `+proj=utm +zone=${zone} +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs`;
   const wgs = "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
@@ -335,7 +357,7 @@ async function main() {
     const doc = {
       _type: "case",
       _id: `egif-${safeId}`,
-      title: `${municipio}, ${provincia} (${year || "?"})`,
+      title: `${titleCasePlace(municipio)}, ${titleCasePlace(provincia)} (${year || "?"})`,
       slug: { _type: "slug", current: slug },
       hidden: true,
       region,

@@ -37,6 +37,7 @@ export default function CaseCatastro({ years, parcels, boxTotal, boxUrban, fireY
   const chartRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const width = useMeasuredWidth(chartRef);
+  const [showParcels, setShowParcels] = useState(false);
 
   const urbanYears = years.filter(y => y.urbano > 0);
 
@@ -187,50 +188,72 @@ export default function CaseCatastro({ years, parcels, boxTotal, boxUrban, fireY
         </p>
       )}
 
-      {/* Receipts table */}
+      {/* Receipts — collapsed card, expands to the full table */}
       {parcels.length > 0 && (
-        <div className="mt-8 max-w-2xl">
-          <p className="type-label mb-3" style={{ color: "var(--muted)" }}>
-            Parcelas señaladas — consulta oficial
-          </p>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                {["Referencia catastral", "Superficie", "Modificada", ""].map(h => (
-                  <th key={h} className="type-label" style={{ fontSize: "9px", color: "var(--muted)", textAlign: "left", padding: "0 10px 6px", fontWeight: 500 }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {parcels.map(p => (
-                <tr key={p.rc} style={{ borderBottom: "1px solid var(--border)" }}>
-                  <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--foreground)" }}>{p.rc}</td>
-                  <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--muted)" }}>
-                    {p.areaM2.toLocaleString("es-ES")} m²
-                  </td>
-                  <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--muted)" }}>{p.year}</td>
-                  <td style={{ padding: "8px 10px" }}>
-                    <a
-                      href={`https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=${encodeURIComponent(p.rc)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="type-label hover:underline"
-                      style={{ fontSize: "10px", color: "var(--accent)", whiteSpace: "nowrap" }}
-                    >
-                      Ver en el Catastro ↗
-                    </a>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {nonSpikeTotal > parcels.length && (
-            <p className="type-small mt-2" style={{ color: "var(--muted)", fontSize: 12 }}>
-              … y {(nonSpikeTotal - parcels.length).toLocaleString("es-ES")} parcelas más (se muestran las de mayor superficie).
-            </p>
-          )}
+        <div
+          className="mt-8 max-w-2xl rounded-sm"
+          style={{ backgroundColor: "var(--surface)", border: "1px solid var(--border)" }}
+        >
+          <button
+            type="button"
+            onClick={() => setShowParcels(v => !v)}
+            aria-expanded={showParcels}
+            className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left"
+          >
+            <span className="type-label" style={{ color: "var(--foreground)" }}>
+              {parcels.length === 1 ? "1 parcela señalada" : `${parcels.length} parcelas señaladas`} — consulta oficial
+            </span>
+            <span className="type-label shrink-0" style={{ color: "var(--accent)" }}>
+              {showParcels ? "Ocultar −" : "Mostrar +"}
+            </span>
+          </button>
+          <div
+            className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+            style={{ gridTemplateRows: showParcels ? "1fr" : "0fr" }}
+          >
+            <div className="overflow-hidden">
+              <div className="px-4 pb-4">
+                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid var(--border)" }}>
+                      {["Referencia catastral", "Superficie", "Modificada", ""].map(h => (
+                        <th key={h} className="type-label" style={{ fontSize: "9px", color: "var(--muted)", textAlign: "left", padding: "0 10px 6px", fontWeight: 500 }}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {parcels.map(p => (
+                      <tr key={p.rc} style={{ borderBottom: "1px solid var(--border)" }}>
+                        <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--foreground)" }}>{p.rc}</td>
+                        <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--muted)" }}>
+                          {p.areaM2.toLocaleString("es-ES")} m²
+                        </td>
+                        <td className="type-data" style={{ padding: "8px 10px", fontSize: "12px", color: "var(--muted)" }}>{p.year}</td>
+                        <td style={{ padding: "8px 10px" }}>
+                          <a
+                            href={`https://www1.sedecatastro.gob.es/Cartografia/mapa.aspx?refcat=${encodeURIComponent(p.rc)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="type-label hover:underline"
+                            style={{ fontSize: "10px", color: "var(--accent)", whiteSpace: "nowrap" }}
+                          >
+                            Ver en el Catastro ↗
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {nonSpikeTotal > parcels.length && (
+                  <p className="type-small mt-2" style={{ color: "var(--muted)", fontSize: 12 }}>
+                    … y {(nonSpikeTotal - parcels.length).toLocaleString("es-ES")} parcelas más (se muestran las de mayor superficie).
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

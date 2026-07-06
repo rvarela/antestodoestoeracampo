@@ -33,10 +33,10 @@ const SOURCES = [
     url: "https://www.ine.es/jaxiT3/Tabla.htm?t=25997",
   },
   {
-    name: "Investigaciones sobre sentencias por incendio",
+    name: "España en llamas",
     org: "Civio",
-    use: "Contexto judicial: condenas y absoluciones 2007–2012.",
-    url: "https://civio.es/",
+    use: "Investigación de referencia sobre grandes incendios (también sobre datos EGIF) y su base propia de sentencias 2007–2013: condenas, absoluciones y causas archivadas.",
+    url: "https://civio.es/espana-en-llamas/",
   },
 ];
 

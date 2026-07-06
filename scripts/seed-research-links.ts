@@ -77,8 +77,10 @@ function boeUrl(municipality: string, fromYear: number, toYear: number): string 
   return `https://www.boe.es/buscar/boe.php?${params.toString()}`;
 }
 
-function elPaisUrl(m: string, y: number): string {
-  return `https://elpais.com/buscador/?q=${enc("incendio " + m)}&df=${y}-01-01&dt=${y + 5}-12-31`;
+function elPaisUrl(m: string): string {
+  // El País's buscador redirects ?q= into a path URL and bakes any extra
+  // params into the search text — the old df/dt date params now produce a 404.
+  return `https://elpais.com/buscador/?q=${enc("incendio " + m)}`;
 }
 
 function elMundoUrl(m: string): string {
@@ -143,11 +145,11 @@ function buildLinks(doc: {
   }
 
   links.push({
-    label: `El País — "incendio ${doc.municipality}" (${doc.year}–${doc.year + 5})`,
-    url: elPaisUrl(doc.municipality, doc.year),
+    label: `El País — "incendio ${doc.municipality}"`,
+    url: elPaisUrl(doc.municipality),
     sourceType: "ElPais",
     isSearch: true,
-    note: "Hemeroteca El País. Busca artículos sobre el incendio y su aftermath.",
+    note: `Hemeroteca El País. El buscador ya no acepta fechas en la URL — filtra ${doc.year}–${doc.year + 5} en su interfaz.`,
   });
 
   links.push({
@@ -249,17 +251,23 @@ async function main() {
       continue;
     }
 
-    // If force, delete existing pending links first. Approved/rejected links
-    // keep their editorial status — only their URL/label/note get refreshed.
+    // If force, refresh seed links only. Approved/rejected links keep their
+    // editorial status — only URL/label/note get refreshed. Harvested links
+    // (rl-<slug>-cendoj-<hash>, rl-<slug>-news-<hash>) are NEVER touched:
+    // deleting all pending links here wiped the harvested queue on 2026-07-06.
+    // Only pending SEED docs (fixed ids, incl. retired catastro/maps) are
+    // deleted — and only to purge seeds no longer generated.
     let statusMap = new Map<string, string>();
     if (force && existingSlugs.has(doc.slug)) {
+      const seedIds = new Set(links.map(l => `rl-${doc.slug}-${l.sourceType.toLowerCase()}`));
+      for (const legacy of ["catastro", "maps"]) seedIds.add(`rl-${doc.slug}-${legacy}`);
       const existing = await client.fetch<Array<{ _id: string; status: string }>>(
         `*[_type == "researchLink" && caseSlug == $slug]{ _id, status }`,
         { slug: doc.slug }
       );
       statusMap = new Map(existing.map(e => [e._id, e.status]));
       for (const e of existing) {
-        if (e.status === "pending") await client.delete(e._id);
+        if (e.status === "pending" && seedIds.has(e._id)) await client.delete(e._id);
       }
     }
 

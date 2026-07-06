@@ -106,6 +106,16 @@ export default async function CasePage({
           <CaseTimeline events={case_.timeline} accentColor={case_.accentColor} />
         )}
 
+        {/* Political connections */}
+        {case_.connections && case_.connections.length > 0 && (
+          <CaseConnections connections={case_.connections} />
+        )}
+
+        {/* Judicial */}
+        {case_.judicial && case_.judicial.length > 0 && (
+          <CaseJudicial events={case_.judicial} />
+        )}
+
         {/* Catastro — modification histogram + flagged parcels */}
         {case_.catastroYears && case_.catastroYears.length > 0 && (
           <CaseCatastro
@@ -117,16 +127,6 @@ export default async function CasePage({
             urbanParcels={case_.urbanParcels}
             catastroSignal={case_.catastroSignal}
           />
-        )}
-
-        {/* Political connections */}
-        {case_.connections && case_.connections.length > 0 && (
-          <CaseConnections connections={case_.connections} />
-        )}
-
-        {/* Judicial */}
-        {case_.judicial && case_.judicial.length > 0 && (
-          <CaseJudicial events={case_.judicial} />
         )}
 
         {/* Sources */}

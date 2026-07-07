@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
+import Link from "next/link";
 import type { CaseSummary, CaseStatus } from "@/types/case";
 import { convictionRateByYear } from "@/data/justicia";
+import { motivationStats, MOTIVATION_UNIVERSE_TOTAL } from "@/data/motivaciones";
 
 // ── Shared tokens ─────────────────────────────────────────────────────────────
 
@@ -231,6 +233,108 @@ function ChartByRegion({ cases }: { cases: CaseSummary[] }) {
   return <svg ref={svgRef} className="w-full" />;
 }
 
+// ── Chart 2b: EGIF motivations (intentional ≥100 ha) ─────────────────────────
+
+const MOTIVATION_ABBR: Record<string, string> = {
+  "Modificación del uso del suelo":      "Modif. uso del suelo",
+  "Limpieza tradicional del monte":      "Limpieza tradicional",
+  "Distraer a las fuerzas de seguridad": "Distraer a la policía",
+  "Otras motivaciones conocidas":        "Otras conocidas",
+  "Rechazo a espacios protegidos":       "Rechazo a esp. protegidos",
+  "Represalia por inversiones":          "Repres. por inversiones",
+  "Eliminar vegetación forestal":        "Eliminar vegetación",
+};
+
+function ChartMotivations() {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const width = useMeasuredWidth(svgRef);
+
+  useEffect(() => {
+    if (!svgRef.current || !width) return;
+
+    const data = motivationStats;
+    const narrow = width < 500;
+    const ROW_H = 26;
+    const W = width;
+    const H = data.length * ROW_H + 8;
+    const m = { top: 4, right: narrow ? 44 : 64, bottom: 4, left: narrow ? 132 : 220 };
+    const iw = W - m.left - m.right;
+    const ih = H - m.top - m.bottom;
+
+    const svg = d3.select(svgRef.current);
+    svg.selectAll("*").remove();
+    svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+    const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
+
+    const x = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.count)!])
+      .range([0, iw]);
+
+    const y = d3.scaleBand()
+      .domain(data.map(d => d.code))
+      .range([0, ih])
+      .padding(0.3);
+
+    // Track
+    g.selectAll(".track")
+      .data(data)
+      .join("rect")
+      .attr("class", "track")
+      .attr("x", 0)
+      .attr("y", d => y(d.code)!)
+      .attr("width", iw)
+      .attr("height", y.bandwidth())
+      .attr("fill", BORDER)
+      .attr("opacity", 0.5)
+      .attr("rx", 1);
+
+    // Bar — 432 in accent; minimum 2px so single-digit counts stay visible
+    g.selectAll(".bar")
+      .data(data)
+      .join("rect")
+      .attr("class", "bar")
+      .attr("x", 0)
+      .attr("y", d => y(d.code)!)
+      .attr("width", d => Math.max(2, x(d.count)))
+      .attr("height", y.bandwidth())
+      .attr("fill", d => d.code === "432" ? ACCENT : FOREST)
+      .attr("rx", 1);
+
+    // Label left
+    g.selectAll(".lbl-mot")
+      .data(data)
+      .join("text")
+      .attr("class", "lbl-mot")
+      .attr("x", -10)
+      .attr("y", d => y(d.code)! + y.bandwidth() / 2)
+      .attr("text-anchor", "end")
+      .attr("dominant-baseline", "middle")
+      .attr("fill", d => d.code === "432" ? ACCENT : FG)
+      .attr("font-weight", d => d.code === "432" ? 600 : 400)
+      .attr("font-size", narrow ? "10px" : "12px")
+      .attr("font-family", SANS)
+      .text(d => narrow ? (MOTIVATION_ABBR[d.label] ?? d.label) : d.label);
+
+    // Count right
+    g.selectAll(".lbl-count")
+      .data(data)
+      .join("text")
+      .attr("class", "lbl-count")
+      .attr("x", d => Math.max(2, x(d.count)) + 8)
+      .attr("y", d => y(d.code)! + y.bandwidth() / 2)
+      .attr("dominant-baseline", "middle")
+      .attr("fill", d => d.code === "432" ? ACCENT : MUTED)
+      .attr("font-weight", d => d.code === "432" ? 600 : 400)
+      .attr("font-size", "11px")
+      .attr("font-family", MONO)
+      .text(d => d.count.toLocaleString("es-ES"));
+
+  }, [width]);
+
+  return <svg ref={svgRef} className="w-full" />;
+}
+
 // ── Chart 3: status breakdown ─────────────────────────────────────────────────
 
 function ChartByStatus({ cases }: { cases: CaseSummary[] }) {
@@ -454,6 +558,39 @@ export default function DatosCharts({ cases }: { cases: CaseSummary[] }) {
         <ChartByRegion cases={cases} />
         <p className="type-small mt-4" style={{ color: "var(--muted)" }}>
           Suma de hectáreas en los casos documentados. Fuente: EGIF (MITECO).
+        </p>
+      </section>
+
+      <hr style={{ borderColor: "var(--border)" }} />
+
+      <section>
+        <p className="type-label mb-3" style={{ color: "var(--muted)" }}>
+          Motivación · según la estadística oficial
+        </p>
+        <h2 className="type-h3 mb-4" style={{ color: "var(--foreground)" }}>
+          ¿Por qué se provocan?
+        </h2>
+        <p className="type-body mb-8 max-w-2xl" style={{ color: "var(--muted)" }}>
+          El propio EGIF codifica la motivación de cada incendio intencionado.
+          Entre los {MOTIVATION_UNIVERSE_TOTAL.toLocaleString("es-ES")} fuegos
+          intencionados de ≥100 hectáreas (1995–2022), la administración solo
+          reconoce{" "}
+          <Link
+            href={{ pathname: "/casos", query: { motivacion: "Modificación del uso del suelo" } }}
+            className="underline underline-offset-2"
+            style={{ color: "var(--accent)" }}
+          >
+            6 provocados para modificar el uso del suelo
+          </Link>
+          {" "}— y en un 40 % de los casos declara no saber por qué se prendió.
+        </p>
+        <ChartMotivations />
+        <p className="type-small mt-4" style={{ color: "var(--muted)" }}>
+          Motivación registrada por el investigador de cada incendio en la EGIF
+          (MITECO); la mayoría de las causas constan como «supuestas», no probadas
+          judicialmente. Que un incendio no esté codificado como «modificación del
+          uso del suelo» no descarta ese móvil: es la categoría más difícil de
+          probar en el momento del fuego, porque el beneficio llega años después.
         </p>
       </section>
 

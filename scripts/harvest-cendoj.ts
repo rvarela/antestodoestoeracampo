@@ -19,6 +19,7 @@
  * Usage:
  *   npm run research:cendoj                      # all published cases
  *   npm run research:cendoj -- --slug=arenas-de-san-pedro-2009-2009050152
+ *   npm run research:cendoj -- --slug=slug-a,slug-b   (comma list — ONE session, dodges the fresh-session soft-block)
  *   npm run research:cendoj -- --dry-run --limit=5
  *   npm run research:cendoj -- --max-items=10    # per case (default 6)
  */
@@ -203,9 +204,9 @@ async function main() {
     _id: string; slug: string; municipality: string; year: number; region: string | null;
   }>>(
     slugFilter
-      ? `*[_type == "case" && hidden == false && slug.current == $slug]{ _id, "slug": slug.current, municipality, year, region }`
+      ? `*[_type == "case" && hidden == false && slug.current in $slugs]{ _id, "slug": slug.current, municipality, year, region }`
       : `*[_type == "case" && hidden == false]{ _id, "slug": slug.current, municipality, year, region }`,
-    slugFilter ? { slug: slugFilter } : {}
+    slugFilter ? { slugs: slugFilter.split(",").map((s) => s.trim()).filter(Boolean) } : {}
   );
 
   console.log(`  Cases: ${Math.min(cases.length, limit)}\n`);

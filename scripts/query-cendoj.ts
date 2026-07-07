@@ -40,7 +40,12 @@ async function main() {
   );
   // CENDOJ_TEXT env var wins — PowerShell 5.1 mangles quoted/accented args
   const raw = process.env.CENDOJ_TEXT ?? args["text"];
-  const n = args["n"] ? parseInt(args["n"]) : 20;
+  // CENDOJ only accepts specific page sizes — anything else (e.g. 15) gets
+  // «La búsqueda no es válida!» on every query. Snap to the nearest valid one.
+  const VALID_N = [10, 20, 50];
+  const wanted = args["n"] ? parseInt(args["n"]) : 20;
+  const n = VALID_N.reduce((a, b) => (Math.abs(b - wanted) < Math.abs(a - wanted) ? b : a));
+  if (n !== wanted) console.log(`(--n=${wanted} no es un tamaño de página válido en CENDOJ — usando ${n})`);
   if (!raw) {
     console.error(`Usage: $env:CENDOJ_TEXT='"incendio forestal" "Municipio"'; npx tsx scripts/query-cendoj.ts [--n=20]`);
     process.exit(1);

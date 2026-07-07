@@ -62,6 +62,10 @@ export interface CaseSummary {
   urbanParcels?: number;
   /** De-noised Catastro signal (rural box + spread-out post-fire urbanisation) — higher = stronger lead */
   catastroSignal?: number;
+  /** EGIF-coded motivation (short label, see src/lib/motivations.ts) — e.g. "Modificación del uso del suelo" */
+  motivation?: string;
+  /** EGIF motivation code — "432" = land-use change, the platform's thesis */
+  motivationCode?: string;
   status: CaseStatus;
   outcome: string;
   accentColor: string;

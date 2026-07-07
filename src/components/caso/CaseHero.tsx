@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import { urlFor } from "@/sanity/lib/image";
+import { MOTIVATIONS, LAND_USE_CODE } from "@/lib/motivations";
 import type { CaseDetail } from "@/types/case";
 
 function heroImageUrl(c: CaseDetail): string | null {
@@ -45,6 +46,13 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
   const imageUrl = heroImageUrl(c);
   const mapsUrl = googleMapsUrl(c);
   const isConvicted = c.status === "Sentencia firme";
+
+  // EGIF-coded motivation — shown unless unknown (400); 432 = land-use change, the pattern itself
+  const isLandUse = c.motivationCode === LAND_USE_CODE;
+  const showMotivation = !!c.motivation && c.motivationCode !== "400";
+  const motivationTitle = c.motivationCode
+    ? `${MOTIVATIONS[c.motivationCode]?.official ?? c.motivation} — Motivación registrada por el investigador en la estadística oficial EGIF; la mayoría de las causas constan como «supuestas», no probadas judicialmente.`
+    : undefined;
 
   return (
     <div
@@ -149,6 +157,25 @@ export default function CaseHero({ case_: c }: { case_: CaseDetail }) {
               style={{ color: "rgba(255,255,255,0.65)", fontSize: "13px" }}
             >
               {c.hectares.toLocaleString("es-ES")} ha calcinadas
+            </span>
+          )}
+          {showMotivation && (
+            <span
+              className="type-label"
+              title={motivationTitle}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "4px 12px",
+                borderRadius: 999,
+                fontSize: "10px",
+                backgroundColor: isLandUse ? "var(--accent)" : "rgba(255,255,255,0.15)",
+                color: "#fff",
+                border: isLandUse ? "none" : "1px solid rgba(255,255,255,0.3)",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              Motivación EGIF: {c.motivation}
             </span>
           )}
           {mapsUrl && (

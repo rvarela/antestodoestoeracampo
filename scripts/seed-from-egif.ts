@@ -22,6 +22,7 @@ import path from "path";
 import { parse } from "csv-parse/sync";
 import proj4 from "proj4";
 import { createClient } from "@sanity/client";
+import { motivationShort } from "../src/lib/motivations";
 
 // ── Load .env.local ──────────────────────────────────────────────────────────
 
@@ -347,6 +348,12 @@ async function main() {
       if (coordinates) coordSource = "geocoded";
     }
 
+    // EGIF motivation: "[432]  Incendios provocados para..." → short label + code
+    const motMatch = motivacion.replace(/\s+/g, " ").match(/^\[(\d+)\]\s*(.*)$/);
+    const motivationCode = motMatch?.[1];
+    const motivationLabel =
+      motivacion && motivacion !== "-" ? motivationShort(motivationCode, motMatch?.[2] ?? motivacion) : null;
+
     const fireDesc = [
       `${hectareas} ha de superficie forestal calcinadas.`,
       motivacion ? `Motivación registrada: ${motivacion}.` : "",
@@ -365,6 +372,8 @@ async function main() {
       year: year || undefined,
       hectares: hectareas,
       status: "En investigación",
+      ...(motivationLabel && { motivation: motivationLabel }),
+      ...(motivationCode && { motivationCode }),
       accentColor: "#C4622D",
       ...(coordinates && { coordinates }),
       timeline: [

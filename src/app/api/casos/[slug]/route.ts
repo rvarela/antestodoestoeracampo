@@ -83,6 +83,8 @@ export async function GET(
       region: c.region,
       año: c.year,
       hectareas: c.hectares,
+      motivacion_egif: c.motivation ?? null,
+      codigo_motivacion_egif: c.motivationCode ?? null,
       estado: c.status,
       coordenadas: c.coordinates ?? null,
       resumen: c.excerpt,

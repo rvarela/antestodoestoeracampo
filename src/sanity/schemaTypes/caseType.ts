@@ -86,6 +86,19 @@ export const caseType = defineType({
       type: "number",
     }),
     defineField({
+      name: "motivation",
+      title: "Motivación (EGIF)",
+      type: "string",
+      description:
+        "Motivación del incendio codificada por el propio EGIF (etiqueta corta). Rellenado por patch:motivation desde los CSV originales — no editar a mano.",
+    }),
+    defineField({
+      name: "motivationCode",
+      title: "Código de motivación EGIF",
+      type: "string",
+      description: "Código numérico EGIF (ej. 432 = modificación del uso del suelo). Rellenado por patch:motivation.",
+    }),
+    defineField({
       name: "urbanParcels",
       title: "Parcelas urbanas modificadas (Catastro)",
       type: "number",

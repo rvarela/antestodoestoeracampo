@@ -37,12 +37,13 @@ function csvField(v: string | number | undefined | null) {
 function exportCsv(rows: CaseSummary[]) {
   const header = [
     "titulo", "municipio", "region", "año", "hectareas",
-    "parcelas_urbanas_modificadas", "estado", "lat", "lng", "url",
+    "parcelas_urbanas_modificadas", "motivacion_egif", "codigo_motivacion_egif",
+    "estado", "lat", "lng", "url",
   ];
   const lines = rows.map((c) =>
     [
       c.title, c.municipality, c.region, c.year, c.hectares,
-      c.urbanParcels ?? "", c.status,
+      c.urbanParcels ?? "", c.motivation ?? "", c.motivationCode ?? "", c.status,
       c.coordinates?.lat ?? "", c.coordinates?.lng ?? "",
       `https://antestodoestoeracampo.es/casos/${c.slug}`,
     ].map(csvField).join(",")
@@ -73,6 +74,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
   const [q, setQ] = useState(sp.get("q") ?? "");
   const [region, setRegion] = useState(sp.get("region") ?? "");
   const [status, setStatus] = useState(sp.get("estado") ?? "");
+  const [motivation, setMotivation] = useState(sp.get("motivacion") ?? "");
   const [sort, setSort] = useState<SortKey>((sp.get("orden") as SortKey) || "catastroSignal");
   const [dir, setDir] = useState<SortDir>((sp.get("dir") as SortDir) || "desc");
   const [view, setView] = useState<View>((sp.get("vista") as View) || "tabla");
@@ -88,6 +90,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
       if (q.trim()) p.set("q", q.trim());
       if (region) p.set("region", region);
       if (status) p.set("estado", status);
+      if (motivation) p.set("motivacion", motivation);
       if (sort !== "catastroSignal") p.set("orden", sort);
       if (dir !== "desc") p.set("dir", dir);
       if (view !== "tabla") p.set("vista", view);
@@ -95,10 +98,15 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
       router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     }, 350);
     return () => clearTimeout(t);
-  }, [q, region, status, sort, dir, view, pathname, router]);
+  }, [q, region, status, motivation, sort, dir, view, pathname, router]);
 
   const regions = useMemo(
     () => [...new Set(cases.map((c) => c.region).filter(Boolean))].sort(),
+    [cases]
+  );
+
+  const motivations = useMemo(
+    () => [...new Set(cases.map((c) => c.motivation).filter((m): m is string => !!m))].sort((a, b) => a.localeCompare(b, "es")),
     [cases]
   );
 
@@ -107,6 +115,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
     const rows = cases.filter((c) => {
       if (region && c.region !== region) return false;
       if (status && c.status !== status) return false;
+      if (motivation && c.motivation !== motivation) return false;
       return !nq || matchesQuery(c, nq);
     });
     const mul = dir === "asc" ? 1 : -1;
@@ -116,7 +125,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
       if (av !== bv) return (av < bv ? -1 : 1) * mul;
       return a.title.localeCompare(b.title, "es");
     });
-  }, [cases, q, region, status, sort, dir]);
+  }, [cases, q, region, status, motivation, sort, dir]);
 
   const totalHa = useMemo(
     () => filtered.reduce((s, c) => s + (c.hectares ?? 0), 0),
@@ -199,6 +208,20 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
           ))}
         </select>
 
+        {/* Motivation (EGIF-coded) */}
+        <select
+          aria-label="Filtrar por motivación EGIF"
+          value={motivation}
+          onChange={(e) => setMotivation(e.target.value)}
+          className="px-4 py-2.5 rounded-full type-small outline-none"
+          style={selectStyle}
+        >
+          <option value="">Todas las motivaciones</option>
+          {motivations.map((m) => (
+            <option key={m} value={m}>{m}</option>
+          ))}
+        </select>
+
         {/* View toggle */}
         <div
           className="flex rounded-full overflow-hidden"
@@ -246,7 +269,7 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
         </p>
       ) : view === "tabla" ? (
         <div className="overflow-x-auto -mx-6 px-6 md:mx-0 md:px-0">
-          <table className="w-full min-w-[820px] border-collapse">
+          <table className="w-full min-w-[980px] border-collapse">
             <thead>
               <tr style={{ borderBottom: "1px solid var(--foreground)" }}>
                 <th className="px-3 py-2.5 text-left">
@@ -259,6 +282,9 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
                 {thButton("hectares", "Hectáreas")}
                 {thButton("catastroSignal", "Señal")}
                 {thButton("urbanParcels", "Parcelas urbanas")}
+                <th className="px-3 py-2.5 text-left whitespace-nowrap">
+                  <span className="type-label" style={{ color: "var(--muted)" }}>Motivación</span>
+                </th>
                 <th className="px-3 py-2.5 text-left whitespace-nowrap">
                   <span className="type-label" style={{ color: "var(--muted)" }}>Estado</span>
                 </th>
@@ -304,6 +330,15 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
                     >
                       {c.urbanParcels ?? "—"}
                     </td>
+                    <td
+                      className="px-3 py-3 type-small whitespace-nowrap"
+                      style={{
+                        color: c.motivationCode === "432" ? "var(--accent)" : "var(--muted)",
+                        fontWeight: c.motivationCode === "432" ? 500 : undefined,
+                      }}
+                    >
+                      {c.motivation && c.motivationCode !== "400" ? c.motivation : "—"}
+                    </td>
                     <td className="px-3 py-3 whitespace-nowrap">
                       <span
                         className="inline-flex items-center px-2.5 py-0.5 rounded-full type-label"
@@ -345,6 +380,12 @@ export default function CasosArchive({ cases }: { cases: CaseSummary[] }) {
           catastral masivo (que inflan el recuento bruto sin indicar recalificación). El
           archivo se ordena por esta señal de forma predeterminada. Sigue siendo una pista
           para investigar, no una prueba de recalificación irregular.
+        </p>
+        <p>
+          «Motivación» es la que registra la propia estadística oficial EGIF para cada
+          incendio intencionado — incluida «Modificación del uso del suelo», el patrón que
+          documenta esta plataforma. La registra el investigador del incendio y en la mayoría
+          de los casos consta como «supuesta», no probada judicialmente.
         </p>
       </div>
     </div>

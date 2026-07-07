@@ -27,6 +27,8 @@ function caseRow(c: CaseSummary) {
     año: c.year,
     hectareas: c.hectares,
     parcelas_urbanas_modificadas: c.urbanParcels ?? null,
+    motivacion_egif: c.motivation ?? null,
+    codigo_motivacion_egif: c.motivationCode ?? null,
     estado: c.status,
     lat: c.coordinates?.lat ?? null,
     lng: c.coordinates?.lng ?? null,

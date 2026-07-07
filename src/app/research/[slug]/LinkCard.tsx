@@ -32,6 +32,19 @@ function dateFromLabel(label: string): string {
   return "";
 }
 
+/** ISO → DD/MM/YYYY for the form; year-only and free text stay as-is */
+function displayDate(d: string): string {
+  const m = d.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : d;
+}
+
+/** DD/MM/YYYY → ISO for storage (timeline convention); ISO/year-only pass through */
+function isoDate(d: string): string {
+  const dmy = d.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (dmy) return `${dmy[3]}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
+  return d.trim();
+}
+
 const SOURCE_LABELS: Record<string, string> = {
   CENDOJ: "CENDOJ",
   BOE: "BOE",
@@ -67,8 +80,8 @@ interface LinkCardProps {
   status: "pending" | "approved" | "rejected";
   isSearch?: boolean;
   confidence?: number;
-  /** this link already has an entry in the case timeline */
-  inTimeline?: boolean;
+  /** the entry this link already has in the case timeline — the form prefills from it */
+  timelineEntry?: { date?: string; title?: string; description?: string; type?: string } | null;
 }
 
 function confidenceColor(c: number): string {
@@ -77,17 +90,19 @@ function confidenceColor(c: number): string {
   return "#B91C1C";              // red — probably noise
 }
 
-export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence, inTimeline: initialInTimeline }: LinkCardProps) {
+export function LinkCard({ id, label, url, sourceType, note, status: initialStatus, isSearch, confidence, timelineEntry }: LinkCardProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const [showTimelineForm, setShowTimelineForm] = useState(false);
-  const [inTimeline, setInTimeline] = useState(!!initialInTimeline);
-  const [tlDate, setTlDate] = useState(() => dateFromLabel(label));
-  const [tlType, setTlType] = useState(sourceType === "CENDOJ" ? "judicial" : "other");
-  const [tlTitle, setTlTitle] = useState(label.length > 120 ? label.slice(0, 117) + "…" : label);
-  const [tlDescription, setTlDescription] = useState("");
+  const [inTimeline, setInTimeline] = useState(!!timelineEntry);
+  // Prefill from the existing timeline entry — re-opening the form must show
+  // what was pushed, not a blank form that would overwrite it with empties
+  const [tlDate, setTlDate] = useState(() => displayDate(timelineEntry?.date ?? dateFromLabel(label)));
+  const [tlType, setTlType] = useState(timelineEntry?.type ?? (sourceType === "CENDOJ" ? "judicial" : "other"));
+  const [tlTitle, setTlTitle] = useState(timelineEntry?.title ?? (label.length > 120 ? label.slice(0, 117) + "…" : label));
+  const [tlDescription, setTlDescription] = useState(timelineEntry?.description ?? "");
   const [tlError, setTlError] = useState<string | null>(null);
 
   function update(next: "approved" | "rejected" | "pending") {
@@ -103,7 +118,7 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
     setTlError(null);
     startTransition(async () => {
       const res = await pushLinkToTimeline(id, {
-        date: tlDate, type: tlType, title: tlTitle, description: tlDescription,
+        date: isoDate(tlDate), type: tlType, title: tlTitle, description: tlDescription,
       });
       if (!res.ok) {
         setTlError(res.error);
@@ -341,7 +356,7 @@ export function LinkCard({ id, label, url, sourceType, note, status: initialStat
             <input
               value={tlDate}
               onChange={e => setTlDate(e.target.value)}
-              placeholder="AAAA-MM-DD o AAAA"
+              placeholder="DD/MM/AAAA o AAAA"
               style={{ ...inputStyle, maxWidth: 150 }}
             />
             <select value={tlType} onChange={e => setTlType(e.target.value)} style={{ ...inputStyle, maxWidth: 190 }}>

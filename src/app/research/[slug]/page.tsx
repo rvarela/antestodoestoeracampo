@@ -22,6 +22,14 @@ interface ResearchLink {
   confidence?: number;
 }
 
+interface TimelineEntryLite {
+  _key: string;
+  date?: string;
+  title?: string;
+  description?: string;
+  type?: string;
+}
+
 interface CaseDoc {
   _id: string;
   title: string;
@@ -32,7 +40,7 @@ interface CaseDoc {
   status: string;
   sourcesCount: number;
   sourceUrls: Array<string | null>;
-  timelineKeys: Array<string | null> | null;
+  timelineEntries: TimelineEntryLite[] | null;
 }
 
 export default async function ResearchCasePage({
@@ -48,7 +56,7 @@ export default async function ResearchCasePage({
         _id, title, municipality, region, year, hectares, status,
         "sourcesCount": count(sources),
         "sourceUrls": sources[].url,
-        "timelineKeys": timeline[]._key
+        "timelineEntries": timeline[]{ _key, date, title, description, type }
       }`,
       { slug }
     ),
@@ -72,7 +80,9 @@ export default async function ResearchCasePage({
   const toPushCount = approved.filter(l => !l.isSearch && l.url && !caseUrls.has(l.url)).length;
   const approvedSearches = approved.filter(l => l.isSearch).length;
 
-  const timelineKeys = new Set((caseDoc.timelineKeys ?? []).filter(Boolean));
+  const timelineByKey = new Map(
+    (caseDoc.timelineEntries ?? []).map(t => [t._key, t])
+  );
   const card = (l: ResearchLink) => (
     <LinkCard
       key={l._id}
@@ -84,7 +94,7 @@ export default async function ResearchCasePage({
       status={l.status}
       isSearch={l.isSearch}
       confidence={l.confidence}
-      inTimeline={timelineKeys.has(timelineKeyForLink(l._id))}
+      timelineEntry={timelineByKey.get(timelineKeyForLink(l._id)) ?? null}
     />
   );
 
